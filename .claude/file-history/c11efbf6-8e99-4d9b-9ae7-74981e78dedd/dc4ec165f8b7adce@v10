@@ -1,0 +1,79 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { apiFetch } from "@/lib/api";
+import { Lightbulb, Sparkles, Loader2 } from "lucide-react";
+
+export default function InsightsPage() {
+  const [insights, setInsights] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [habitPrompt, setHabitPrompt] = useState("");
+  const [generatedHabits, setGeneratedHabits] = useState<string>("");
+
+  async function getWeeklyInsight() {
+    setLoading(true);
+    const data = await apiFetch("/api/insights", {
+      method: "POST",
+      body: JSON.stringify({ type: "weekly" }),
+    });
+    setInsights(data.text || "");
+    setLoading(false);
+  }
+
+  async function generateHabits() {
+    if (!habitPrompt.trim()) return;
+    setLoading(true);
+    const data = await apiFetch("/api/insights", {
+      method: "POST",
+      body: JSON.stringify({ type: "generate-habits", prompt: habitPrompt }),
+    });
+    setGeneratedHabits(data.text || "");
+    setLoading(false);
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">AI 洞察</h1>
+        <p className="text-sm text-muted-foreground mt-1">让 AI 帮你发现规律，精准提升</p>
+      </div>
+
+      {/* Weekly Insight */}
+      <div className="bg-card rounded-2xl border p-6 space-y-4">
+        <h2 className="font-semibold flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-yellow-500" /> 本周洞察
+        </h2>
+        {insights ? (
+          <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">{insights}</p>
+        ) : (
+          <button onClick={getWeeklyInsight} disabled={loading} className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:opacity-90">
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lightbulb className="w-4 h-4" />}
+            生成本周洞察
+          </button>
+        )}
+      </div>
+
+      {/* Habit Generator */}
+      <div className="bg-card rounded-2xl border p-6 space-y-4">
+        <h2 className="font-semibold flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-yellow-500" /> 习惯生成器
+        </h2>
+        <p className="text-sm text-muted-foreground">描述你的目标，AI 帮你拆解成可执行的习惯</p>
+        <textarea
+          className="w-full px-3 py-2.5 rounded-xl border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/20 min-h-[80px]"
+          placeholder="例如：我想提升商业分析能力，目前每天只有1小时空闲时间..."
+          value={habitPrompt}
+          onChange={(e) => setHabitPrompt(e.target.value)}
+        />
+        <button onClick={generateHabits} disabled={loading || !habitPrompt.trim()} className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:opacity-90 disabled:opacity-50">
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "生成习惯方案"}
+        </button>
+        {generatedHabits && (
+          <div className="mt-4 p-4 rounded-xl bg-muted">
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">{generatedHabits}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

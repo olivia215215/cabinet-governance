@@ -1,0 +1,109 @@
+# UI/UX 全面优化计划
+
+## 背景
+
+当前系统功能可用，但 UI 层面存在严重的一致性问题：
+- 6 个可复用组件（Input、Textarea、Card、Skeleton、EmptyState、AssetStatusBadge）存在但**零页面使用**
+- 6 套重复的 statusBadge 内联实现，颜色相互矛盾
+- 全局无色相（全灰度），无品牌识别度
+- 原生 `<input>`/`<textarea>`/`<select>` 被到处复制粘贴，每处 80+ 字符的 Tailwind 类
+- 弹窗用 `fixed inset-0 bg-black/50` 手写，而不是 Dialog 组件
+- 20 个页面 6 种不同 max-w，双层 p-6+p-4 padding
+- 无 toast 通知、无 skip-to-content、侧边栏无 aria-current
+
+## 目标
+
+视觉 + 交互全面升级，不破坏任何现有功能。
+
+---
+
+## Phase 1: 地基 — 主题、布局、组件迁移
+
+### 1A — 注入品牌色系 
+
+修改 `app/globals.css`：
+- primary 从 `oklch(0.205 0 0)`（黑）→ `oklch(0.45 0.18 250)`（专业蓝）
+- ring 匹配 primary 色相
+- chart-* 从灰度 → 蓝到翠绿光谱
+- 新增 7 个语义状态色 token
+
+### 1B — 修复布局双层 padding
+
+`components/layout/app-layout.tsx`：`<main className="flex-1 p-6">` → `flex-1`
+
+### 1C — 统一页面宽度
+
+| 类型 | max-w | 
+|------|-------|
+| 表单（login, inbound, profile）| max-w-md |
+| 内容（apply, notifications, chat）| max-w-2xl |
+| 详情（ticket detail, asset detail）| max-w-3xl |
+| 列表（my-assets, approvals, users）| max-w-4xl |
+| 仪表盘（home, IT home, exec）| max-w-5xl |
+
+### 1D — 全页面迁移到共享组件
+
+每个页面替换：
+1. 原生 `<input>`/`<textarea>` → `<Input>` / `<Textarea>`
+2. 内联 `statusBadge()` → `<AssetStatusBadge>` / `<TicketStatusBadge>`
+3. 手写骨架屏 → `<Skeleton>`
+4. 虚线空状态 → `<EmptyState>`
+5. 手写弹窗 → `<Dialog>`
+6. 原生 `<select>` → `<Select>`（新组件）
+
+### 1E — 新建 3 个缺失组件
+
+- `components/ui/select.tsx` — Select/SelectTrigger/SelectContent/SelectItem
+- `components/page-header.tsx` — `<PageHeader title="" description="" actions={} />`
+- `components/ticket-status-badge.tsx` — 工单状态徽章
+
+### 1F — 统一 AssetStatusBadge 颜色
+
+`components/asset-status-badge.tsx` 作为唯一颜色来源，9 个状态色与 CSS token 对齐。
+
+### 1G — 无障碍速赢
+
+- 侧边栏：`aria-current="page"`
+- EmptyState：`role="status"`
+- AppLayout：skip-to-content 链接
+
+---
+
+## Phase 2: 交互 — Toast、过渡、微动效
+
+### 2A — Toast 通知系统
+
+新建 `components/ui/toast/`：`toast-provider.tsx` + `use-toast.ts`
+
+### 2B — 骨架屏统一
+
+所有页面用 `<Skeleton>` 替换 `animate-pulse` div
+
+### 2C — 页面淡入动效
+
+`animate-page-in` CSS keyframes，AppLayout 应用到 children
+
+### 2D — 侧边栏 + 顶部栏微交互
+
+- 侧边栏 `transition-colors duration-150`
+- 顶部栏滚动阴影
+
+### 2E — 三态规范
+
+所有页面 loading/error/empty 统一使用共享组件模式
+
+---
+
+## 验收
+
+- `npx tsc --noEmit` 零错误
+- 开发服务器正常启动，所有页面可访问
+- 每个页面三态视觉一致
+- 亮/暗模式正常
+- 键盘导航可用
+- 响应式断点正常
+
+## 大臣
+
+Phase 1：大匠 — 全部代码实现
+Phase 2：大匠 + 画院 — 画院出交互规范，大匠实现

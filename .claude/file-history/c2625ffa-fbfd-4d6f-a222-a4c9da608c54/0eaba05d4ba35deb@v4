@@ -1,0 +1,296 @@
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
+import { apiFetch } from "@/lib/api-client";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { TicketStatusBadge } from "@/components/ticket-status-badge";
+import { PageHeader } from "@/components/page-header";
+
+interface TicketDetail {
+  id: string;
+  type: string;
+  status: string;
+  reason: string;
+  rejectReason?: string;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+  applicant: { id: string; name: string; email: string; role: string };
+  targetAsset?: { id: string; model?: { modelName: string; brandName: string } };
+  targetModel?: { modelName: string; brandName: string };
+  assignedBy?: { id: string; name: string };
+  processor?: { id: string; name: string };
+  fromHolder?: { id: string; name: string };
+  toHolder?: { id: string; name: string };
+  targetDept?: { id: string; name: string };
+  deputyApprover?: { id: string; name: string };
+  deputyApproval?: boolean;
+  notifications?: { id: string; type: string; title: string; body: string; createdAt: string }[];
+}
+
+export default function TicketDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { user } = useAuth();
+  const [ticket, setTicket] = useState<TicketDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState("");
+  const [rejectDialog, setRejectDialog] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [deputyMode, setDeputyMode] = useState(false);
+
+  const id = params.id as string;
+
+  const fetchTicket = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiFetch<TicketDetail>(`/api/tickets/${id}`);
+      setTicket(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "加载失败");
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchTicket();
+  }, [fetchTicket]);
+
+  const handleApprove = async () => {
+    if (!ticket) return;
+    setActionLoading("approve");
+    try {
+      const body: Record<string, unknown> = {};
+      if (deputyMode) body.deputy = true;
+      await apiFetch(`/api/tickets/${id}/approve`, { method: "POST", body });
+      await fetchTicket();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "操作失败");
+    } finally {
+      setActionLoading("");
+    }
+  };
+
+  const handleReject = async () => {
+    if (!ticket || !rejectReason.trim()) return;
+    setActionLoading("reject");
+    try {
+      await apiFetch(`/api/tickets/${id}/reject`, { method: "POST", body: { rejectReason } });
+      setRejectDialog(false);
+      setRejectReason("");
+      await fetchTicket();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "操作失败");
+    } finally {
+      setActionLoading("");
+    }
+  };
+
+  const handleCancel = async () => {
+    setActionLoading("cancel");
+    try {
+      await apiFetch(`/api/tickets/${id}/cancel`, { method: "POST" });
+      await fetchTicket();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "操作失败");
+    } finally {
+      setActionLoading("");
+    }
+  };
+
+  const typeLabel = (type: string) => {
+    const map: Record<string, string> = { APPLY: "申领", REPAIR: "报修", RETURN: "归还", TRANSFER: "调拨" };
+    return map[type] ?? type;
+  };
+
+  if (!user) return null;
+
+  // Determine button visibility based on role and status
+  const canApprove =
+    (user.role === "MANAGER" || user.role === "IT_ADMIN") &&
+    ticket &&
+    ["PENDING_MANAGER_1", "PENDING_MANAGER_2", "PENDING_IT"].includes(ticket.status);
+  const canReject = canApprove;
+  const canCancel =
+    ticket &&
+    ticket.applicant &&
+    (ticket.applicant.id === user.id || user.role === "IT_ADMIN") &&
+    !["COMPLETED", "REJECTED", "CANCELLED"].includes(ticket.status);
+
+  if (loading) {
+    return (
+      <div className="flex flex-1 items-center justify-center p-4">
+        <div className="w-full max-w-3xl space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-64 rounded-lg" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error !== null) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 p-4">
+        <p className="text-destructive">{error}</p>
+        <Button onClick={fetchTicket}>重试</Button>
+        <Button variant="outline" onClick={() => router.back()}>返回</Button>
+      </div>
+    );
+  }
+
+  if (!ticket) {
+    return (
+      <div className="flex flex-1 items-center justify-center p-4">
+        <p className="text-muted-foreground">工单不存在</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-1 flex-col gap-6 p-4 max-w-3xl mx-auto w-full">
+      <div className="flex items-center justify-between">
+        <PageHeader title={`${typeLabel(ticket.type)}工单`} />
+        <TicketStatusBadge status={ticket.status} />
+      </div>
+
+      {/* Detail Cards */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card size="sm">
+          <CardContent>
+            <p className="text-xs text-muted-foreground">申请人</p>
+            <p className="text-sm font-medium">{ticket.applicant?.name}</p>
+          </CardContent>
+        </Card>
+        <Card size="sm">
+          <CardContent>
+            <p className="text-xs text-muted-foreground">申请时间</p>
+            <p className="text-sm font-medium">{new Date(ticket.createdAt).toLocaleString("zh-CN")}</p>
+          </CardContent>
+        </Card>
+        {ticket.targetModel && (
+          <Card size="sm">
+            <CardContent>
+              <p className="text-xs text-muted-foreground">设备型号</p>
+              <p className="text-sm font-medium">{ticket.targetModel.modelName}</p>
+            </CardContent>
+          </Card>
+        )}
+        {ticket.targetAsset && (
+          <Card size="sm">
+            <CardContent>
+              <p className="text-xs text-muted-foreground">设备</p>
+              <p className="text-sm font-medium">{ticket.targetAsset.model?.modelName}</p>
+            </CardContent>
+          </Card>
+        )}
+        {ticket.processor && (
+          <Card size="sm">
+            <CardContent>
+              <p className="text-xs text-muted-foreground">处理人</p>
+              <p className="text-sm font-medium">{ticket.processor.name}</p>
+            </CardContent>
+          </Card>
+        )}
+        {ticket.rejectReason && (
+          <Card size="sm" className="col-span-2 border-destructive/30">
+            <CardContent>
+              <p className="text-xs text-destructive">驳回原因</p>
+              <p className="text-sm">{ticket.rejectReason}</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      <Card size="sm">
+        <CardContent>
+          <p className="text-sm font-medium">申请理由</p>
+          <p className="text-sm text-muted-foreground">{ticket.reason}</p>
+        </CardContent>
+      </Card>
+
+      {/* Actions */}
+      <div className="flex flex-wrap gap-2">
+        {canApprove && (
+          <>
+            <Button onClick={handleApprove} disabled={actionLoading === "approve"}>
+              {actionLoading === "approve" ? "处理中..." : "审批通过"}
+            </Button>
+            <Button variant="outline" onClick={() => setRejectDialog(true)} disabled={actionLoading === "reject"}>
+              驳回
+            </Button>
+            {user.role === "IT_ADMIN" && (
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={deputyMode} onChange={(e) => setDeputyMode(e.target.checked)} />
+                代审批
+              </label>
+            )}
+          </>
+        )}
+        {canCancel && (
+          <Button variant="destructive" onClick={handleCancel} disabled={actionLoading === "cancel"}>
+            {actionLoading === "cancel" ? "取消中..." : "取消工单"}
+          </Button>
+        )}
+      </div>
+
+      {/* Reject Dialog */}
+      <Dialog open={rejectDialog} onOpenChange={setRejectDialog}>
+        <DialogContent showCloseButton>
+          <DialogHeader>
+            <DialogTitle>驳回工单</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="请输入驳回原因..."
+            rows={3}
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setRejectDialog(false); setRejectReason(""); }}>
+              取消
+            </Button>
+            <Button onClick={handleReject} disabled={!rejectReason.trim() || actionLoading === "reject"}>
+              确认驳回
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Error Banner */}
+      {error !== null && (
+        <div className="rounded-lg bg-destructive/10 px-4 py-2 text-sm text-destructive">
+          {error}
+        </div>
+      )}
+
+      {/* Timeline (from notifications) */}
+      {ticket.notifications && ticket.notifications.length > 0 && (
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">时间线</h2>
+          <div className="space-y-2">
+            {ticket.notifications.map((n) => (
+              <Card key={n.id} size="sm">
+                <CardContent>
+                  <p className="text-sm font-medium">{n.title}</p>
+                  <p className="text-sm text-muted-foreground">{n.body}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {new Date(n.createdAt).toLocaleString("zh-CN")}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,426 @@
+import { useState } from "react";
+import { View, Text, Input, Picker } from "@tarojs/components";
+import { useDidShow, showModal, showToast } from "@tarojs/taro";
+import { apiFetch } from "../../lib";
+import { getDomains, saveDomains, Domain, UNCATEGORIZED } from "../../lib/domains";
+import "./index.scss";
+
+const EMOJI_OPTIONS = [
+  "💪", "📚", "✨", "💼", "🧠", "🏛️", "🌍", "🏠",
+  "🎯", "🎨", "🎵", "✍️", "🧘", "🏃", "🍎", "💻",
+  "📝", "🎬", "🗣️", "🧭", "🔬", "📊", "💡", "⭐",
+];
+
+const COLOR_OPTIONS = [
+  "#ef4444", "#3b82f6", "#ec4899", "#f59e0b",
+  "#8b5cf6", "#10b981", "#06b6d4", "#78716c",
+];
+
+interface Habit {
+  id: string;
+  title: string;
+  description: string | null;
+  domainId: string;
+  unit: string;
+  targetValue: number;
+  frequency: string;
+  isActive: boolean;
+}
+
+export default function HabitsPage() {
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [form, setForm] = useState({
+    title: "", description: "", domainIdx: 0, unit: "次",
+    targetValue: 1, frequency: "daily",
+  });
+
+  // Domain management state
+  const [showDomainManager, setShowDomainManager] = useState(false);
+  const [domainManagerView, setDomainManagerView] = useState<"list" | "new" | "edit">("list");
+  const [domainForm, setDomainForm] = useState<Domain>({ name: "", icon: "💪", color: "#ef4444" });
+  const [editingDomainName, setEditingDomainName] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useDidShow(() => { fetchHabits(); });
+
+  async function fetchHabits() {
+    try {
+      setHabits(await apiFetch("/api/habits"));
+    } catch {
+      showToast({ title: "获取习惯列表失败", icon: "none" });
+    }
+    setLoading(false);
+  }
+
+  function openNew() {
+    setEditId(null);
+    setForm({ title: "", description: "", domainIdx: 0, unit: "次", targetValue: 1, frequency: "daily" });
+    setShowForm(true);
+  }
+
+  function openEdit(h: Habit) {
+    setEditId(h.id);
+    const domains = getDomains();
+    const idx = domains.findIndex(d => d.name === h.domainId);
+    setForm({
+      title: h.title,
+      description: h.description || "",
+      domainIdx: idx >= 0 ? idx : domains.length - 1,
+      unit: h.unit,
+      targetValue: h.targetValue,
+      frequency: h.frequency,
+    });
+    setShowForm(true);
+  }
+
+  async function handleSave() {
+    const domains = getDomains();
+    if (form.domainIdx < 0 || form.domainIdx >= domains.length) {
+      showToast({ title: "领域索引无效", icon: "none" });
+      return;
+    }
+    setSaving(true);
+    try {
+      const body = { ...form, domainId: domains[form.domainIdx].name };
+      if (editId) {
+        await apiFetch("/api/habits", { method: "PUT", body: JSON.stringify({ id: editId, ...body }) });
+      } else {
+        await apiFetch("/api/habits", { method: "POST", body: JSON.stringify(body) });
+      }
+      setShowForm(false);
+      fetchHabits();
+    } catch {
+      showToast({ title: "保存习惯失败", icon: "none" });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function deleteHabit(id: string) {
+    try {
+      await apiFetch("/api/habits", { method: "DELETE", body: JSON.stringify({ id }) });
+      fetchHabits();
+    } catch {
+      showToast({ title: "删除习惯失败", icon: "none" });
+    }
+  }
+
+  async function toggleActive(id: string, current: boolean) {
+    try {
+      await apiFetch("/api/habits", { method: "PUT", body: JSON.stringify({ id, isActive: !current }) });
+      fetchHabits();
+    } catch {
+      showToast({ title: "操作失败", icon: "none" });
+    }
+  }
+
+  // ---- Domain management handlers ----
+
+  function openDomainManager() {
+    setShowForm(false);
+    setDomainManagerView("list");
+    setDomainForm({ name: "", icon: "💪", color: "#ef4444" });
+    setEditingDomainName(null);
+    setShowDomainManager(true);
+  }
+
+  function openNewDomain() {
+    setDomainForm({ name: "", icon: "💪", color: "#ef4444" });
+    setDomainManagerView("new");
+  }
+
+  function openEditDomain(domain: Domain) {
+    setEditingDomainName(domain.name);
+    setDomainForm({ name: domain.name, icon: domain.icon, color: domain.color });
+    setDomainManagerView("edit");
+  }
+
+  async function handleDomainSave() {
+    const name = domainForm.name.trim();
+    if (!name) return;
+
+    const userDomains = getDomains().filter(d => d.name !== UNCATEGORIZED.name);
+
+    if (domainManagerView === "new") {
+      if (userDomains.some(d => d.name === name)) {
+        showModal({ title: "提示", content: "该领域名称已存在", showCancel: false });
+        return;
+      }
+      userDomains.push({ name, icon: domainForm.icon, color: domainForm.color });
+    } else if (domainManagerView === "edit") {
+      const idx = userDomains.findIndex(d => d.name === editingDomainName);
+      if (idx === -1) return;
+
+      if (name !== editingDomainName && userDomains.some(d => d.name === name)) {
+        showModal({ title: "提示", content: "该领域名称已存在", showCancel: false });
+        return;
+      }
+
+      const oldName = userDomains[idx].name;
+      userDomains[idx] = { name, icon: domainForm.icon, color: domainForm.color };
+
+      // If domain renamed, update all habits under old name
+      if (name !== oldName) {
+        try {
+          await Promise.all(habits.filter(h => h.domainId === oldName).map(h =>
+            apiFetch("/api/habits", { method: "PUT", body: JSON.stringify({ id: h.id, domainId: name }) })
+          ));
+          fetchHabits();
+        } catch {
+          showToast({ title: "迁移习惯失败", icon: "none" });
+          return;
+        }
+      }
+    }
+
+    saveDomains(userDomains);
+    setDomainManagerView("list");
+    setEditingDomainName(null);
+  }
+
+  async function handleDeleteDomain(domain: Domain) {
+    const count = habits.filter(h => h.domainId === domain.name).length;
+    const res = await showModal({
+      title: "删除领域",
+      content: `确定删除"${domain.name}"吗？其下 ${count} 个习惯将移入"未分类"。`,
+    });
+
+    if (!res.confirm) return;
+
+    setSaving(true);
+    try {
+      // Move habits to 未分类 first, then delete domain
+      await Promise.all(habits.filter(h => h.domainId === domain.name).map(h =>
+        apiFetch("/api/habits", { method: "PUT", body: JSON.stringify({ id: h.id, domainId: UNCATEGORIZED.name }) })
+      ));
+
+      const userDomains = getDomains()
+        .filter(d => d.name !== UNCATEGORIZED.name && d.name !== domain.name);
+      saveDomains(userDomains);
+
+      fetchHabits();
+    } catch {
+      showToast({ title: "删除领域失败", icon: "none" });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const domains = getDomains();
+
+  return (
+    <View className="page">
+      <View className="page-header">
+        <View>
+          <Text className="page-title">习惯管理</Text>
+          <Text className="page-subtitle">管理你的每日修炼清单</Text>
+        </View>
+        <View className="add-btn" onClick={openNew}><Text>+</Text></View>
+      </View>
+
+      {domains.map((domain) => {
+        const domainHabits = habits.filter((h) => h.domainId === domain.name);
+        return (
+          <View key={domain.name}>
+            <Text className="domain-title">{domain.icon} {domain.name}</Text>
+            {domainHabits.map((habit) => (
+              <View key={habit.id} className={`habit-card ${!habit.isActive ? "inactive" : ""}`}>
+                <View className="habit-info">
+                  <Text className="habit-name">{habit.title}</Text>
+                  {habit.description && <Text className="habit-desc">{habit.description}</Text>}
+                  <View className="habit-meta">
+                    <Text>{habit.frequency === "daily" ? "每日" : habit.frequency}</Text>
+                    <Text> · </Text>
+                    <Text>目标 {habit.targetValue}{habit.unit}</Text>
+                  </View>
+                </View>
+                <View className="habit-actions">
+                  <Text className={`action-btn ${saving ? "disabled" : ""}`} onClick={() => !saving && toggleActive(habit.id, habit.isActive)}>
+                    {habit.isActive ? "停用" : "启用"}
+                  </Text>
+                  <Text className="action-btn" onClick={() => openEdit(habit)}>编辑</Text>
+                  <Text className={`action-btn danger ${saving ? "disabled" : ""}`} onClick={() => !saving && deleteHabit(habit.id)}>删除</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        );
+      })}
+
+      <View className="domain-manager-entry" onClick={openDomainManager}>
+        <View className="domain-manager-entry-bar" />
+        <Text className="domain-manager-entry-text">管理分类</Text>
+        <Text className="domain-manager-entry-arrow">&#8250;</Text>
+      </View>
+
+      {!loading && habits.length === 0 && (
+        <View className="empty"><Text>还没有习惯，点右上角 + 开始</Text></View>
+      )}
+
+      {/* ---- Habit Form Modal ---- */}
+      {showForm && (
+        <View className="modal-mask" onClick={() => setShowForm(false)}>
+          <View className="modal" onClick={(e) => e.stopPropagation()}>
+            <Text className="modal-title">{editId ? "编辑习惯" : "新增习惯"}</Text>
+
+            <View className="form-group">
+              <Text className="form-label">名称</Text>
+              <Input className="form-input" placeholder="如：晨跑30分钟" value={form.title} onInput={(e) => setForm({ ...form, title: e.detail.value })} />
+            </View>
+
+            <View className="form-group">
+              <Text className="form-label">描述</Text>
+              <Input className="form-input" placeholder="具体怎么做" value={form.description} onInput={(e) => setForm({ ...form, description: e.detail.value })} />
+            </View>
+
+            <View className="form-row">
+              <View className="form-group flex-1">
+                <Text className="form-label">领域</Text>
+                <Picker mode="selector" range={domains.map(d => d.icon + " " + d.name)} value={form.domainIdx} onChange={(e) => setForm({ ...form, domainIdx: +e.detail.value })}>
+                  <View className="form-picker">{domains[form.domainIdx].icon} {domains[form.domainIdx].name}</View>
+                </Picker>
+              </View>
+              <View className="form-group flex-1">
+                <Text className="form-label">频率</Text>
+                <Picker mode="selector" range={["每日", "每周", "工作日"]} value={form.frequency === "daily" ? 0 : form.frequency === "weekly" ? 1 : 2} onChange={(e) => setForm({ ...form, frequency: ["daily", "weekly", "weekday"][+e.detail.value] })}>
+                  <View className="form-picker">{form.frequency === "daily" ? "每日" : form.frequency === "weekly" ? "每周" : "工作日"}</View>
+                </Picker>
+              </View>
+            </View>
+
+            <View className="form-row">
+              <View className="form-group flex-1">
+                <Text className="form-label">目标值</Text>
+                <Input className="form-input" type="number" value={String(form.targetValue)} onInput={(e) => setForm({ ...form, targetValue: +e.detail.value || 1 })} />
+              </View>
+              <View className="form-group flex-1">
+                <Text className="form-label">单位</Text>
+                <Input className="form-input" placeholder="次/分钟/页" value={form.unit} onInput={(e) => setForm({ ...form, unit: e.detail.value })} />
+              </View>
+            </View>
+
+            <View className="form-buttons">
+              <View className="btn-cancel" onClick={() => setShowForm(false)}><Text>取消</Text></View>
+              <View className={"btn-save" + (saving ? " disabled" : "")} onClick={() => !saving && handleSave()}><Text>{editId ? "保存" : "添加"}</Text></View>
+            </View>
+          </View>
+        </View>
+      )}
+
+      {/* ---- Domain Manager Modal ---- */}
+      {showDomainManager && (
+        <View className="modal-mask" onClick={() => setShowDomainManager(false)}>
+          <View className="modal" onClick={(e) => e.stopPropagation()}>
+            <View className="domain-manager-accent" />
+
+            {/* List View */}
+            {domainManagerView === "list" && (
+              <>
+                <View className="modal-header-row">
+                  <Text className="modal-title">管理分类</Text>
+                  <Text className="modal-add-btn" onClick={openNewDomain}>+ 新增</Text>
+                </View>
+
+                {domains.map((domain) => {
+                  const isSystem = domain.name === UNCATEGORIZED.name;
+                  return (
+                    <View key={domain.name} className="domain-item">
+                      <View className="domain-item-bar" style={{ backgroundColor: domain.color }} />
+                      <Text className="domain-item-icon">{domain.icon}</Text>
+                      <Text className="domain-item-name">{domain.name}</Text>
+                      {isSystem ? (
+                        <Text className="domain-item-tag">系统</Text>
+                      ) : (
+                        <View className="domain-item-actions">
+                          <View className="domain-item-action edit" onClick={() => openEditDomain(domain)}>
+                            <Text>&#9998;</Text>
+                          </View>
+                          <View className={`domain-item-action delete${saving ? " disabled" : ""}`} onClick={() => !saving && handleDeleteDomain(domain)}>
+                            <Text>&#10005;</Text>
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  );
+                })}
+
+                <View className="domain-close-btn" onClick={() => setShowDomainManager(false)}>
+                  <Text>关闭</Text>
+                </View>
+              </>
+            )}
+
+            {/* New / Edit Form View */}
+            {(domainManagerView === "new" || domainManagerView === "edit") && (
+              <>
+                <Text className="modal-title">{domainManagerView === "new" ? "新增分类" : "编辑分类"}</Text>
+
+                <View className="form-group">
+                  <Text className="form-label">名称</Text>
+                  <Input
+                    className="form-input"
+                    placeholder="分类名称"
+                    value={domainForm.name}
+                    onInput={(e) => setDomainForm({ ...domainForm, name: e.detail.value })}
+                  />
+                </View>
+
+                <View className="form-section">
+                  <Text className="form-section-title">图标</Text>
+                  <View className="emoji-picker-rows">
+                    <View className="emoji-row">
+                      {EMOJI_OPTIONS.slice(0, 12).map((emoji) => (
+                        <View
+                          key={emoji}
+                          className={`emoji-pill ${domainForm.icon === emoji ? "selected" : ""}`}
+                          onClick={() => setDomainForm({ ...domainForm, icon: emoji })}
+                        >
+                          <Text>{emoji}</Text>
+                        </View>
+                      ))}
+                    </View>
+                    <View className="emoji-row">
+                      {EMOJI_OPTIONS.slice(12).map((emoji) => (
+                        <View
+                          key={emoji}
+                          className={`emoji-pill ${domainForm.icon === emoji ? "selected" : ""}`}
+                          onClick={() => setDomainForm({ ...domainForm, icon: emoji })}
+                        >
+                          <Text>{emoji}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                </View>
+
+                <View className="form-section">
+                  <Text className="form-section-title">颜色</Text>
+                  <View className="color-picker-grid">
+                    {COLOR_OPTIONS.map((color) => (
+                      <View
+                        key={color}
+                        className={`color-swatch ${domainForm.color === color ? "selected" : ""}`}
+                        onClick={() => setDomainForm({ ...domainForm, color })}
+                      >
+                        <View className="color-swatch-inner" style={{ backgroundColor: color }} />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+
+                <View className="form-buttons">
+                  <View className="btn-cancel" onClick={() => setDomainManagerView("list")}><Text>取消</Text></View>
+                  <View className={"btn-save" + (saving ? " disabled" : "")} onClick={() => !saving && handleDomainSave()}><Text>保存</Text></View>
+                </View>
+              </>
+            )}
+
+          </View>
+        </View>
+      )}
+    </View>
+  );
+}

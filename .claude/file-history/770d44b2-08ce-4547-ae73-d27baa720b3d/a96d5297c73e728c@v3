@@ -1,0 +1,141 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { formatDate, getToday, PRESET_DOMAINS } from "@/lib/utils";
+import { apiFetch } from "@/lib/api";
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
+} from "recharts";
+import { TrendingUp, Award, Target, Calendar } from "lucide-react";
+
+interface HabitWithLogs {
+  id: string;
+  title: string;
+  domainId: string;
+  logs: { date: string; completed: boolean }[];
+}
+
+export default function StatsPage() {
+  const [habits, setHabits] = useState<HabitWithLogs[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState<"week" | "month">("week");
+
+  useEffect(() => { fetchStats(); }, [range]);
+
+  async function fetchStats() {
+    const data = await apiFetch(`/api/stats?range=${range}`);
+    setHabits(data.habits || []);
+    setLoading(false);
+  }
+
+  if (loading) return <div className="flex items-center justify-center h-64 text-muted-foreground">加载中...</div>;
+
+  const totalChecks = habits.reduce((sum, h) => sum + h.logs.filter((l) => l.completed).length, 0);
+  const totalPossible = habits.length * (range === "week" ? 7 : 30);
+  const overallRate = totalPossible > 0 ? Math.round((totalChecks / totalPossible) * 100) : 0;
+
+  // Domain completion rates
+  const domainStats = PRESET_DOMAINS.map((d) => {
+    const domainHabits = habits.filter((h) => h.domainId === d.name);
+    const completed = domainHabits.reduce((sum, h) => sum + h.logs.filter((l) => l.completed).length, 0);
+    const possible = domainHabits.length * (range === "week" ? 7 : 30);
+    return { name: d.name, icon: d.icon, rate: possible > 0 ? Math.round((completed / possible) * 100) : 0, color: d.color };
+  }).filter((d) => d.rate > 0);
+
+  // Weekly bar data
+  const days = range === "week" ? 7 : 30;
+  const barData = Array.from({ length: days }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (days - 1 - i));
+    const dateStr = d.toISOString().split("T")[0];
+    const completed = habits.filter((h) => h.logs.some((l) => l.date === dateStr && l.completed)).length;
+    return {
+      date: d.toLocaleDateString("zh-CN", { month: "short", day: "numeric" }),
+      completed,
+      total: habits.length,
+    };
+  });
+
+  const streakDays = calculateStreak(habits);
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">数据统计</h1>
+        <p className="text-sm text-muted-foreground mt-1">看见进步，持续精进</p>
+      </div>
+
+      {/* Range Toggle */}
+      <div className="flex gap-2">
+        <button onClick={() => setRange("week")} className={`px-4 py-2 rounded-xl text-sm font-medium ${range === "week" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>本周</button>
+        <button onClick={() => setRange("month")} className={`px-4 py-2 rounded-xl text-sm font-medium ${range === "month" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>本月</button>
+      </div>
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="bg-card rounded-xl border p-4 text-center">
+          <p className="text-3xl font-bold">{overallRate}%</p>
+          <p className="text-xs text-muted-foreground mt-1">总完成率</p>
+        </div>
+        <div className="bg-card rounded-xl border p-4 text-center">
+          <p className="text-3xl font-bold">{totalChecks}</p>
+          <p className="text-xs text-muted-foreground mt-1">总打卡数</p>
+        </div>
+        <div className="bg-card rounded-xl border p-4 text-center">
+          <p className="text-3xl font-bold">{streakDays}</p>
+          <p className="text-xs text-muted-foreground mt-1">连续天数</p>
+        </div>
+        <div className="bg-card rounded-xl border p-4 text-center">
+          <p className="text-3xl font-bold">{habits.length}</p>
+          <p className="text-xs text-muted-foreground mt-1">活跃习惯</p>
+        </div>
+      </div>
+
+      {/* Bar Chart */}
+      <div className="bg-card rounded-2xl border p-6">
+        <h2 className="font-semibold mb-4">每日完成趋势</h2>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={barData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey="date" tick={{ fontSize: 12, fill: "var(--muted-fg)" }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "var(--muted-fg)" }} />
+            <Tooltip />
+            <Bar dataKey="completed" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Radar Chart */}
+      {domainStats.length > 0 && (
+        <div className="bg-card rounded-2xl border p-6">
+          <h2 className="font-semibold mb-4">领域均衡度</h2>
+          <ResponsiveContainer width="100%" height={280}>
+            <RadarChart data={domainStats}>
+              <PolarGrid stroke="var(--border)" />
+              <PolarAngleAxis dataKey="name" tick={{ fontSize: 12, fill: "var(--muted-fg)" }} />
+              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+              <Radar dataKey="rate" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.15} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function calculateStreak(habits: HabitWithLogs[]): number {
+  if (habits.length === 0) return 0;
+  const allDates = new Set<string>();
+  habits.forEach((h) => h.logs.filter((l) => l.completed).forEach((l) => allDates.add(l.date)));
+  const sorted = [...allDates].sort().reverse();
+  let streak = 0;
+  const today = new Date(getToday());
+  for (let i = 0; i < sorted.length; i++) {
+    const expected = new Date(today);
+    expected.setDate(expected.getDate() - i);
+    if (sorted[i] === expected.toISOString().split("T")[0]) streak++;
+    else break;
+  }
+  return streak;
+}

@@ -1,0 +1,22 @@
+import { NextRequest, NextResponse } from "next/server";
+import { store } from "@/lib/store";
+
+export async function GET() {
+  const profile = store.profiles.get("demo") || null;
+  const inputs = store.personalInputs.filter((p: any) => p.userId === "demo");
+  return NextResponse.json({ profile, inputs });
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const profile = {
+    userId: "demo",
+    name: body.name,
+    goals: body.goals || [],
+    preferences: { customPrompt: body.customPrompt || "" },
+    wakeTime: body.wakeTime,
+    sleepTime: body.sleepTime,
+  };
+  store.profiles.set("demo", profile);
+  return NextResponse.json(profile);
+}

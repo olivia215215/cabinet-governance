@@ -1,0 +1,30 @@
+import { NextRequest, NextResponse } from "next/server";
+import { store } from "@/lib/store";
+
+export async function POST(req: NextRequest) {
+  const { habitId, date, value, note, mood } = await req.json();
+
+  const existingIdx = store.habitLogs.findIndex(
+    (l: any) => l.habitId === habitId && l.date === date
+  );
+
+  if (existingIdx !== -1) {
+    // Toggle: if completed, uncheck; if not, check
+    store.habitLogs[existingIdx].completed = !store.habitLogs[existingIdx].completed;
+    return NextResponse.json(store.habitLogs[existingIdx]);
+  }
+
+  const log = {
+    id: crypto.randomUUID(),
+    habitId,
+    userId: "demo",
+    date,
+    value: value || 1,
+    completed: true,
+    note: note || null,
+    mood: mood || null,
+    createdAt: new Date().toISOString(),
+  };
+  store.habitLogs.push(log);
+  return NextResponse.json(log);
+}

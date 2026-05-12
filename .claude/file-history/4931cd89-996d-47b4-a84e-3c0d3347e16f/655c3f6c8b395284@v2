@@ -1,0 +1,13 @@
+{
+  "name": "天子日课 — 每日自我提升",
+  "short_name": "天子日课",
+  "description": "健身、读书、变美、工作、学习，日日精进",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f6",
+  "theme_color": "#1c1917",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

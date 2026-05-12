@@ -1,0 +1,8 @@
+# Ignore everything in home directory
+/*
+
+# Except Claude/Codex configuration
+!/.claude/
+!/.codex/
+!/CLAUDE.md
+!/.gitignore

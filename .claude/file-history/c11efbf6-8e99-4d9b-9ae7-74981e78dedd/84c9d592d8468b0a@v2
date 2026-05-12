@@ -1,0 +1,122 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { PRESET_DOMAINS } from "@/lib/utils";
+import { User, Target, Moon, Sun, Save } from "lucide-react";
+
+export default function ProfilePage() {
+  const [profile, setProfile] = useState({
+    name: "", goals: "", wakeTime: "07:00", sleepTime: "23:00", customPrompt: "",
+  });
+  const [personalInputs, setPersonalInputs] = useState<{ category: string; content: string }[]>([]);
+  const [newInput, setNewInput] = useState({ category: "习惯", content: "" });
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/profile").then((r) => r.json()).then((data) => {
+      if (data.profile) {
+        setProfile({
+          name: data.profile.name || "",
+          goals: Array.isArray(data.profile.goals) ? data.profile.goals.join("\n") : "",
+          wakeTime: data.profile.wakeTime || "07:00",
+          sleepTime: data.profile.sleepTime || "23:00",
+          customPrompt: data.profile.preferences?.customPrompt || "",
+        });
+      }
+      if (data.inputs) setPersonalInputs(data.inputs);
+    });
+  }, []);
+
+  async function saveProfile() {
+    await fetch("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: profile.name,
+        goals: profile.goals.split("\n").filter((g) => g.trim()),
+        wakeTime: profile.wakeTime,
+        sleepTime: profile.sleepTime,
+        customPrompt: profile.customPrompt,
+      }),
+    });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  async function addInput() {
+    if (!newInput.content.trim()) return;
+    await fetch("/api/profile/input", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newInput),
+    });
+    setPersonalInputs([...personalInputs, newInput]);
+    setNewInput({ category: "习惯", content: "" });
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">个人设置</h1>
+        <p className="text-sm text-muted-foreground mt-1">越了解你，越能精准辅助</p>
+      </div>
+
+      {/* Basic Info */}
+      <div className="bg-card rounded-2xl border p-6 space-y-4">
+        <h2 className="font-semibold flex items-center gap-2"><User className="w-4 h-4" /> 基本信息</h2>
+        <div>
+          <label className="text-sm font-medium">你的名字/称号</label>
+          <input className="w-full mt-1 px-3 py-2.5 rounded-xl border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/20" placeholder="朕 / 陛下" value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-medium flex items-center gap-1"><Sun className="w-3 h-3" /> 起床时间</label>
+            <input type="time" className="w-full mt-1 px-3 py-2.5 rounded-xl border bg-background text-sm outline-none" value={profile.wakeTime} onChange={(e) => setProfile({ ...profile, wakeTime: e.target.value })} />
+          </div>
+          <div>
+            <label className="text-sm font-medium flex items-center gap-1"><Moon className="w-3 h-3" /> 睡觉时间</label>
+            <input type="time" className="w-full mt-1 px-3 py-2.5 rounded-xl border bg-background text-sm outline-none" value={profile.sleepTime} onChange={(e) => setProfile({ ...profile, sleepTime: e.target.value })} />
+          </div>
+        </div>
+      </div>
+
+      {/* Goals */}
+      <div className="bg-card rounded-2xl border p-6 space-y-4">
+        <h2 className="font-semibold flex items-center gap-2"><Target className="w-4 h-4" /> 你的目标</h2>
+        <p className="text-xs text-muted-foreground">每行一个目标，AI 会围绕这些目标做推荐</p>
+        <textarea className="w-full mt-1 px-3 py-2.5 rounded-xl border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/20 min-h-[120px]" placeholder={"提升商业分析能力\n养成运动习惯\n扩大社交圈\n..."} value={profile.goals} onChange={(e) => setProfile({ ...profile, goals: e.target.value })} />
+      </div>
+
+      {/* AI Customization */}
+      <div className="bg-card rounded-2xl border p-6 space-y-4">
+        <h2 className="font-semibold">AI 个性化提示词</h2>
+        <p className="text-xs text-muted-foreground">告诉 AI 你的沟通偏好、关注重点、角色设定</p>
+        <textarea className="w-full mt-1 px-3 py-2.5 rounded-xl border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/20 min-h-[80px]" placeholder={"用「陛下」称呼我\n关注商业和管理领域\n多推荐前沿科技内容\n风格简洁直接"} value={profile.customPrompt} onChange={(e) => setProfile({ ...profile, customPrompt: e.target.value })} />
+      </div>
+
+      <button onClick={saveProfile} className="w-full flex items-center justify-center gap-2 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-all">
+        {saved ? "已保存 ✓" : <><Save className="w-4 h-4" /> 保存设置</>}
+      </button>
+
+      {/* Personalization Inputs */}
+      <div className="bg-card rounded-2xl border p-6 space-y-4">
+        <h2 className="font-semibold">个性化需求</h2>
+        <p className="text-xs text-muted-foreground">告诉 AI 你的特定需求，让它更懂你</p>
+        {personalInputs.map((pi, i) => (
+          <div key={i} className="flex gap-2 p-3 rounded-xl bg-muted">
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">{pi.category}</span>
+            <span className="text-sm">{pi.content}</span>
+          </div>
+        ))}
+        <div className="flex gap-2">
+          <select className="px-3 py-2 rounded-xl border bg-background text-sm" value={newInput.category} onChange={(e) => setNewInput({ ...newInput, category: e.target.value })}>
+            {PRESET_DOMAINS.map((d) => <option key={d.name} value={d.name}>{d.name}</option>)}
+            <option value="其他">其他</option>
+          </select>
+          <input className="flex-1 px-3 py-2 rounded-xl border bg-background text-sm outline-none" placeholder="描述你的个性化需求..." value={newInput.content} onChange={(e) => setNewInput({ ...newInput, content: e.target.value })} onKeyDown={(e) => e.key === "Enter" && addInput()} />
+          <button onClick={addInput} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium">添加</button>
+        </div>
+      </div>
+    </div>
+  );
+}

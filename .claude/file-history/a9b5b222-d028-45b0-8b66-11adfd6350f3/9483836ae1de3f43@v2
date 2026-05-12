@@ -1,0 +1,57 @@
+import Taro from "@tarojs/taro";
+import { PRESET_DOMAINS } from "./utils";
+
+export interface Domain {
+  name: string;
+  icon: string;
+  color: string;
+}
+
+export const UNCATEGORIZED: Domain = {
+  name: "未分类",
+  icon: "📦",
+  color: "#78716c",
+};
+
+const STORAGE_KEY = "custom_domains";
+
+export function getDomains(): Domain[] {
+  const merged: Domain[] = [...PRESET_DOMAINS];
+  try {
+    const raw = Taro.getStorageSync(STORAGE_KEY);
+    if (raw) {
+      const custom: Domain[] = JSON.parse(raw);
+      for (const d of custom) {
+        if (!merged.find((m) => m.name === d.name)) {
+          merged.push(d);
+        }
+      }
+    }
+  } catch (_) {
+    // storage 为空或解析失败，使用默认
+  }
+  merged.push(UNCATEGORIZED);
+  return merged;
+}
+
+export function saveDomains(domains: Domain[]): void {
+  const custom = domains.filter(
+    (d) =>
+      d.name !== UNCATEGORIZED.name &&
+      !PRESET_DOMAINS.find((p) => p.name === d.name)
+  );
+  try {
+    Taro.setStorageSync(STORAGE_KEY, JSON.stringify(custom));
+  } catch (_) {
+    // QuotaExceededError 等，静默失败
+  }
+}
+
+export function resetDomains(): Domain[] {
+  try {
+    Taro.removeStorageSync(STORAGE_KEY);
+  } catch (_) {
+    // 忽略
+  }
+  return getDomains();
+}

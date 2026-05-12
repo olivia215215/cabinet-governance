@@ -1,0 +1,18 @@
+import Anthropic from "@anthropic-ai/sdk";
+
+const anthropic = new Anthropic({
+  apiKey: process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY,
+});
+
+export async function getAIRecommendation(prompt: string): Promise<string> {
+  const msg = await anthropic.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    system:
+      "你是一位专业的个人成长教练。回复简洁有力，风格如帝王侍读。每段不超过3句话。",
+    messages: [{ role: "user", content: prompt }],
+  });
+  const block = msg.content[0];
+  if (block.type === "text") return block.text;
+  return "";
+}

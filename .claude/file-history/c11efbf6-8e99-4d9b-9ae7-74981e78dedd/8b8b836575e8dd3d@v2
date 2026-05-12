@@ -1,0 +1,16 @@
+import Taro from "@tarojs/taro";
+
+const API_BASE = process.env.TARO_APP_API_BASE || "http://172.16.184.119:3456";
+
+export async function apiFetch(path: string, options?: RequestInit) {
+  const url = `${API_BASE}${path}`;
+  const res = await Taro.request({
+    url,
+    method: (options?.method as any) || "GET",
+    data: options?.body ? JSON.parse(options.body as string) : undefined,
+    header: { "Content-Type": "application/json" },
+    timeout: 15000,
+  });
+  if (res.statusCode >= 400) throw new Error(`API error: ${res.statusCode}`);
+  return res.data;
+}

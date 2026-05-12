@@ -1,0 +1,15 @@
+---
+name: prevent-project-pollution
+description: 项目目录防污染——新文件必须及时commit，项目需有身份标记，多项目严禁混在同一目录
+type: feedback
+originSessionId: c11efbf6-8e99-4d9b-9ae7-74981e78dedd
+---
+**铁律**：新建文件当即 commit，不得延后。项目目录必须能自我标识。
+
+**Why:** 天子日课项目被另一个 IT 资产管理系统污染——50+ 文件混入同一目录，原有 API 路由被删除、核心文件被覆盖。恢复时 `git checkout HEAD` 只能恢复已提交的文件，`domains.ts` 和 `reminder-card` 两个从未 commit 的新文件永久丢失，需重建。
+
+**How to apply:**
+1. 任何新建文件（组件、lib、API 路由），写完当即 `git add` + `git commit`，不等"全部改完再说"
+2. 项目根目录 README 第一行写项目名，防止脚手架命令跑错目录
+3. 不同项目分不同目录，绝不在同一个 git 仓库里混
+4. 遇到 `git status` 出现大量 `??` 和 `D` 时，先停手排查，不要盲目 checkout

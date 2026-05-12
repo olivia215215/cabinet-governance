@@ -1,0 +1,31 @@
+const DEEPSEEK_BASE = "https://api.deepseek.com/chat/completions";
+const API_KEY = process.env.CLAUDE_API_KEY || "";
+
+export async function getAIRecommendation(prompt: string): Promise<string> {
+  if (!API_KEY) throw new Error("API key not configured");
+
+  const res = await fetch(DEEPSEEK_BASE, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "deepseek-chat",
+      messages: [
+        { role: "system", content: "你是一位专业的个人成长教练。回复简洁有力，风格如帝王侍读。每段不超过3句话。" },
+        { role: "user", content: prompt },
+      ],
+      max_tokens: 1024,
+      temperature: 0.7,
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`DeepSeek API error ${res.status}: ${errText}`);
+  }
+
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || "";
+}

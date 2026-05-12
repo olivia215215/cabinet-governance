@@ -1,0 +1,9 @@
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.tianzi.rike',
+  appName: '天子日课',
+  webDir: 'out'
+};
+
+export default config;

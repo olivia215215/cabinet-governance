@@ -1,0 +1,7 @@
+# Database (set up Supabase project at https://supabase.com)
+DATABASE_URL="postgresql://postgres:password@localhost:54322/tianzi-rike"
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+
+# Claude API (set your API key)
+CLAUDE_API_KEY=""

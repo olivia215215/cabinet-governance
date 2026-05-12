@@ -1,0 +1,43 @@
+// In-memory store — swap for Supabase/Prisma when database is ready
+// Data persists to a global object during dev server lifetime
+// In production, replace with actual database calls
+
+const globalStore = globalThis as unknown as {
+  habits: any[];
+  habitLogs: any[];
+  dailyReviews: any[];
+  profiles: Map<string, any>;
+  personalInputs: any[];
+};
+
+if (!globalStore.habits) globalStore.habits = [];
+if (!globalStore.habitLogs) globalStore.habitLogs = [];
+if (!globalStore.dailyReviews) globalStore.dailyReviews = [];
+if (!globalStore.profiles) globalStore.profiles = new Map();
+if (!globalStore.personalInputs) globalStore.personalInputs = [];
+
+// Seed preset domains as habits for demo purposes
+if (globalStore.habits.length === 0) {
+  const seedHabits = [
+    { domainId: "健身", title: "晨跑 30 分钟", description: "公园慢跑，心率保持在130-150", unit: "分钟", targetValue: 30, frequency: "daily" },
+    { domainId: "健身", title: "睡前拉伸", description: "全身拉伸10分钟，改善柔韧性", unit: "分钟", targetValue: 10, frequency: "daily" },
+    { domainId: "读书", title: "阅读 30 分钟", description: "纸质书优先，做简短笔记", unit: "分钟", targetValue: 30, frequency: "daily" },
+    { domainId: "变美", title: "护肤流程", description: "洁面-精华-面霜-防晒（白天）", unit: "次", targetValue: 1, frequency: "daily" },
+    { domainId: "工作", title: "深度工作 2 小时", description: "手机勿扰模式，专注核心任务", unit: "小时", targetValue: 2, frequency: "weekday" },
+    { domainId: "学习", title: "学习新技能 45 分钟", description: "在线课程或实践项目", unit: "分钟", targetValue: 45, frequency: "daily" },
+    { domainId: "商业思维", title: "商业案例分析", description: "每天分析一个商业案例或新闻", unit: "个", targetValue: 1, frequency: "daily" },
+    { domainId: "视野", title: "阅读行业报告", description: "浏览科技/商业前沿动态", unit: "篇", targetValue: 1, frequency: "daily" },
+    { domainId: "生活习惯", title: "早睡早起", description: "23:00前躺下，不碰手机", unit: "次", targetValue: 1, frequency: "daily" },
+  ];
+  seedHabits.forEach((h) => {
+    globalStore.habits.push({ id: crypto.randomUUID(), userId: "demo", ...h, isActive: true, reminderTime: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+  });
+}
+
+export const store = {
+  habits: globalStore.habits,
+  habitLogs: globalStore.habitLogs,
+  dailyReviews: globalStore.dailyReviews,
+  profiles: globalStore.profiles,
+  personalInputs: globalStore.personalInputs,
+};

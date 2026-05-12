@@ -1,0 +1,45 @@
+import { NextRequest, NextResponse } from "next/server";
+import { store } from "@/lib/store";
+
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const date = searchParams.get("date");
+
+  const habits = store.habits.map((h) => {
+    const log = date
+      ? store.habitLogs.find((l: any) => l.habitId === h.id && l.date === date)
+      : undefined;
+    return { ...h, logs: log ? [log] : [] };
+  });
+
+  return NextResponse.json(habits);
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const habit = {
+    id: crypto.randomUUID(),
+    userId: "demo",
+    ...body,
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  store.habits.push(habit);
+  return NextResponse.json(habit);
+}
+
+export async function PUT(req: NextRequest) {
+  const { id, ...updates } = await req.json();
+  const idx = store.habits.findIndex((h: any) => h.id === id);
+  if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  store.habits[idx] = { ...store.habits[idx], ...updates, updatedAt: new Date().toISOString() };
+  return NextResponse.json(store.habits[idx]);
+}
+
+export async function DELETE(req: NextRequest) {
+  const { id } = await req.json();
+  store.habits = store.habits.filter((h: any) => h.id !== id);
+  store.habitLogs = store.habitLogs.filter((l: any) => l.habitId !== id);
+  return NextResponse.json({ ok: true });
+}

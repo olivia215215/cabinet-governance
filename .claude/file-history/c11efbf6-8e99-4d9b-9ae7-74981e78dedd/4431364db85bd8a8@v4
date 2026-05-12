@@ -1,0 +1,10 @@
+# API Base URL — change to Vercel URL in production
+NEXT_PUBLIC_API_URL=http://localhost:3456
+
+# Database (set up Supabase project at https://supabase.com)
+DATABASE_URL="postgresql://postgres:password@localhost:54322/tianzi-rike"
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+
+# Claude API (set your API key to enable AI features)
+CLAUDE_API_KEY="sk-6a23f15727ae4059b1c425ec0707e4ff"

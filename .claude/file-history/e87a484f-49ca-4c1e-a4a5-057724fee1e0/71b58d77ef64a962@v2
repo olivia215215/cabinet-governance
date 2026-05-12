@@ -1,0 +1,65 @@
+import { jwtVerify } from "jose";
+import type { NextRequest } from "next/server";
+
+export interface AuthUser {
+  userId: string;
+  role: "EMPLOYEE" | "MANAGER" | "IT_ADMIN" | "EXECUTIVE";
+  deptId: string;
+}
+
+function getSecret(): Uint8Array {
+  return new TextEncoder().encode(
+    process.env.AUTH_SECRET || "dev-secret-change-in-production"
+  );
+}
+
+export class AuthError extends Error {
+  constructor(
+    message: string,
+    public statusCode: number = 401
+  ) {
+    super(message);
+    this.name = "AuthError";
+  }
+}
+
+export async function verifyAuth(request: NextRequest): Promise<AuthUser> {
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    throw new AuthError("Missing or invalid authorization header", 401);
+  }
+  const token = authHeader.slice(7);
+  try {
+    const { payload } = await jwtVerify(token, getSecret());
+    const role = payload.role as string;
+    if (!["EMPLOYEE", "MANAGER", "IT_ADMIN", "EXECUTIVE"].includes(role)) {
+      throw new AuthError("Invalid role in token", 401);
+    }
+    return {
+      userId: payload.sub as string,
+      role: role as AuthUser["role"],
+      deptId: payload.deptId as string,
+    };
+  } catch (e) {
+    if (e instanceof AuthError) throw e;
+    throw new AuthError("Invalid or expired token", 401);
+  }
+}
+
+export function requireRole(
+  user: AuthUser,
+  ...roles: AuthUser["role"][]
+): void {
+  if (!roles.includes(user.role)) {
+    throw new AuthError("Insufficient permissions", 403);
+  }
+}
+
+export function requireOneOf(
+  user: AuthUser,
+  ...roles: AuthUser["role"][]
+): void {
+  if (!roles.includes(user.role)) {
+    throw new AuthError("Insufficient permissions", 403);
+  }
+}

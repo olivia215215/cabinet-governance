@@ -1,0 +1,544 @@
+
+[38;5;250m███████╗██╗  ██╗██╗██╗     ██╗     ███████╗[0m
+[38;5;248m██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝[0m
+[38;5;245m███████╗█████╔╝ ██║██║     ██║     ███████╗[0m
+[38;5;243m╚════██║██╔═██╗ ██║██║     ██║     ╚════██║[0m
+[38;5;240m███████║██║  ██╗██║███████╗███████╗███████║[0m
+[38;5;238m╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝[0m
+
+┌   skills 
+│
+│  Tip: use the --yes (-y) and --global (-g) flags to install without prompts.
+[?25l│
+◇  Source: https://github.com/Donchitos/Claude-Code-Game-Studios.git
+[?25h[?25l│
+◒  Cloning repository[999D[J◐  Cloning repository[999D[J◓  Cloning repository[999D[J◑  Cloning repository[999D[J◒  Cloning repository[999D[J◐  Cloning repository[999D[J◓  Cloning repository[999D[J◑  Cloning repository[999D[J◒  Cloning repository.[999D[J◐  Cloning repository.[999D[J◓  Cloning repository.[999D[J◑  Cloning repository.[999D[J◒  Cloning repository.[999D[J◐  Cloning repository.[999D[J◓  Cloning repository.[999D[J◑  Cloning repository.[999D[J◒  Cloning repository..[999D[J◐  Cloning repository..[999D[J◓  Cloning repository..[999D[J◑  Cloning repository..[999D[J◒  Cloning repository..[999D[J◐  Cloning repository..[999D[J◓  Cloning repository..[999D[J◑  Cloning repository..[999D[J◒  Cloning repository...[999D[J◐  Cloning repository...[999D[J◓  Cloning repository...[999D[J◑  Cloning repository...[999D[J◒  Cloning repository...[999D[J◐  Cloning repository...[999D[J◓  Cloning repository...[999D[J◑  Cloning repository...[999D[J◒  Cloning repository...[999D[J◐  Cloning repository[999D[J◓  Cloning repository[999D[J◑  Cloning repository[999D[J◒  Cloning repository[999D[J◐  Cloning repository[999D[J◇  Repository cloned
+[?25h[?25l│
+[999D[J◇  Found 72 skills
+[?25h│
+●  Installing all 72 skills
+[?25l│
+[999D[J◇  55 agents
+[?25h│
+●  Installing to: Antigravity, Claude Code, OpenClaw, Codex, Cursor, Gemini CLI
+
+│
+◇  Installation Summary ─────────────────────────────────────────────╮
+│                                                                    │
+│  ~/.agents/skills/adopt                                            │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/architecture-decision                            │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/architecture-review                              │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/art-bible                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/asset-audit                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/asset-spec                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/balance-check                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/brainstorm                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/bug-report                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/bug-triage                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/changelog                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/code-review                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/consistency-check                                │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/content-audit                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/create-architecture                              │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/create-control-manifest                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/create-epics                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/create-stories                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/day-one-patch                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/design-review                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/design-system                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/dev-story                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/estimate                                         │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/gate-check                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/help                                             │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/hotfix                                           │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/launch-checklist                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/localize                                         │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/map-systems                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/milestone-review                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/onboard                                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/patch-notes                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/perf-profile                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/playtest-report                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/project-stage-detect                             │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/propagate-design-change                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/prototype                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/qa-plan                                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/quick-design                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/regression-suite                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/release-checklist                                │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/retrospective                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/reverse-document                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/review-all-gdds                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/scope-check                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/security-audit                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/setup-engine                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/skill-improve                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/skill-test                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/smoke-check                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/soak-test                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/sprint-plan                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/sprint-status                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/start                                            │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/story-done                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/story-readiness                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-audio                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-combat                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-level                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-live-ops                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-narrative                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-polish                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-qa                                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-release                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/team-ui                                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/tech-debt                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/test-evidence-review                             │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/test-flakiness                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/test-helpers                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/test-setup                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/ux-design                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+│  ~/.agents/skills/ux-review                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlink → Claude Code, OpenClaw                                 │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────╯
+[?25l│
+[999D[J◒  Installing skills[999D[J◐  Installing skills[999D[J◓  Installing skills[999D[J◑  Installing skills[999D[J◒  Installing skills[999D[J◐  Installing skills[999D[J◓  Installing skills[999D[J◑  Installing skills[999D[J◒  Installing skills.[999D[J◐  Installing skills.[999D[J◇  Installation complete
+[?25h
+│
+◇  Installed 72 skills ──────────────────────────────────────────────╮
+│                                                                    │
+│  ✓ ~/.agents/skills/adopt                                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/architecture-decision                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/architecture-review                            │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/art-bible                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/asset-audit                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/asset-spec                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/balance-check                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/brainstorm                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/bug-report                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/bug-triage                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/changelog                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/code-review                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/consistency-check                              │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/content-audit                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/create-architecture                            │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/create-control-manifest                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/create-epics                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/create-stories                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/day-one-patch                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/design-review                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/design-system                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/dev-story                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/estimate                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/gate-check                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/help                                           │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/hotfix                                         │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/launch-checklist                               │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/localize                                       │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/map-systems                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/milestone-review                               │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/onboard                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/patch-notes                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/perf-profile                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/playtest-report                                │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/project-stage-detect                           │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/propagate-design-change                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/prototype                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/qa-plan                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/quick-design                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/regression-suite                               │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/release-checklist                              │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/retrospective                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/reverse-document                               │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/review-all-gdds                                │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/scope-check                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/security-audit                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/setup-engine                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/skill-improve                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/skill-test                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/smoke-check                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/soak-test                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/sprint-plan                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/sprint-status                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/start                                          │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/story-done                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/story-readiness                                │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-audio                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-combat                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-level                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-live-ops                                  │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-narrative                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-polish                                    │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-qa                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-release                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/team-ui                                        │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/tech-debt                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/test-evidence-review                           │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/test-flakiness                                 │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/test-helpers                                   │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/test-setup                                     │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/ux-design                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│  ✓ ~/.agents/skills/ux-review                                      │
+│    universal: Antigravity, Codex, Cursor, Gemini CLI, Amp +8 more  │
+│    symlinked: Claude Code, OpenClaw                                │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────╯
+
+│
+└  Done!  Review skills before use; they run with full agent permissions.
+

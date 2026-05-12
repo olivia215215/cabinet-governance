@@ -1,0 +1,133 @@
+# IT 资产管理系统 — 实施计划
+
+## 背景
+
+- **仓库**: `https://github.com/olivia215215/it-asset` (空仓库，已 clone 到 `/Users/admin/it-asset`)
+- **目标**: AI IT 资产与设备流转管理系统，4 角色（Employee/Manager/IT Admin/Executive），全生命周期管理
+- **交付**: Docker Compose，PostgreSQL 16，DeepSeek V4 Flash AI
+- **教训**: 每次 Phase 结束必须 `git commit`，绝不再丢代码
+
+---
+
+## Phase 0: 地基（派 大匠 + 都督，并行）
+
+### 0.1 项目初始化
+- `npx create-next-app@latest` — TypeScript, Tailwind, App Router, no-src-dir
+- 安装依赖: `prisma`, `@prisma/client`, `jose`, `bcryptjs`, `lucide-react`, `recharts`, `shadcn/ui`
+
+### 0.2 Prisma Schema
+- 9 张表 + 9 个枚举（复用上轮完整 schema）
+- `datasource.url = env("DATABASE_URL")`
+
+### 0.3 认证体系 (lib/auth.ts + API routes)
+- `lib/auth.ts`: `verifyAuth()`, `AuthUser`, `requireOneOf()`
+- `app/api/auth/login/route.ts`: POST, jose SignJWT, 24h expiry
+- `app/api/auth/logout/route.ts`: POST
+- `app/api/auth/session/route.ts`: GET, jwtVerify
+
+### 0.4 Seed (prisma/seed.ts)
+- 3 部门 + 6 用户 + 3 型号 + 10 资产实例 + 4 工单 + 3 通知
+- 幂等（skipDuplicates），FK 顺序正确
+
+### 0.5 Docker
+- Dockerfile (node:22-alpine, prisma generate + build)
+- docker-compose.yml (app + postgres:16)
+- docker-entrypoint.sh (PG 等待 → prisma db push → seed → 启动)
+- .env.example
+
+### 0.6 Test Reset
+- `app/api/test/reset/route.ts`: POST, NODE_ENV check, deleteMany + re-seed
+
+**验收**: `docker-compose up` 启动成功，6 个账户可登录
+**大臣**: 大匠（代码）+ 都督（Docker）并行
+**提交**: `git commit -m "Phase 0: schema + auth + seed + docker"`
+
+---
+
+## Phase 1: 核心业务（派 大匠）
+
+### 1.1 Lib 层
+- `lib/asset-state-machine.ts`: 10 状态白名单转移矩阵，LOST→自动取消工单
+- `lib/ticket-workflow.ts`: 四类工单审批链，跳过规则，deputy 代审批
+- `lib/audit.ts`: createAuditLog, logAssetStatusChange, logTicketStatusChange
+- `lib/dto.ts`: sanitizeAssetModel/Instance 按角色过滤敏感字段
+- `lib/notifications.ts`: createNotification, notifyApprovalRequest, notifyApprovalResult
+
+### 1.2 API Routes（23 个）
+- 工单提交: apply, return, repair, transfer
+- 工单操作: approve, reject, cancel, assign, accept, confirm, complete
+- 工单查询: list, detail, IT workbench
+- 审批: pending, history
+- 资产: mine, detail, IT list, IT detail, timeline, inbound, scrap, lost
+
+**验收**: 所有 API 通过 curl 测试
+**大臣**: 大匠
+**提交**: `git commit -m "Phase 1: core business logic + 23 API routes"`
+
+---
+
+## Phase 2: AI 集成（派 大匠）
+
+### 2.1 Lib 层
+- `lib/ai/client.ts`: callDeepSeek<T>, 5000ms AbortController 超时
+- `lib/ai/triage.ts`: enforceTriageRules 硬规则
+- `lib/ai/confirmation-token.ts`: 一次性 JWT，5 分钟过期
+- `lib/ai/with-fallback.ts`: withAiFallback 降级包装
+
+### 2.2 API Routes
+- `app/api/ai/recommend/route.ts`: 设备推荐，Chinese Prompt
+- `app/api/ai/triage/route.ts`: 故障分诊 + 后处理规则
+- `app/api/ai/chat/route.ts`: 对话助手 + 意图分类 + Token 确认
+
+**验收**: 三个 AI 端点可调用，降级正常
+**大臣**: 大匠
+**提交**: `git commit -m "Phase 2: AI integration"`
+
+---
+
+## Phase 3: 前端（派 画院 + 大匠，并行）
+
+### 3.1 通用层（画院）
+- shadcn/ui 组件: avatar, badge, button, card, dialog, dropdown-menu, input, scroll-area, separator, sheet, skeleton, textarea
+- 布局: app-layout, sidebar (22 项角色路由), header
+- 业务组件: asset-status-badge, empty-state, notification-bell, role-guard, ticket-timeline
+- `lib/auth-context.tsx`: AuthProvider + useAuth + login/logout + RoleSwitcher
+- `lib/api-client.ts`: apiFetch<T> 封装，Bearer token 自动注入
+
+### 3.2 页面（画院 + 大匠）
+
+| 角色 | 页面 | 数量 |
+|------|------|------|
+| 通用 | login, home, chat, notifications, profile | 5 |
+| Employee | my-assets, apply, tickets, tickets/[id] | 4 |
+| Manager | approvals, dept-board | 2 |
+| IT Admin | it/home, it/tickets, it/assets, it/assets/[id], it/models, it/inbound, it/inventory, it/users, it/audit | 9 |
+| Executive | exec/dashboard, exec/insights | 2 |
+
+**共 22 页，全部 `"use client"`，apiFetch 调用真实 API，loading/error/empty 三种状态**
+
+**验收**: 所有页面渲染，TS 零错误
+**大臣**: 画院（UI+布局+组件）+ 大匠（页面逻辑+API对接）并行
+**提交**: `git commit -m "Phase 3: frontend 22 pages + components"`
+
+---
+
+## Phase 4: 验证收尾（派 镇抚 + 御史）
+
+- TypeScript 全量编译检查
+- 御史代码审查
+- 镇抚端到端测试
+- README 最终版本
+
+**验收**: TS 零错误，御史通过
+**提交**: `git commit -m "Phase 4: verification + review"`
+
+---
+
+## 铁律（从上轮事故中汲取）
+
+1. **每 Phase 结束必须 git commit**，多阶段备份
+2. **首辅不写代码**，只调度大臣
+3. **并行优先**：互不依赖的任务同时派多人
+4. **AUTH_SECRET 全项目统一**，不再有两个默认值
+5. **先建迁移再 Docker**，或直接用 `prisma db push`

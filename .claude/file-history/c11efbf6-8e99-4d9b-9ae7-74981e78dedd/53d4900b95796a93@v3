@@ -1,0 +1,98 @@
+.reminder-card {
+  margin-bottom: var(--space-lg);
+}
+
+/* ---- 卡片标题行（图标 + 文字） ---- */
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.toggle {
+  width: 88rpx;
+  height: 48rpx;
+  border-radius: 24rpx;
+  background: var(--color-border);
+  position: relative;
+  transition: background 0.25s;
+}
+
+.toggle.active {
+  background: var(--color-accent);
+}
+
+.toggle-knob {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 4rpx;
+  left: 4rpx;
+  transition: transform 0.25s;
+}
+
+.toggle.active .toggle-knob {
+  transform: translateX(40rpx);
+}
+
+.reminder-options {
+  margin-top: var(--space-lg);
+  border-top: 1rpx solid var(--color-border);
+  padding-top: var(--space-lg);
+}
+
+.reminder-time-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) 0;
+}
+
+.reminder-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.reminder-value {
+  font-size: var(--text-md);
+  color: var(--color-accent);
+  font-weight: 500;
+  font-feature-settings: "tnum";
+}
+
+.reminder-days {
+  margin-top: var(--space-md);
+}
+
+.day-buttons {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.day-btn {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  transition: all 0.2s;
+}
+
+.day-btn.selected {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.day-btn:active {
+  opacity: 0.7;
+}

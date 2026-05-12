@@ -1,0 +1,236 @@
+const pptxgen = require("pptxgenjs");
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
+const sharp = require("sharp");
+const { FaBrain, FaCode, FaBullseye, FaExchangeAlt, FaHeadphones } = require("react-icons/fa");
+
+// --- Icon rendering ---
+function renderIconSvg(IconComponent, color, size = 256) {
+  return ReactDOMServer.renderToStaticMarkup(
+    React.createElement(IconComponent, { color, size: String(size) })
+  );
+}
+
+async function iconToBase64Png(IconComponent, color, size = 256) {
+  const svg = renderIconSvg(IconComponent, color, size);
+  const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer();
+  return "image/png;base64," + pngBuffer.toString("base64");
+}
+
+// --- Colors ---
+const NAVY = "1E2761";
+const ICE = "CADCFC";
+const WHITE = "FFFFFF";
+const DARK_TEXT = "141432";
+const LIGHT_BG = "F7F9FD";
+const TEAL = "0DA5B3"; // brightened for better contrast on navy (was 0694A2)
+
+// --- Helpers: fresh shadow factory ---
+const cardShadow = () => ({ type: "outer", color: "000000", blur: 8, offset: 3, angle: 135, opacity: 0.08 });
+
+async function main() {
+  const pres = new pptxgen();
+  pres.layout = "LAYOUT_16x9";
+  pres.author = "AS Platform Team";
+  pres.title = "AS Platform: Feature Roadmap";
+
+  // Pre-render icons (white on navy circles)
+  const iconBrain = await iconToBase64Png(FaBrain, "#FFFFFF");
+  const iconCode = await iconToBase64Png(FaCode, "#FFFFFF");
+  const iconTarget = await iconToBase64Png(FaBullseye, "#FFFFFF");
+  const iconWorkflow = await iconToBase64Png(FaExchangeAlt, "#FFFFFF");
+  const iconAudio = await iconToBase64Png(FaHeadphones, "#FFFFFF");
+
+  // ================================================================
+  // SLIDE 1 — TITLE
+  // ================================================================
+  {
+    const slide = pres.addSlide();
+    slide.background = { color: NAVY };
+
+    // Top accent line
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 3.3, y: 1.0, w: 3.4, h: 0.04, fill: { color: TEAL },
+    });
+
+    // Brand label — use ICE for strong contrast on navy
+    slide.addText("AS PLATFORM", {
+      x: 0.5, y: 1.25, w: 9, h: 0.55,
+      fontSize: 16, fontFace: "Arial", color: ICE,
+      align: "center", charSpacing: 10, margin: 0,
+    });
+
+    // Main title
+    slide.addText("Upcoming Feature\nRoadmap", {
+      x: 0.5, y: 2.05, w: 9, h: 1.8,
+      fontSize: 44, fontFace: "Arial Black", color: WHITE,
+      align: "center", lineSpacingMultiple: 1.15, margin: 0,
+    });
+
+    // Subtitle
+    slide.addText("Next 1–2 Months  ·  Product Strategy Overview", {
+      x: 0.5, y: 4.05, w: 9, h: 0.5,
+      fontSize: 15, fontFace: "Arial", color: ICE,
+      align: "center", margin: 0,
+    });
+
+    // Bottom accent line
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 3.3, y: 4.75, w: 3.4, h: 0.04, fill: { color: TEAL },
+    });
+  }
+
+  // ================================================================
+  // CONTENT SLIDES
+  // ================================================================
+  const features = [
+    {
+      num: "01",
+      title: "Agentic RAG",
+      feature: "Upgrade to Agent-driven Retrieval-Augmented Generation.",
+      value:
+        "Moves beyond simple semantic search. The system will now autonomously plan queries, execute multi-step reasoning, and dynamically route across different knowledge bases to provide highly accurate answers for complex scenarios.",
+      icon: iconBrain,
+    },
+    {
+      num: "02",
+      title: "IDE Plugin",
+      feature: "Support for IDE (Integrated Development Environment) plugins.",
+      value:
+        "Expands the platform’s ecosystem directly into the developer workflow. Users will be able to invoke AS platform agents and tools seamlessly within their own coding environments.",
+      icon: iconCode,
+    },
+    {
+      num: "03",
+      title: "Intent Recognition Strategy V3",
+      feature: "Major upgrade to our core intent routing engine.",
+      value:
+        "Significantly enhances the precision of understanding complex or multi-intent commands. This version minimizes routing errors and ensures user requests are directed to the correct agent with higher reliability.",
+      icon: iconTarget,
+    },
+    {
+      num: "04",
+      title: "Workflow Agent",
+      feature: 'Introduction of specialized "One-In, One-Out" Workflow Agents.',
+      value:
+        "Focuses on deterministic execution. These agents bypass conversational overhead to handle specific, procedural tasks with strictly defined input/output data structures, ensuring maximum stability and efficiency.",
+      icon: iconWorkflow,
+    },
+    {
+      num: "05",
+      title: "Audio Playback in Chat History",
+      feature:
+        "Support for playing original audio inputs within the Agent’s conversation logs.",
+      value:
+        "Enhances the multimodal interaction experience. Users and administrators can now easily trace and review original voice commands directly from the chat history for better context alignment.",
+      icon: iconAudio,
+    },
+  ];
+
+  features.forEach((feat) => {
+    const slide = pres.addSlide();
+    slide.background = { color: LIGHT_BG };
+
+    // --- Top header bar ---
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 0, y: 0, w: 10, h: 1.15, fill: { color: NAVY },
+    });
+
+    // Feature number (teal, 34pt large text = passes WCAG)
+    slide.addText(feat.num, {
+      x: 0.6, y: 0, w: 0.9, h: 1.15,
+      fontSize: 34, fontFace: "Arial Black", color: TEAL,
+      align: "center", valign: "middle", margin: 0,
+    });
+
+    // Thin vertical divider
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 1.55, y: 0.25, w: 0.025, h: 0.65, fill: { color: TEAL, transparency: 50 },
+    });
+
+    // Feature title (white, header)
+    slide.addText(feat.title, {
+      x: 1.7, y: 0, w: 7.5, h: 1.15,
+      fontSize: 28, fontFace: "Arial Black", color: WHITE,
+      align: "left", valign: "middle", margin: 0,
+    });
+
+    // --- Content area ---
+
+    // Icon circle (navy with shadow)
+    slide.addShape(pres.shapes.OVAL, {
+      x: 0.75, y: 1.85, w: 1.5, h: 1.5,
+      fill: { color: NAVY },
+      shadow: cardShadow(),
+    });
+    slide.addImage({ data: feat.icon, x: 0.97, y: 2.07, w: 1.06, h: 1.06 });
+
+    // "FEATURE" label — ICE on light bg gives ~10:1 contrast
+    slide.addText("FEATURE", {
+      x: 2.8, y: 1.55, w: 2.0, h: 0.32,
+      fontSize: 10, fontFace: "Arial", color: TEAL,
+      bold: true, charSpacing: 5, align: "left", valign: "middle", margin: 0,
+    });
+    // Feature description (0.18" gap from label)
+    slide.addText(feat.feature, {
+      x: 2.8, y: 2.05, w: 6.5, h: 0.80,
+      fontSize: 17, fontFace: "Arial", color: DARK_TEXT,
+      bold: true, align: "left", valign: "top", margin: 0,
+    });
+
+    // "BUSINESS VALUE" label (0.24" gap from feature text bottom)
+    slide.addText("BUSINESS VALUE", {
+      x: 2.8, y: 3.10, w: 2.5, h: 0.32,
+      fontSize: 10, fontFace: "Arial", color: TEAL,
+      bold: true, charSpacing: 5, align: "left", valign: "middle", margin: 0,
+    });
+    // BV description (0.18" gap from label)
+    slide.addText(feat.value, {
+      x: 2.8, y: 3.60, w: 6.6, h: 1.5,
+      fontSize: 14.5, fontFace: "Arial", color: "4A4A68",
+      align: "left", valign: "top", margin: 0,
+    });
+
+    // Bottom accent strip — moved up for breathing room (0.2" from slide edge)
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 0, y: 5.40, w: 10, h: 0.05, fill: { color: NAVY },
+    });
+  });
+
+  // ================================================================
+  // CLOSING SLIDE
+  // ================================================================
+  {
+    const slide = pres.addSlide();
+    slide.background = { color: NAVY };
+
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 3.3, y: 1.2, w: 3.4, h: 0.04, fill: { color: TEAL },
+    });
+
+    slide.addText("Thank You", {
+      x: 1, y: 1.6, w: 8, h: 1.2,
+      fontSize: 50, fontFace: "Arial Black", color: WHITE,
+      align: "center", margin: 0,
+    });
+
+    slide.addText("Questions & Discussion", {
+      x: 1, y: 3.0, w: 8, h: 0.7,
+      fontSize: 20, fontFace: "Arial", color: ICE,
+      align: "center", margin: 0,
+    });
+
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 3.3, y: 4.2, w: 3.4, h: 0.04, fill: { color: TEAL },
+    });
+  }
+
+  // --- Write ---
+  await pres.writeFile({ fileName: "/Users/admin/AS_Platform_Roadmap.pptx" });
+  console.log("✅ Saved: /Users/admin/AS_Platform_Roadmap.pptx");
+}
+
+main().catch((err) => {
+  console.error("❌ Error:", err);
+  process.exit(1);
+});

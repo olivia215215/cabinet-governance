@@ -1,0 +1,27 @@
+---
+name: use-skills-with-agents
+description: 派大臣干活时必须同时调用对应的 Skill，大臣 + Skill 配合使用
+type: feedback
+originSessionId: c11efbf6-8e99-4d9b-9ae7-74981e78dedd
+---
+首辅调度大臣时，必须同时考虑挂什么 Skill。Skill 提供结构化流程，Agent 提供角色和工具，两者互补。
+
+## 大臣-Skill 映射
+
+| 大臣 | 必挂 Skill |
+|------|-----------|
+| 提刑（排查Bug）| `systematic-debugging` |
+| 御史（审代码）| `code-review` |
+| 大匠（写代码）| `test-driven-development` 或 `verification-before-completion` |
+| 尚书（PRD）| `writing-plans` |
+| 都督（部署）| `verification-before-completion` |
+| 镇抚（测试）| `test-driven-development` |
+| 画院（设计）| `frontend-design` |
+| 锦衣（调研）| 可选 `brainstorming` |
+
+## 调用方式
+
+先 `Skill(skill="xxx")` 加载流程，再在 Agent prompt 中告知按该流程行事。或者 Agent prompt 中直接要求调用 Skill。
+
+**Why:** 首辅被训了——Skill 系统是现成的，不用等于浪费。
+**How to apply:** 每次派大臣之前，动态判断：任务特征是否和 skill 的适用场景匹配？合适才挂，不匹配不硬套。Skill 是工具不是仪式。参考映射（非强制）：系统调试→systematic-debugging，审代码→code-review，写代码→test-driven-development/verification-before-completion，写PRD→writing-plans，UI设计→frontend-design，数据→无强对应，部署→verification-before-completion。

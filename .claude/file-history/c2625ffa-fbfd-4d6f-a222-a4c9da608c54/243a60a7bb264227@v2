@@ -1,0 +1,104 @@
+"use client";
+
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { setToken, clearToken, apiFetch } from "./api-client";
+
+export type UserRole = "EMPLOYEE" | "MANAGER" | "IT_ADMIN" | "EXECUTIVE";
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatar?: string;
+  department: string;
+  departmentId: string;
+}
+
+interface AuthContextType {
+  user: User;
+  token: string | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  setRole: (role: UserRole) => void;
+  unreadNotifications: number;
+  setUnreadNotifications: (n: number) => void;
+}
+
+const defaultUser: User = {
+  id: "user-001",
+  name: "张明",
+  email: "zhangming@company.com",
+  role: "EMPLOYEE",
+  department: "研发部",
+  departmentId: "dept-dev",
+};
+
+const roleNames: Record<UserRole, string> = {
+  EMPLOYEE: "张明",
+  MANAGER: "李主管",
+  IT_ADMIN: "王工",
+  EXECUTIVE: "赵总",
+};
+
+const AuthContext = createContext<AuthContextType>({
+  user: defaultUser,
+  token: null,
+  loading: false,
+  login: async () => {},
+  logout: () => {},
+  setRole: () => {},
+  unreadNotifications: 3,
+  setUnreadNotifications: () => {},
+});
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User>(defaultUser);
+  const [token, setTokenState] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
+
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem("auth-token") : null;
+    if (stored) {
+      setTokenState(stored);
+      apiFetch<{ user: User }>("/api/auth/session")
+        .then((data) => setUser(data.user))
+        .catch(() => { clearToken(); setTokenState(null); })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const data = await apiFetch<{ user: User; token: string }>("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    setToken(data.token);
+    setTokenState(data.token);
+    setUser(data.user);
+  }, []);
+
+  const logout = useCallback(() => {
+    clearToken();
+    setTokenState(null);
+    setUser(defaultUser);
+  }, []);
+
+  const setRole = useCallback((role: UserRole) => {
+    setUser((prev) => ({ ...prev, role, name: roleNames[role] }));
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, token, loading, login, logout, setRole, unreadNotifications, setUnreadNotifications }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}

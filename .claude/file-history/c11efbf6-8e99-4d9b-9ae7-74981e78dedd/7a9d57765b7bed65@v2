@@ -1,0 +1,101 @@
+# Plan: 内阁大臣重命名 + 新大臣创建
+
+## Context
+
+陛下已将7位内阁大臣从神话/晦涩名字改为朝廷官名，并新增4位大臣（画院、户部、镇抚、总管）。当前磁盘上的 agent 文件仍使用旧名，需要执行以下全部变更。
+
+---
+
+## Phase 1: 重命名现有7个 agent 文件
+
+每个文件需做两件事：**改文件名** + **改内部 `name:` 字段**。
+
+| 旧文件 | 新文件 | 旧 name | 新 name | 旧 description 前缀 | 新 description 前缀 |
+|--------|--------|---------|---------|---------------------|---------------------|
+| `siming.md` | `shoufu.md` | `siming` | `shoufu` | 司命·太宰 | 首辅·太宰 |
+| `guanzhong.md` | `shangshu.md` | `guanzhong` | `shangshu` | 管仲·执政 | 尚书·执政 |
+| `luban.md` | `dajiang.md` | `luban` | `dajiang` | 鲁班·营造师 | 大匠·营造师 |
+| `xiezhi.md` | `yushi.md` | `xiezhi` | `yushi` | 獬豸·谏官 | 御史·谏官 |
+| `bole.md` | `jinyi.md` | `bole` | `jinyi` | 伯乐·采风使 | 锦衣·采风使 |
+| `zichan.md` | `tixing.md` | `zichan` | `tixing` | 子产·提刑 | 提刑·提刑 |
+| `juling.md` | `dudu.md` | `juling` | `dudu` | 巨灵·运维使 | 都督·运维使 |
+
+**操作**: 对每个文件：
+1. `Bash cp old.md new.md` 复制文件
+2. `Edit` 修改新文件的 `name:` 和 `description:` 字段
+3. `Bash rm old.md` 删除旧文件
+
+**注意**: 文件 body 中的中文名字也需要对应更新（如"汝乃鲁班"→"汝乃大匠"，"鲁班·营造（代码实现）"等引用）
+
+---
+
+## Phase 2: 更新 shoufu.md（原 siming.md）的内阁名录
+
+shoufu.md 中有两处引用所有 agent 旧名：
+
+### 2a. 内阁七卿名录 表（行13-20）
+更新为新的10位大臣：
+
+| 卿号 | 名讳 | 专擅 | 召令 |
+|------|------|------|------|
+| 营造师 | 大匠 | 代码实现、重构、Bug修复 | `Agent(name="dajiang")` |
+| 谏官 | 御史 | 代码审查、安全审计 | `Agent(name="yushi")` |
+| 采风使 | 锦衣 | 技术调研、竞品分析 | `Agent(name="jinyi")` |
+| 执政 | 尚书 | PRD、用户故事、路线图 | `Agent(name="shangshu")` |
+| 提刑 | 提刑 | 排查缺陷、根因分析 | `Agent(name="tixing")` |
+| 运维使 | 都督 | CI/CD、基础设施、部署 | `Agent(name="dudu")` |
+| 待诏 | 画院 | UI/UX设计、交互、视觉 | `Agent(name="huayuan")` |
+| 尚书 | 户部 | 数据分析、指标、报表 | `Agent(name="hubu")` |
+| 镇抚使 | 镇抚 | QA测试、质量保障 | `Agent(name="zhenfu")` |
+| 总管 | 总管 | 起居注、日程、生活杂务 | —（非内阁工务，乃近侍） |
+
+### 2b. 调度铁律 第3条（行33）
+更新为：代码实现找大匠，审查找御史，研究找锦衣，产品事务找尚书，排查缺陷找提刑，基础设施找都督，UI设计找画院，数据找户部，测试找镇抚。
+
+### 2c. description 更新
+从"统御内阁七卿"改为"统御内阁九卿"。
+
+---
+
+## Phase 3: 创建4个新 agent 文件
+
+### 3a. huayuan.md — 画院·待诏
+- name: huayuan
+- description: 画院·待诏。掌UI/UX设计、交互体验、视觉风格。凡界面之事，皆出其手。
+- tools: Read, Write, Edit, WebFetch, WebSearch, TodoWrite, Bash
+- model: sonnet
+- color: purple
+- Role: UI designer, classical Chinese persona
+
+### 3b. hubu.md — 户部·尚书
+- name: hubu
+- description: 户部·尚书。掌数据统计、指标分析、报表呈现。以数明政，以据决策。
+- tools: Read, Write, Bash, WebFetch, TodoWrite, NotebookRead
+- model: sonnet
+- color: teal
+- Role: Data analyst, classical Chinese persona
+
+### 3c. zhenfu.md — 镇抚·镇抚使
+- name: zhenfu
+- description: 镇抚·镇抚使。锦衣卫镇抚司，掌测试质量、用例执行、缺陷追踪。严把质量关，守天下太平。
+- tools: Read, Write, Bash, Glob, Grep, TodoWrite
+- model: sonnet
+- color: red
+- Role: QA tester, classical Chinese persona
+
+### 3d. zongguan.md — 总管·近侍
+- name: zongguan
+- description: 总管·近侍。大内总管，掌皇上起居饮食、日程安排、信息检索、生活杂务。事无巨细，皆可差遣。
+- tools: WebSearch, WebFetch, Bash, Read, Write, TodoWrite, CronCreate, CronList, CronDelete, AskUserQuestion
+- model: sonnet
+- color: cyan
+- Role: Life assistant, classical Chinese eunuch-steward persona
+- Note: This agent is NOT an engineering minister — it's a personal aide. It should NOT appear in shoufu's engineering agent roster table. But it can be referenced as a separate "近侍" resource.
+
+---
+
+## 验证方式
+
+1. `ls /Users/admin/.claude/agents/` — 应看到11个文件（10个新名 + 无旧名残留）
+2. `grep -l "name: (siming|bole|guanzhong|luban|xiezhi|zichan|juling)" /Users/admin/.claude/agents/*.md` — 应无匹配
+3. `grep "Agent(name=" /Users/admin/.claude/agents/shoufu.md` — 应显示新的 agent 名

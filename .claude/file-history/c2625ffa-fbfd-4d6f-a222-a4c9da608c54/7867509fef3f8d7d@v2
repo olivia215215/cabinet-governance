@@ -1,0 +1,4 @@
+DATABASE_URL="postgresql://user:pass@localhost:5432/itassets"
+AUTH_SECRET="change-me-to-a-random-string"
+AI_API_KEY="sk-your-deepseek-api-key"
+AI_BASE_URL="https://api.deepseek.com/v1"

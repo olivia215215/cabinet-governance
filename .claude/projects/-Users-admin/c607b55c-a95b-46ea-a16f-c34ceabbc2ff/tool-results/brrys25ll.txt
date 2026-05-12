@@ -1,0 +1,1462 @@
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+drwxr-xr-x  8 admin  staff  256 Apr 12 20:17 claude-plugins-official
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official:
+total 24
+drwxr-xr-x   8 admin  staff   256 Apr 12 20:17 .
+drwxr-xr-x   3 admin  staff    96 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff    96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff    40 Apr 12 20:17 .gcs-sha
+-rw-r--r--   1 admin  staff    19 Apr 12 20:17 .gitignore
+-rw-r--r--   1 admin  staff  1948 Apr 12 20:17 README.md
+drwxr-xr-x  18 admin  staff   576 Apr 12 20:17 external_plugins
+drwxr-xr-x  35 admin  staff  1120 Apr 12 20:17 plugins
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/.claude-plugin:
+total 136
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff    256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  67323 Apr 12 20:17 marketplace.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins:
+total 0
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 .
+drwxr-xr-x   8 admin  staff  256 Apr 12 20:17 ..
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 asana
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 context7
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 discord
+drwxr-xr-x  10 admin  staff  320 Apr 12 20:17 fakechat
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 firebase
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 github
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 gitlab
+drwxr-xr-x   5 admin  staff  160 Apr 12 20:17 greptile
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 imessage
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 laravel-boost
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 linear
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 playwright
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 serena
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 supabase
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 telegram
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 terraform
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/asana:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   79 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/asana/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  276 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/context7:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   90 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/context7/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  262 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/discord:
+total 200
+drwxr-xr-x  12 admin  staff    384 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff    576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff    165 Apr 12 20:17 .mcp.json
+-rw-r--r--   1 admin  staff     37 Apr 12 20:17 .npmrc
+-rw-r--r--   1 admin  staff   6599 Apr 12 20:17 ACCESS.md
+-rw-r--r--   1 admin  staff  11344 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   4904 Apr 12 20:17 README.md
+-rw-r--r--   1 admin  staff  23966 Apr 12 20:17 bun.lock
+-rw-r--r--   1 admin  staff    306 Apr 12 20:17 package.json
+-rw-r--r--   1 admin  staff  33340 Apr 12 20:17 server.ts
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/discord/.claude-plugin:
+total 8
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  290 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/discord/skills:
+total 0
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 access
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 configure
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/discord/skills/access:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4357 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/discord/skills/configure:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4324 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/fakechat:
+total 120
+drwxr-xr-x  10 admin  staff    320 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff    576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff    166 Apr 12 20:17 .mcp.json
+-rw-r--r--   1 admin  staff     37 Apr 12 20:17 .npmrc
+-rw-r--r--   1 admin  staff  11344 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   1308 Apr 12 20:17 README.md
+-rw-r--r--   1 admin  staff  19317 Apr 12 20:17 bun.lock
+-rw-r--r--   1 admin  staff    333 Apr 12 20:17 package.json
+-rw-r--r--   1 admin  staff  10547 Apr 12 20:17 server.ts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/fakechat/.claude-plugin:
+total 8
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  10 admin  staff  320 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  300 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/firebase:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   97 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/firebase/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  281 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/github:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  178 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/github/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  271 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/gitlab:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   85 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/gitlab/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  254 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/greptile:
+total 16
+drwxr-xr-x   5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff   576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff    96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   162 Apr 12 20:17 .mcp.json
+-rw-r--r--   1 admin  staff  1914 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/greptile/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  357 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/imessage:
+total 184
+drwxr-xr-x  12 admin  staff    384 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff    576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff    166 Apr 12 20:17 .mcp.json
+-rw-r--r--   1 admin  staff     37 Apr 12 20:17 .npmrc
+-rw-r--r--   1 admin  staff   6764 Apr 12 20:17 ACCESS.md
+-rw-r--r--   1 admin  staff  11344 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   4442 Apr 12 20:17 README.md
+-rw-r--r--   1 admin  staff  19345 Apr 12 20:17 bun.lock
+-rw-r--r--   1 admin  staff    355 Apr 12 20:17 package.json
+-rw-r--r--   1 admin  staff  32245 Apr 12 20:17 server.ts
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/imessage/.claude-plugin:
+total 8
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  319 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/imessage/skills:
+total 0
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 access
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 configure
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/imessage/skills/access:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4754 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/imessage/skills/configure:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  3546 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/laravel-boost:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   88 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/laravel-boost/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  295 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/linear:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   82 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/linear/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  279 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/playwright:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   87 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/playwright/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  295 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/serena:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  137 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/serena/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  254 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/supabase:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   86 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/supabase/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  280 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/telegram:
+total 200
+drwxr-xr-x  12 admin  staff    384 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff    576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff    166 Apr 12 20:17 .mcp.json
+-rw-r--r--   1 admin  staff     37 Apr 12 20:17 .npmrc
+-rw-r--r--   1 admin  staff   7075 Apr 12 20:17 ACCESS.md
+-rw-r--r--   1 admin  staff  11344 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   4494 Apr 12 20:17 README.md
+-rw-r--r--   1 admin  staff  20129 Apr 12 20:17 bun.lock
+-rw-r--r--   1 admin  staff    302 Apr 12 20:17 package.json
+-rw-r--r--   1 admin  staff  39353 Apr 12 20:17 server.ts
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/telegram/.claude-plugin:
+total 8
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  294 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/telegram/skills:
+total 0
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  12 admin  staff  384 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 access
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 configure
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/telegram/skills/access:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4280 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/telegram/skills/configure:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4024 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/terraform:
+total 8
+drwxr-xr-x   4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  18 admin  staff  576 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  192 Apr 12 20:17 .mcp.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/terraform/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  274 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins:
+total 0
+drwxr-xr-x  35 admin  staff  1120 Apr 12 20:17 .
+drwxr-xr-x   8 admin  staff   256 Apr 12 20:17 ..
+drwxr-xr-x   7 admin  staff   224 Apr 12 20:17 agent-sdk-dev
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 clangd-lsp
+drwxr-xr-x   7 admin  staff   224 Apr 12 20:17 claude-code-setup
+drwxr-xr-x   9 admin  staff   288 Apr 12 20:17 claude-md-management
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 code-review
+drwxr-xr-x   5 admin  staff   160 Apr 12 20:17 code-simplifier
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 commit-commands
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 csharp-lsp
+drwxr-xr-x   8 admin  staff   256 Apr 12 20:17 example-plugin
+drwxr-xr-x   7 admin  staff   224 Apr 12 20:17 explanatory-output-style
+drwxr-xr-x   7 admin  staff   224 Apr 12 20:17 feature-dev
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 frontend-design
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 gopls-lsp
+drwxr-xr-x  14 admin  staff   448 Apr 12 20:17 hookify
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 jdtls-lsp
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 kotlin-lsp
+drwxr-xr-x   7 admin  staff   224 Apr 12 20:17 learning-output-style
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 lua-lsp
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 math-olympiad
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 mcp-server-dev
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 php-lsp
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 playground
+drwxr-xr-x   8 admin  staff   256 Apr 12 20:17 plugin-dev
+drwxr-xr-x   7 admin  staff   224 Apr 12 20:17 pr-review-toolkit
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 pyright-lsp
+drwxr-xr-x   8 admin  staff   256 Apr 12 20:17 ralph-loop
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 ruby-lsp
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 rust-analyzer-lsp
+drwxr-xr-x   5 admin  staff   160 Apr 12 20:17 security-guidance
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 session-report
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 skill-creator
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 swift-lsp
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 typescript-lsp
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/agent-sdk-dev:
+total 40
+drwxr-xr-x   7 admin  staff    224 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   6397 Apr 12 20:17 README.md
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 agents
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 commands
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/agent-sdk-dev/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  167 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/agent-sdk-dev/agents:
+total 32
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  5206 Apr 12 20:17 agent-sdk-verifier-py.md
+-rw-r--r--  1 admin  staff  5419 Apr 12 20:17 agent-sdk-verifier-ts.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/agent-sdk-dev/commands:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  7846 Apr 12 20:17 new-sdk-app.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/clangd-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    780 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-code-setup:
+total 1104
+drwxr-xr-x   7 admin  staff     224 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff    1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff      96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    1015 Apr 12 20:17 README.md
+-rw-r--r--   1 admin  staff  545204 Apr 12 20:17 automation-recommender-example.png
+drwxr-xr-x   3 admin  staff      96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-code-setup/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  273 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-code-setup/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 claude-automation-recommender
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-code-setup/skills/claude-automation-recommender:
+total 24
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  10856 Apr 12 20:17 SKILL.md
+drwxr-xr-x  7 admin  staff    224 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-code-setup/skills/claude-automation-recommender/references:
+total 80
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  6316 Apr 12 20:17 hooks-patterns.md
+-rw-r--r--  1 admin  staff  7419 Apr 12 20:17 mcp-servers.md
+-rw-r--r--  1 admin  staff  3016 Apr 12 20:17 plugins-reference.md
+-rw-r--r--  1 admin  staff  9612 Apr 12 20:17 skills-reference.md
+-rw-r--r--  1 admin  staff  5049 Apr 12 20:17 subagent-templates.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-md-management:
+total 2136
+drwxr-xr-x   9 admin  staff     288 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff    1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff      96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff   11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    1084 Apr 12 20:17 README.md
+-rw-r--r--   1 admin  staff  518778 Apr 12 20:17 claude-md-improver-example.png
+drwxr-xr-x   3 admin  staff      96 Apr 12 20:17 commands
+-rw-r--r--   1 admin  staff  555521 Apr 12 20:17 revise-claude-md-example.png
+drwxr-xr-x   3 admin  staff      96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-md-management/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff  288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  283 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-md-management/commands:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff   288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  1357 Apr 12 20:17 revise-claude-md.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-md-management/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff  288 Apr 12 20:17 ..
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 claude-md-improver
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-md-management/skills/claude-md-improver:
+total 16
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  6028 Apr 12 20:17 SKILL.md
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/claude-md-management/skills/claude-md-improver/references:
+total 24
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  2617 Apr 12 20:17 quality-criteria.md
+-rw-r--r--  1 admin  staff  3687 Apr 12 20:17 templates.md
+-rw-r--r--  1 admin  staff  3197 Apr 12 20:17 update-guidelines.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-review:
+total 40
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   7321 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 commands
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-review/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  234 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-review/commands:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  7422 Apr 12 20:17 code-review.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-simplifier:
+total 24
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 agents
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-simplifier/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  271 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-simplifier/agents:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  3129 Apr 12 20:17 code-simplifier.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/commit-commands:
+total 40
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   5908 Apr 12 20:17 README.md
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 commands
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/commit-commands/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  236 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/commit-commands/commands:
+total 24
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  1865 Apr 12 20:17 clean_gone.md
+-rw-r--r--  1 admin  staff   796 Apr 12 20:17 commit-push-pr.md
+-rw-r--r--  1 admin  staff   624 Apr 12 20:17 commit.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/csharp-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    486 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin:
+total 40
+drwxr-xr-x   8 admin  staff    256 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff     91 Apr 12 20:17 .mcp.json
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   1881 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 commands
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff  256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  270 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin/commands:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  1247 Apr 12 20:17 example-command.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin/skills:
+total 0
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff  256 Apr 12 20:17 ..
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 example-command
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 example-skill
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin/skills/example-command:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  1226 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/example-plugin/skills/example-skill:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  2725 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/explanatory-output-style:
+total 32
+drwxr-xr-x   7 admin  staff    224 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   2470 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 hooks
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 hooks-handlers
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/explanatory-output-style/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  290 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/explanatory-output-style/hooks:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  323 Apr 12 20:17 hooks.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/explanatory-output-style/hooks-handlers:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff  1468 Apr 12 20:17 session-start.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/feature-dev:
+total 48
+drwxr-xr-x   7 admin  staff    224 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff  11697 Apr 12 20:17 README.md
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 agents
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 commands
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/feature-dev/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  262 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/feature-dev/agents:
+total 24
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  2259 Apr 12 20:17 code-architect.md
+-rw-r--r--  1 admin  staff  2115 Apr 12 20:17 code-explorer.md
+-rw-r--r--  1 admin  staff  2994 Apr 12 20:17 code-reviewer.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/feature-dev/commands:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  5097 Apr 12 20:17 feature-dev.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/frontend-design:
+total 32
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    977 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/frontend-design/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  180 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/frontend-design/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 frontend-design
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/frontend-design/skills/frontend-design:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4274 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/gopls-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    473 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify:
+total 48
+drwxr-xr-x  14 admin  staff    448 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff    291 Apr 12 20:17 .gitignore
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   7710 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 agents
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 commands
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 core
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 examples
+drwxr-xr-x   8 admin  staff    256 Apr 12 20:17 hooks
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 matchers
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 skills
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 utils
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/.claude-plugin:
+total 8
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff  448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  210 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/agents:
+total 16
+drwxr-xr-x   3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff   448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  5478 Apr 12 20:17 conversation-analyzer.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/commands:
+total 48
+drwxr-xr-x   6 admin  staff   192 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff   448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  2863 Apr 12 20:17 configure.md
+-rw-r--r--   1 admin  staff  4624 Apr 12 20:17 help.md
+-rw-r--r--   1 admin  staff  7667 Apr 12 20:17 hookify.md
+-rw-r--r--   1 admin  staff  2020 Apr 12 20:17 list.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/core:
+total 48
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff    448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff      0 Apr 12 20:17 __init__.py
+-rw-r--r--   1 admin  staff   9690 Apr 12 20:17 config_loader.py
+-rw-r--r--   1 admin  staff  10711 Apr 12 20:17 rule_engine.py
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/examples:
+total 32
+drwxr-xr-x   6 admin  staff  192 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff  448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  315 Apr 12 20:17 console-log-warning.local.md
+-rw-r--r--   1 admin  staff  278 Apr 12 20:17 dangerous-rm.local.md
+-rw-r--r--   1 admin  staff  500 Apr 12 20:17 require-tests-stop.local.md
+-rw-r--r--   1 admin  staff  421 Apr 12 20:17 sensitive-files-warning.local.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/hooks:
+total 40
+drwxr-xr-x   8 admin  staff   256 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff   448 Apr 12 20:17 ..
+-rwxr-xr-x   1 admin  staff     0 Apr 12 20:17 __init__.py
+-rw-r--r--   1 admin  staff  1020 Apr 12 20:17 hooks.json
+-rwxr-xr-x   1 admin  staff  1622 Apr 12 20:17 posttooluse.py
+-rwxr-xr-x   1 admin  staff  1852 Apr 12 20:17 pretooluse.py
+-rwxr-xr-x   1 admin  staff  1403 Apr 12 20:17 stop.py
+-rwxr-xr-x   1 admin  staff  1389 Apr 12 20:17 userpromptsubmit.py
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/matchers:
+total 0
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff  448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff    0 Apr 12 20:17 __init__.py
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/skills:
+total 0
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff  448 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 writing-rules
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/skills/writing-rules:
+total 24
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  8423 Apr 12 20:17 SKILL.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/hookify/utils:
+total 0
+drwxr-xr-x   3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  14 admin  staff  448 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff    0 Apr 12 20:17 __init__.py
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/jdtls-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    811 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/kotlin-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    306 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/learning-output-style:
+total 40
+drwxr-xr-x   7 admin  staff    224 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   4687 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 hooks
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 hooks-handlers
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/learning-output-style/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  295 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/learning-output-style/hooks:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  320 Apr 12 20:17 hooks.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/learning-output-style/hooks-handlers:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff  3564 Apr 12 20:17 session-start.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/lua-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    705 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad:
+total 32
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   1192 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  356 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 math-olympiad
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad/skills/math-olympiad:
+total 40
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  19961 Apr 12 20:17 SKILL.md
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 evals
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 references
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 scripts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad/skills/math-olympiad/evals:
+total 8
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  2008 Apr 12 20:17 trigger_eval.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad/skills/math-olympiad/references:
+total 112
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  12571 Apr 12 20:17 adversarial_prompts.md
+-rw-r--r--  1 admin  staff   1961 Apr 12 20:17 attempt_agent.md
+-rw-r--r--  1 admin  staff   2024 Apr 12 20:17 known_constructions.md
+-rw-r--r--  1 admin  staff   2970 Apr 12 20:17 model_tier_defaults.md
+-rw-r--r--  1 admin  staff   6150 Apr 12 20:17 presentation_prompts.md
+-rw-r--r--  1 admin  staff   5998 Apr 12 20:17 solver_heuristics.md
+-rw-r--r--  1 admin  staff   8284 Apr 12 20:17 verifier_patterns.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/math-olympiad/skills/math-olympiad/scripts:
+total 16
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff   205 Apr 12 20:17 check_latex.sh
+-rwxr-xr-x  1 admin  staff  1485 Apr 12 20:17 compile_pdf.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev:
+total 32
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   1547 Apr 12 20:17 README.md
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  334 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills:
+total 0
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 build-mcp-app
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 build-mcp-server
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 build-mcpb
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills/build-mcp-app:
+total 40
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  16447 Apr 12 20:17 SKILL.md
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills/build-mcp-app/references:
+total 56
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  6121 Apr 12 20:17 apps-sdk-messages.md
+-rw-r--r--  1 admin  staff  4525 Apr 12 20:17 iframe-sandbox.md
+-rw-r--r--  1 admin  staff  8924 Apr 12 20:17 widget-templates.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills/build-mcp-server:
+total 24
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  10960 Apr 12 20:17 SKILL.md
+drwxr-xr-x  10 admin  staff    320 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills/build-mcp-server/references:
+total 104
+drwxr-xr-x  10 admin  staff   320 Apr 12 20:17 .
+drwxr-xr-x   4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  4764 Apr 12 20:17 auth.md
+-rw-r--r--   1 admin  staff  3639 Apr 12 20:17 deploy-cloudflare-workers.md
+-rw-r--r--   1 admin  staff  4728 Apr 12 20:17 elicitation.md
+-rw-r--r--   1 admin  staff  7054 Apr 12 20:17 remote-http-scaffold.md
+-rw-r--r--   1 admin  staff  4090 Apr 12 20:17 resources-and-prompts.md
+-rw-r--r--   1 admin  staff  4673 Apr 12 20:17 server-capabilities.md
+-rw-r--r--   1 admin  staff  6111 Apr 12 20:17 tool-design.md
+-rw-r--r--   1 admin  staff  1108 Apr 12 20:17 versions.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills/build-mcpb:
+total 16
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  7690 Apr 12 20:17 SKILL.md
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/mcp-server-dev/skills/build-mcpb/references:
+total 32
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  5384 Apr 12 20:17 local-security.md
+-rw-r--r--  1 admin  staff  5359 Apr 12 20:17 manifest-schema.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/php-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    436 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/playground:
+total 32
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   1258 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/playground/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  277 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/playground/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 playground
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/playground/skills/playground:
+total 8
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  3824 Apr 12 20:17 SKILL.md
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 templates
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/playground/skills/playground/templates:
+total 72
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  6196 Apr 12 20:17 code-map.md
+-rw-r--r--  1 admin  staff  3644 Apr 12 20:17 concept-map.md
+-rw-r--r--  1 admin  staff  2817 Apr 12 20:17 data-explorer.md
+-rw-r--r--  1 admin  staff  2719 Apr 12 20:17 design-playground.md
+-rw-r--r--  1 admin  staff  5733 Apr 12 20:17 diff-review.md
+-rw-r--r--  1 admin  staff  5154 Apr 12 20:17 document-critique.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev:
+total 56
+drwxr-xr-x   8 admin  staff    256 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff  14590 Apr 12 20:17 README.md
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 agents
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 commands
+drwxr-xr-x   9 admin  staff    288 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff  256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  267 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/agents:
+total 48
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  7488 Apr 12 20:17 agent-creator.md
+-rw-r--r--  1 admin  staff  6678 Apr 12 20:17 plugin-validator.md
+-rw-r--r--  1 admin  staff  6132 Apr 12 20:17 skill-reviewer.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/commands:
+total 32
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff    256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  15855 Apr 12 20:17 create-plugin.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills:
+total 0
+drwxr-xr-x  9 admin  staff  288 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff  256 Apr 12 20:17 ..
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 agent-development
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 command-development
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 hook-development
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 mcp-integration
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 plugin-settings
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 plugin-structure
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 skill-development
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/agent-development:
+total 24
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  10430 Apr 12 20:17 SKILL.md
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 examples
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 references
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 scripts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/agent-development/examples:
+total 56
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   9390 Apr 12 20:17 agent-creation-prompt.md
+-rw-r--r--  1 admin  staff  14117 Apr 12 20:17 complete-agent-examples.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/agent-development/references:
+total 72
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   8879 Apr 12 20:17 agent-creation-system-prompt.md
+-rw-r--r--  1 admin  staff   9998 Apr 12 20:17 system-prompt-design.md
+-rw-r--r--  1 admin  staff  11613 Apr 12 20:17 triggering-examples.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/agent-development/scripts:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff  5796 Apr 12 20:17 validate-agent.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development:
+total 56
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   7651 Apr 12 20:17 README.md
+-rw-r--r--  1 admin  staff  19233 Apr 12 20:17 SKILL.md
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 examples
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development/examples:
+total 56
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  13989 Apr 12 20:17 plugin-commands.md
+-rw-r--r--  1 admin  staff   8675 Apr 12 20:17 simple-commands.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/command-development/references:
+total 240
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  13618 Apr 12 20:17 advanced-workflows.md
+-rw-r--r--  1 admin  staff  14971 Apr 12 20:17 documentation-patterns.md
+-rw-r--r--  1 admin  staff   9162 Apr 12 20:17 frontmatter-reference.md
+-rw-r--r--  1 admin  staff  20980 Apr 12 20:17 interactive-commands.md
+-rw-r--r--  1 admin  staff  16437 Apr 12 20:17 marketplace-considerations.md
+-rw-r--r--  1 admin  staff  14622 Apr 12 20:17 plugin-features-reference.md
+-rw-r--r--  1 admin  staff  14803 Apr 12 20:17 testing-strategies.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/hook-development:
+total 32
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  16246 Apr 12 20:17 SKILL.md
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 examples
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 references
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 scripts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/hook-development/examples:
+total 24
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff  1690 Apr 12 20:17 load-context.sh
+-rwxr-xr-x  1 admin  staff  1304 Apr 12 20:17 validate-bash.sh
+-rwxr-xr-x  1 admin  staff  1222 Apr 12 20:17 validate-write.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/hook-development/references:
+total 64
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  10148 Apr 12 20:17 advanced.md
+-rw-r--r--  1 admin  staff   8299 Apr 12 20:17 migration.md
+-rw-r--r--  1 admin  staff   7144 Apr 12 20:17 patterns.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/hook-development/scripts:
+total 56
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  3677 Apr 12 20:17 README.md
+-rwxr-xr-x  1 admin  staff  4200 Apr 12 20:17 hook-linter.sh
+-rwxr-xr-x  1 admin  staff  5336 Apr 12 20:17 test-hook.sh
+-rwxr-xr-x  1 admin  staff  5081 Apr 12 20:17 validate-hook-schema.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/mcp-integration:
+total 32
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  12519 Apr 12 20:17 SKILL.md
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 examples
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/mcp-integration/examples:
+total 24
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  502 Apr 12 20:17 http-server.json
+-rw-r--r--  1 admin  staff  413 Apr 12 20:17 sse-server.json
+-rw-r--r--  1 admin  staff  686 Apr 12 20:17 stdio-server.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/mcp-integration/references:
+total 72
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  10196 Apr 12 20:17 authentication.md
+-rw-r--r--  1 admin  staff  10613 Apr 12 20:17 server-types.md
+-rw-r--r--  1 admin  staff  11674 Apr 12 20:17 tool-usage.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-settings:
+total 24
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  12097 Apr 12 20:17 SKILL.md
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 examples
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 references
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 scripts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-settings/examples:
+total 24
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  2177 Apr 12 20:17 create-settings-command.md
+-rw-r--r--  1 admin  staff  2930 Apr 12 20:17 example-settings.md
+-rwxr-xr-x  1 admin  staff  2205 Apr 12 20:17 read-settings-hook.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-settings/references:
+total 48
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  11513 Apr 12 20:17 parsing-techniques.md
+-rw-r--r--  1 admin  staff   9492 Apr 12 20:17 real-world-examples.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-settings/scripts:
+total 16
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff   192 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff  1269 Apr 12 20:17 parse-frontmatter.sh
+-rwxr-xr-x  1 admin  staff  2712 Apr 12 20:17 validate-settings.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-structure:
+total 40
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   3210 Apr 12 20:17 README.md
+-rw-r--r--  1 admin  staff  13796 Apr 12 20:17 SKILL.md
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 examples
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-structure/examples:
+total 80
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  18746 Apr 12 20:17 advanced-plugin.md
+-rw-r--r--  1 admin  staff   1731 Apr 12 20:17 minimal-plugin.md
+-rw-r--r--  1 admin  staff  13310 Apr 12 20:17 standard-plugin.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/plugin-structure/references:
+total 48
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff    192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  12086 Apr 12 20:17 component-patterns.md
+-rw-r--r--  1 admin  staff  12061 Apr 12 20:17 manifest-reference.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/skill-development:
+total 48
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  22825 Apr 12 20:17 SKILL.md
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 references
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/plugin-dev/skills/skill-development/references:
+total 24
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  11547 Apr 12 20:17 skill-creator-original.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/pr-review-toolkit:
+total 40
+drwxr-xr-x   7 admin  staff    224 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   7528 Apr 12 20:17 README.md
+drwxr-xr-x   8 admin  staff    256 Apr 12 20:17 agents
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 commands
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/pr-review-toolkit/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff  224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  266 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/pr-review-toolkit/agents:
+total 88
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  3985 Apr 12 20:17 code-reviewer.md
+-rw-r--r--  1 admin  staff  5292 Apr 12 20:17 code-simplifier.md
+-rw-r--r--  1 admin  staff  5725 Apr 12 20:17 comment-analyzer.md
+-rw-r--r--  1 admin  staff  4985 Apr 12 20:17 pr-test-analyzer.md
+-rw-r--r--  1 admin  staff  7807 Apr 12 20:17 silent-failure-hunter.md
+-rw-r--r--  1 admin  staff  5368 Apr 12 20:17 type-design-analyzer.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/pr-review-toolkit/commands:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  7 admin  staff   224 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  4997 Apr 12 20:17 review-pr.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/pyright-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    564 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/ralph-loop:
+total 40
+drwxr-xr-x   8 admin  staff    256 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff   6054 Apr 12 20:17 README.md
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 commands
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 hooks
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 scripts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/ralph-loop/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff  256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  343 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/ralph-loop/commands:
+total 24
+drwxr-xr-x  5 admin  staff   160 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   738 Apr 12 20:17 cancel-ralph.md
+-rw-r--r--  1 admin  staff  3227 Apr 12 20:17 help.md
+-rw-r--r--  1 admin  staff   916 Apr 12 20:17 ralph-loop.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/ralph-loop/hooks:
+total 24
+drwxr-xr-x  4 admin  staff   128 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   291 Apr 12 20:17 hooks.json
+-rwxr-xr-x  1 admin  staff  7533 Apr 12 20:17 stop-hook.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/ralph-loop/scripts:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  8 admin  staff   256 Apr 12 20:17 ..
+-rwxr-xr-x  1 admin  staff  7044 Apr 12 20:17 setup-ralph-loop.sh
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/ruby-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    535 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/rust-analyzer-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    701 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/security-guidance:
+total 24
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 hooks
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/security-guidance/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  280 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/security-guidance/hooks:
+total 32
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff    382 Apr 12 20:17 hooks.json
+-rwxr-xr-x  1 admin  staff  10767 Apr 12 20:17 security_reminder_hook.py
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/session-report:
+total 24
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/session-report/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  4 admin  staff  128 Apr 12 20:17 ..
+drwxr-xr-x  5 admin  staff  160 Apr 12 20:17 session-report
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/session-report/skills/session-report:
+total 120
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff   3149 Apr 12 20:17 SKILL.md
+-rw-r--r--  1 admin  staff  28225 Apr 12 20:17 analyze-sessions.mjs
+-rw-r--r--  1 admin  staff  26382 Apr 12 20:17 template.html
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator:
+total 32
+drwxr-xr-x   6 admin  staff    192 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 .claude-plugin
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    264 Apr 12 20:17 README.md
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 skills
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/.claude-plugin:
+total 8
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  378 Apr 12 20:17 plugin.json
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills:
+total 0
+drwxr-xr-x  3 admin  staff   96 Apr 12 20:17 .
+drwxr-xr-x  6 admin  staff  192 Apr 12 20:17 ..
+drwxr-xr-x  9 admin  staff  288 Apr 12 20:17 skill-creator
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator:
+total 88
+drwxr-xr-x   9 admin  staff    288 Apr 12 20:17 .
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11357 Apr 12 20:17 LICENSE.txt
+-rw-r--r--   1 admin  staff  32370 Apr 12 20:17 SKILL.md
+drwxr-xr-x   5 admin  staff    160 Apr 12 20:17 agents
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 assets
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 eval-viewer
+drwxr-xr-x   3 admin  staff     96 Apr 12 20:17 references
+drwxr-xr-x  11 admin  staff    352 Apr 12 20:17 scripts
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/agents:
+total 64
+drwxr-xr-x  5 admin  staff    160 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  10376 Apr 12 20:17 analyzer.md
+-rw-r--r--  1 admin  staff   7287 Apr 12 20:17 comparator.md
+-rw-r--r--  1 admin  staff   9049 Apr 12 20:17 grader.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/assets:
+total 16
+drwxr-xr-x  3 admin  staff    96 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff   288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  7058 Apr 12 20:17 eval_review.html
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/eval-viewer:
+total 120
+drwxr-xr-x  4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  16365 Apr 12 20:17 generate_review.py
+-rw-r--r--  1 admin  staff  44998 Apr 12 20:17 viewer.html
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/references:
+total 24
+drwxr-xr-x  3 admin  staff     96 Apr 12 20:17 .
+drwxr-xr-x  9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--  1 admin  staff  12061 Apr 12 20:17 schemas.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/scripts:
+total 176
+drwxr-xr-x  11 admin  staff    352 Apr 12 20:17 .
+drwxr-xr-x   9 admin  staff    288 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff      0 Apr 12 20:17 __init__.py
+-rwxr-xr-x   1 admin  staff  14386 Apr 12 20:17 aggregate_benchmark.py
+-rwxr-xr-x   1 admin  staff  12847 Apr 12 20:17 generate_report.py
+-rwxr-xr-x   1 admin  staff  10723 Apr 12 20:17 improve_description.py
+-rwxr-xr-x   1 admin  staff   4234 Apr 12 20:17 package_skill.py
+-rwxr-xr-x   1 admin  staff   3972 Apr 12 20:17 quick_validate.py
+-rwxr-xr-x   1 admin  staff  11464 Apr 12 20:17 run_eval.py
+-rwxr-xr-x   1 admin  staff  13685 Apr 12 20:17 run_loop.py
+-rw-r--r--   1 admin  staff   1661 Apr 12 20:17 utils.py
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/swift-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    602 Apr 12 20:17 README.md
+
+/Users/admin/.claude/plugins/marketplaces/claude-plugins-official/plugins/typescript-lsp:
+total 32
+drwxr-xr-x   4 admin  staff    128 Apr 12 20:17 .
+drwxr-xr-x  35 admin  staff   1120 Apr 12 20:17 ..
+-rw-r--r--   1 admin  staff  11358 Apr 12 20:17 LICENSE
+-rw-r--r--   1 admin  staff    692 Apr 12 20:17 README.md

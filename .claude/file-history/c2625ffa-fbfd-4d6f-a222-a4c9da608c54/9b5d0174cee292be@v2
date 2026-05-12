@@ -1,0 +1,417 @@
+# AI 接入方案调研报告
+
+> 锦衣呈报 | 2026-05-11 | 对应技术规格 §7
+
+---
+
+## 鉴定要义
+
+- DeepSeek V4 Flash 性价比极高（$0.14/1M in, $0.28/1M out），新用户送 500 万 tokens，足够开发测试
+- 推荐"Vercel AI SDK（chat 流式）+ 原生 fetch（recommend/triage 非流式）"混合方案，各取所长
+- 三次 AI 调用的 Prompt 全部设计为结构化 JSON 输出，配合 `response_format: json_object` 保证解析稳定
+- severity=high 硬规则兜底必须在后端代码层执行，不能依赖 LLM 自觉
+- 5000ms 超时 + try/catch 降级 + 兜底文案，确保 AI 挂了不影响系统主流程
+
+---
+
+## 一、DeepSeek API 接入方案
+
+### 1.1 API 基础信息
+
+| 项目 | 值 |
+|------|------|
+| Base URL | `https://api.deepseek.com` |
+| Chat Completions | `POST /v1/chat/completions` (OpenAI 兼容) |
+| 认证方式 | `Authorization: Bearer <api-key>` |
+| 推荐模型 | `deepseek-v4-flash` |
+| 即将废弃 (2026-07-24) | `deepseek-chat`, `deepseek-reasoner` |
+| 上下文窗口 | 1M tokens |
+| 最大输出 | 384K tokens |
+| 支持参数 | `temperature`, `top_p`, `response_format`, `stream` |
+
+### 1.2 免费额度与定价
+
+| 项目 | 价格 |
+|------|------|
+| 新用户赠送 | 500 万 tokens（有效期 30 天，无需绑信用卡） |
+| Input (cache miss) | $0.14/1M tokens |
+| Input (cache hit) | $0.0028/1M tokens |
+| Output | $0.28/1M tokens |
+| 最低充值 | $2 |
+
+### 1.3 速率限制
+
+DeepSeek 官方不发布固定速率限制值，采用**动态并发控制**（根据服务端负载动态调整）。超限返回 HTTP 429，建议客户端实现指数退避重试。
+
+### 1.4 Vercel AI SDK vs 原生 fetch 对比
+
+| 维度 | Vercel AI SDK (`@ai-sdk/deepseek`) | 原生 fetch |
+|------|------|------|
+| 额外依赖 | `ai` + `@ai-sdk/deepseek` | 零依赖 |
+| 流式支持 | 一流（`streamText` + `useChat` hook） | 需手写 SSE 解析 |
+| JSON 输出 | `generateText()` 配合 `response_format` | 直接 `response.json()` |
+| 错误处理 | 内置 `RetryError`, `TimeoutError` | 需手写 try/catch |
+| 降级 | 中间件机制 | 自由度高 |
+| 学习成本 | 需了解 SDK 概念 | 零成本 |
+
+**锦衣判断**：混合方案最优。
+
+- `/api/ai/chat`（对话助手） → **Vercel AI SDK**。需要流式输出，前端 `useChat` hook 省大量代码。
+- `/api/ai/recommend` 和 `/api/ai/triage` → **原生 fetch**。JSON 入/JSON 出，无流式需求，零依赖更轻量。
+
+### 1.5 调用示例代码
+
+```typescript
+// lib/ai/client.ts
+const DEEPSEEK_BASE = 'https://api.deepseek.com/v1';
+const MODEL = 'deepseek-v4-flash';
+
+export interface AiCallOptions {
+  messages: { role: 'system' | 'user' | 'assistant'; content: string }[];
+  temperature?: number;
+  timeout?: number;
+}
+
+export async function callDeepSeek<T = unknown>(
+  options: AiCallOptions,
+): Promise<T> {
+  const { messages, temperature = 0.3, timeout = 5000 } = options;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const res = await fetch(`${DEEPSEEK_BASE}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.AI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        temperature,
+        response_format: { type: 'json_object' },
+      }),
+      signal: controller.signal,
+    });
+
+    if (!res.ok) {
+      throw new Error(`DeepSeek API error: ${res.status}`);
+    }
+
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) throw new Error('Empty response from DeepSeek');
+
+    return JSON.parse(content) as T;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+```
+
+---
+
+## 二、申领推荐 Prompt 设计
+
+### 2.1 System Prompt
+
+```
+# 角色
+你是一个IT资产管理系统的设备推荐助手，负责根据员工的需求描述，推荐最合适的办公设备型号。
+
+# 输入
+你将收到：
+1. 用户的需求描述（自然语言）
+2. 所有可选的设备型号列表（JSON数组），每个型号包含字段：
+   - modelId: 型号编码
+   - category: 设备分类（LAPTOP/MONITOR/KEYBOARD/MOUSE/HEADPHONE/OTHER）
+   - brandName: 品牌
+   - modelName: 型号名称
+   - specs: 规格参数（JSON对象，不同分类键不同）
+   - stock: 当前可用库存数
+   - status: 型号状态（ACTIVE或DISCONTINUED）
+
+# 任务
+从型号列表中筛选出最适合用户需求的型号，按匹配度从高到低排序推荐。
+
+# 约束
+1. 必须忽略 status 为 "DISCONTINUED" 的型号
+2. 如果某个型号的 stock 为 0，推荐理由中必须明确标注"暂无库存"
+3. 推荐理由必须具体说明该型号的哪些规格/特性匹配了用户的哪些需求
+4. score 字段为 0-100 的整数，表示匹配程度
+5. topPick 必须在 recommendations 列表中，且 score 应最高
+6. 如果没有任何型号匹配，recommendations 返回空数组，topPick 返回 null
+
+# 输出格式
+返回严格的 JSON 对象：
+{
+  "recommendations": [
+    {
+      "modelId": "型号编码",
+      "score": 95,
+      "reason": "推荐理由。若库存为0则追加「暂无库存」"
+    }
+  ],
+  "topPick": "最优型号编码 或 null"
+}
+```
+
+### 2.2 User Prompt 模板
+
+```
+用户的设备需求：
+{userInput}
+
+当前可用设备型号列表：
+{modelListJson}
+
+请根据用户需求推荐最合适的设备型号。
+```
+
+### 2.3 modelListJson 数据准备
+
+```typescript
+const activeModels = await prisma.assetModel.findMany({
+  where: { status: 'ACTIVE' },
+  include: { _count: { select: { instances: { where: { status: 'IN_STOCK' } } } } },
+});
+
+const modelListJson = activeModels.map(m => ({
+  modelId: m.id,
+  category: m.category,
+  brandName: m.brandName,
+  modelName: m.modelName,
+  specs: m.specs,
+  stock: m._count.instances,
+  status: m.status,
+}));
+```
+
+---
+
+## 三、故障分诊 Prompt 设计
+
+### 3.1 System Prompt
+
+```
+# 角色
+你是一个IT故障诊断助手，负责分析员工的故障描述，判断故障类别、严重程度和是否需要报修。
+
+# 分类规则
+
+## 故障类别 (category)
+- "hardware"：硬件物理故障（屏幕损坏、键盘失灵、无法开机、蓝屏、异响、电池鼓包、接口损坏、进液等）
+- "software"：软件/系统问题（卡顿、软件报错、驱动问题、网络配置、权限问题、病毒等）
+- "user_error"：用户操作问题（不会使用、设置错误、误操作等）
+
+## 严重程度 (severity)
+- "high"：严重影响工作，无法正常使用设备
+- "medium"：影响部分工作但可勉强使用
+- "low"：轻微问题，不影响正常工作
+
+## 是否需要报修 (needRepair)
+- "hardware" 通常 → needRepair = true
+- "software" 优先自助 → needRepair = false
+- "user_error" → needRepair = false
+
+## 自助建议 (selfHelp)
+- needRepair = false 时，selfHelp 必须提供具体可操作的自助步骤（中文，2-4步）
+- needRepair = true 时，selfHelp 返回 null
+
+# 输出格式
+返回严格的 JSON 对象：
+{
+  "category": "hardware" | "software" | "user_error",
+  "severity": "high" | "medium" | "low",
+  "needRepair": true | false,
+  "reason": "诊断理由（20-50字）",
+  "selfHelp": "自助建议步骤 或 null"
+}
+```
+
+### 3.2 后处理硬规则（后端强制）
+
+```typescript
+// lib/ai/triage.ts
+function enforceTriageRules(result: TriageResult): TriageResult {
+  // 硬规则：severity=high 时 needRepair 必须为 true
+  if (result.severity === 'high') {
+    result.needRepair = true;
+  }
+  // 硬规则：selfHelp 与 needRepair 一致性
+  if (result.needRepair) {
+    result.selfHelp = null;
+  } else if (!result.selfHelp) {
+    result.selfHelp = '请尝试重启设备，如问题持续请联系IT支持。';
+  }
+  return result;
+}
+```
+
+---
+
+## 四、对话助手 Prompt + Token 确认机制
+
+### 4.1 架构流程
+
+```
+用户消息 → LLM 意图识别 → 判断是否需要确认
+  ├── 否: 直接回复 + 查询数据 → 返回给用户
+  └── 是: 返回 { needConfirmation: true, pendingAction }
+       → 服务器生成一次性 JWT token
+       → 前端显示确认对话框
+       → 用户确认 → 携带 token 再次请求
+       → 服务器验证 token → 执行操作 → 返回结果
+       → 用户取消 → 清除 token → 返回取消
+```
+
+### 4.2 System Prompt
+
+```
+# 角色
+你是一个IT资产管理系统的智能助手，名为"IT助手"。你帮助员工处理与办公设备相关的问题。
+
+# 重要原则
+1. 回复必须简洁、友好、有指导性，使用中文
+2. 涉及创建工单、提交申领等实际操作时，必须先请求用户确认，不能直接执行
+3. 用户询问资产价格或供应商信息时，回复"抱歉，该信息不在你的权限范围内"
+4. 如果不确定用户的意图，主动引导用户说明具体情况
+
+# 输入
+你将收到 JSON 格式的输入：
+{
+  "history": [{ "role": "user"|"assistant", "content": "消息内容" }],
+  "message": "用户当前消息",
+  "userContext": {
+    "assets": [{ "id": "...", "modelName": "...", "brandName": "...", "category": "...", "status": "...", "warrantyExpiry": "..." }],
+    "pendingTickets": [{ "id": "...", "type": "...", "status": "...", "createdAt": "..." }]
+  }
+}
+
+# 意图分类
+- query_asset: 查询资产（触发词：我的设备、我有什么资产）
+- query_warranty: 查询保修（触发词：保修、保修期、过保）
+- query_ticket: 查询工单（触发词：工单、申请进度）
+- guide_repair: 引导报修（触发词：报修、坏了、出问题）→ 需二次确认
+- guide_apply: 引导申领（触发词：申领、申请、我要一台）→ 需二次确认
+- fallback: 兜底（无法归类的其他消息）
+
+# 输出格式
+
+对于 query_asset / query_warranty / query_ticket（仅查询）：
+{
+  "intent": "query_asset",
+  "reply": "自然语言回复",
+  "needConfirmation": false,
+  "pendingAction": null
+}
+
+对于 guide_repair / guide_apply（需要二次确认）：
+{
+  "intent": "guide_repair",
+  "reply": "即将为你创建XXX，请确认是否继续？",
+  "needConfirmation": true,
+  "pendingAction": {
+    "type": "create_repair" | "create_apply",
+    "description": "具体操作描述",
+    "params": { ... }
+  }
+}
+
+对于 fallback：
+{
+  "intent": "fallback",
+  "reply": "友好引导回复",
+  "needConfirmation": false,
+  "pendingAction": null
+}
+```
+
+### 4.3 Token 确认机制
+
+```typescript
+// lib/ai/confirmation-token.ts
+import { SignJWT, jwtVerify } from 'jose';
+
+const CONFIRMATION_SECRET = new TextEncoder().encode(
+  process.env.AUTH_SECRET + ':confirmation',
+);
+
+interface ConfirmationPayload {
+  userId: string;
+  action: 'create_repair' | 'create_apply';
+  params: Record<string, unknown>;
+  exp: number;
+}
+
+export async function generateConfirmationToken(
+  payload: Omit<ConfirmationPayload, 'exp'>,
+): Promise<string> {
+  return new SignJWT({ ...payload, exp: Math.floor(Date.now() / 1000) + 300 })
+    .setProtectedHeader({ alg: 'HS256' })
+    .sign(CONFIRMATION_SECRET);
+}
+
+export async function verifyConfirmationToken(
+  token: string,
+  userId: string,
+): Promise<ConfirmationPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, CONFIRMATION_SECRET, {
+      algorithms: ['HS256'],
+    });
+    if (payload.userId !== userId) return null;
+    // token 一次性使用: 检查黑名单 + 标记已使用
+    const used = await isTokenUsed(token);
+    if (used) return null;
+    await markTokenUsed(token);
+    return payload as unknown as ConfirmationPayload;
+  } catch {
+    return null;
+  }
+}
+```
+
+---
+
+## 五、降级策略
+
+### 5.1 降级触发条件
+
+| 场景 | 处理 |
+|------|------|
+| API 超时（>5s） | 返回兜底响应 |
+| HTTP 429/5xx | 返回兜底响应 |
+| JSON 解析失败 | 返回兜底响应 |
+| 网络错误 / 空内容 | 返回兜底响应 |
+
+### 5.2 各接口兜底文案
+
+| API | 兜底文案 |
+|------|------|
+| `/api/ai/recommend` | "推荐服务暂时不可用，请稍后重试或浏览全部可用型号自行选择。" |
+| `/api/ai/triage` | "故障诊断暂时不可用，你的报修工单已提交，IT 管理员将尽快处理。" |
+| `/api/ai/chat` | "AI 助手暂时不可用，你可以通过「我的资产」查看资产信息，或通过「申领设备」/「报修」提交申请。" |
+
+### 5.3 通用降级包装函数
+
+```typescript
+export async function withAiFallback<T>(
+  fn: () => Promise<T>,
+  fallbackMessage: string,
+): Promise<{ ok: true; data: T } | { ok: false; fallback: string }> {
+  try {
+    const data = await fn();
+    return { ok: true, data };
+  } catch (error) {
+    console.error('[AI Fallback]', error);
+    return { ok: false, fallback: fallbackMessage };
+  }
+}
+```
+
+### 5.4 降级不影响主流程
+
+AI 降级后，用户仍可正常提交申领/报修工单。推荐/分诊结果为空时，工单进入人工处理队列。所有 try/catch 确保不抛致命异常。

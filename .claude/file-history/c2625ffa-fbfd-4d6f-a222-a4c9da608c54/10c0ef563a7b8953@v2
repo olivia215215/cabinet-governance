@@ -1,0 +1,656 @@
+# 技术规格说明书 — AI IT 资产与设备流转管理系统
+
+> **文档版本** v1.3 | **日期** 2026-05-11 | **状态** 待四轮封驳
+
+---
+
+## 一、技术选型
+
+| 层 | 选型 | 理由 |
+|---|---|---|
+| 框架 | Next.js 15 (App Router) | 项目已有基础，API Routes + Server Components 统一全栈 |
+| 语言 | TypeScript (strict) | 全栈类型安全 |
+| 数据库 | PostgreSQL 16 (Docker) | 实物资产系统需要事务强一致，SQLite 并发弱不适合 |
+| ORM | Prisma | 项目已有 schema 基础，migration 成熟 |
+| 认证 | NextAuth.js v5 + JWT | 多角色权限，session 策略灵活 |
+| UI 框架 | Tailwind CSS + shadcn/ui | 快速出 UI，看板大屏用 Recharts |
+| AI 接入 | Vercel AI SDK + DeepSeek API | 免费额度，中文友好，SDK 封装 stream/降级 |
+| 部署 | Docker Compose (Next.js + PG) | 满足交付要求，一个 `docker compose up` 启动 |
+| 测试重置 | `POST /api/test/reset` seed 脚本 | QA 自动化需要 |
+
+---
+
+## 二、系统架构
+
+```
+┌────────────────────────────────────────────────────┐
+│                    Docker Compose                    │
+│  ┌──────────────────┐  ┌──────────────────┐        │
+│  │   Next.js App     │  │  PostgreSQL 16   │        │
+│  │   (port 3000)     │──│  (port 5432)     │        │
+│  │   - Web UI        │  │  - Prisma ORM     │        │
+│  │   - API Routes    │  │  - Row-Level Sec  │        │
+│  │   - AI SDK        │  └──────────────────┘        │
+│  │   - NextAuth      │                              │
+│  └──────────────────┘                              │
+│           │                                         │
+│           ▼                                          │
+│    DeepSeek API (外部)                               │
+└────────────────────────────────────────────────────┘
+```
+
+**内部架构分层**:
+- `app/` — Next.js App Router 页面 + API Routes
+- `lib/` — 业务逻辑层 (services, auth, ai, utils)
+- `prisma/` — 数据库 schema + migrations + seed
+- `components/` — UI 组件 (shadcn/ui + 自定义)
+
+---
+
+## 三、数据库设计
+
+### 3.1 实体关系
+
+```
+Department (1) ──< (N) User
+User       (1) ──< (N) Ticket (as applicant/approver)
+User       (1) ──< (N) AssetInstance (as holder)
+AssetModel (1) ──< (N) AssetInstance
+AssetInstance (N) >──< (N) Ticket
+Department (1) ──< (N) AssetInstance
+```
+
+### 3.2 核心表
+
+#### Department
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 主键 |
+| name | String | 部门名称 |
+| managerId | String? (FK → User) | 部门主管 |
+
+#### User
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 主键 |
+| email | String (unique) | 登录邮箱 |
+| passwordHash | String | bcrypt hash |
+| name | String | 姓名 |
+| role | Enum(EMPLOYEE, MANAGER, IT_ADMIN, EXECUTIVE) | 基础角色 |
+| deptId | String (FK → Department) | 所属部门 |
+| status | Enum(ACTIVE, RESIGNED) | 账号状态 |
+
+#### AssetModel (SKU 主数据)
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK) | 型号编码，如 MODEL-L01 |
+| category | Enum(LAPTOP, MONITOR, KEYBOARD, MOUSE, HEADPHONE, OTHER) | 资产分类 |
+| brandName | String | 品牌名称 |
+| modelName | String | 型号名称 |
+| specs | JSON | 规格参数 (结构化) |
+| purchasePrice | Decimal | 采购单价 |
+| supplier | String | 供应商 |
+| warrantyMonths | Int | 保修月数 |
+| status | Enum(ACTIVE, DISCONTINUED) | 是否停用 |
+
+**specs JSON 结构**:
+```json
+// 笔记本: { "cpu": "...", "ram": "...", "storage": "...", "screen": "..." }
+// 显示器: { "size": "...", "resolution": "...", "ports": "..." }
+// 外设:    { "connection": "...", "color": "...", "wireless": true }
+```
+
+#### AssetInstance
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK) | 资产编号，如 AST-101 |
+| sn | String (unique) | 厂商序列号 |
+| modelId | String (FK → AssetModel) | 所属型号 |
+| status | Enum(IN_STOCK, AVAILABLE, ASSIGNED, IN_USE, RETURNING, REPAIRING, TRANSFERRING, LOST, SCRAPPED) | 当前状态 |
+| holderId | String? (FK → User) | 当前持有人 |
+| deptId | String? (FK → Department) | 归属部门 |
+| purchaseDate | DateTime | 采购日期 |
+| warrantyExpiry | DateTime | 保修到期 (purchaseDate + model.warrantyMonths) |
+| scrapReason | String? | 报废原因 |
+| lostReason | String? | 丢失原因 |
+| createdAt | DateTime | 入库时间 |
+| updatedAt | DateTime | 最后更新时间 |
+
+#### Ticket
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 工单 ID |
+| type | Enum(APPLY, RETURN, REPAIR, TRANSFER) | 工单类型 |
+| status | Enum(SUBMITTED, PENDING_MANAGER_1, PENDING_MANAGER_2, PENDING_IT, APPROVED, REJECTED, IN_PROGRESS, COMPLETED, CANCELLED) | 工单状态。PENDING_MANAGER_1=调拨发起方主管审批, PENDING_MANAGER_2=调拨接收方主管审批, 非调拨类仅用_1 |
+| applicantId | String (FK → User) | 申请人 |
+| targetAssetId | String? (FK → AssetInstance) | 关联资产 (申领审批通过后可分配，直接关联) |
+| targetModelId | String? (FK → AssetModel) | 申领的目标型号 |
+| reason | Text | 申请理由/故障描述 |
+| rejectReason | String? | 驳回原因 |
+| aiTriageResult | JSON? | AI 分诊结果 (报修类) |
+| aiRecommendation | JSON? | AI 推荐记录 (申领类) |
+| forceRepair | Boolean (default: false) | 员工坚持报修标记 |
+| assignedById | String? (FK → User) | IT 分配人/维修接单人 |
+| processorId | String? (FK → User) | 维修处理人 (IT接单时记录) |
+| fromHolderId | String? (FK → User) | 调出原持有人 (调拨类工单) |
+| toHolderId | String? (FK → User) | 调拨目标持有人 |
+| targetDeptId | String? (FK → Department) | 调拨目标部门 |
+| deputyApproval | Boolean (default: false) | 是否为代审批 (IT管理员代为审批) |
+| deputyApproverId | String? (FK → User) | 代审批人 ID |
+| completedAt | DateTime? | 完成时间 |
+| createdAt | DateTime | 创建时间 |
+| updatedAt | DateTime | 更新时间 |
+
+#### AuditLog (只追加，不修改不删除)
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 主键 |
+| action | String | 操作类型 (如 ticket.create, asset.status_change, ai.recommend) |
+| operatorId | String (FK → User) | 操作人 |
+| targetType | String | 对象类型 (ticket, asset, user) |
+| targetId | String | 对象 ID |
+| beforeSnapshot | JSON? | 操作前快照 |
+| afterSnapshot | JSON? | 操作后快照 |
+| metadata | JSON? | 额外信息 (AI 输入/输出摘要等) |
+| createdAt | DateTime | 操作时间 |
+
+#### Notification
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 主键 |
+| userId | String (FK → User) | 接收人 |
+| type | Enum(APPROVAL_REQUEST, APPROVAL_RESULT, PICKUP_READY, REPAIR_UPDATE, WARRANTY_EXPIRY, TRANSFER_REQUEST, RETURN_SUBMITTED) | 通知类型. RETURN_SUBMITTED=归还工单通知IT确认 |
+| title | String | 标题 |
+| body | Text | 正文 |
+| read | Boolean (default: false) | 是否已读 |
+| relatedTicketId | String? (FK → Ticket) | 关联工单 |
+| relatedAssetId | String? (FK → AssetInstance) | 关联资产 |
+| createdAt | DateTime | 创建时间 |
+
+#### InventorySession (盘点任务)
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 盘点批次 ID |
+| startedById | String (FK → User) | 发起人(IT管理员) |
+| status | Enum(IN_PROGRESS, COMPLETED) | 盘点状态 |
+| startedAt | DateTime | 发起时间 |
+| completedAt | DateTime? | 完成时间 |
+
+#### InventoryScan (盘点扫描记录)
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | String (PK, CUID) | 主键 |
+| sessionId | String (FK → InventorySession) | 所属盘点批次 |
+| assetId | String (FK → AssetInstance) | 扫描到的资产编号 |
+| scannedAt | DateTime | 扫描时间 |
+
+---
+
+## 四、状态机设计
+
+### 4.1 资产状态转移（后端强制校验）
+
+```
+in_stock ──────► available ──────► assigned ──────► in_use
+                    │                  │    │            │
+                    │                  │    └──► available (员工拒收)
+                    │                  │                 │
+                    ▼                  ▼                 ├──► returning ──► available
+                  lost              lost                 │        │
+                    │                  │                 │        └──► scrapped
+                    ▼                  ▼                 │
+               [终止]            [终止]                  ├──► repairing ──► in_use
+                                                         │        │
+                  scrapped ◄─────────────────────────────┤        ├──► available
+                  [终止]                                  │        └──► scrapped
+                                                         │
+                                                         ├──► transferring ──► in_use
+                                                         │
+                                                         └──► lost [终止]
+```
+
+实现方式：Service 层 `AssetStateMachine` 类，包含 `allowedTransitions` map，每次转移前校验。
+
+### 4.2 工单状态流转
+
+```
+申领: submitted → pending_manager_1(或直接 pending_it) → pending_it → approved → in_progress → completed
+                                                                             ↘ rejected
+归还: submitted → pending_it → in_progress → completed
+报修: submitted → (AI 分诊) → pending_it → in_progress(IT接单) → completed
+调拨: submitted → pending_manager_1(若fromHolderId有值) → pending_manager_2 → pending_it → in_progress → completed
+                                                                                       ↘ rejected
+  特别的，若资产状态为 available/in_stock(无原持有人 fromHolderId)，审批流程从 submitted 直接到 pending_manager_2
+所有状态可有 cancelled (员工主动撤销，仅限审批通过前)
+```
+
+---
+
+## 五、API 设计
+
+### 5.1 路由规划
+
+```
+认证:
+  POST   /api/auth/login
+  POST   /api/auth/logout
+  GET    /api/auth/session
+
+资产(员工端):
+  GET    /api/assets/mine              — 我的资产列表
+  GET    /api/assets/:id               — 资产详情(权限过滤)
+
+资产(IT 管理员端):
+  GET    /api/it/assets                — 全量资产列表 (分页+筛选)
+  GET    /api/it/assets/:id            — 资产详情含全生命周期
+  POST   /api/it/assets/inbound        — 入库(扫码/手动)
+  POST   /api/it/assets/inbound/batch  — 批量入库(CSV)
+  POST   /api/it/assets/:id/accept     — 验收确认(in_stock → available)
+  POST   /api/it/assets/:id/scrap      — 报废
+  POST   /api/it/assets/:id/lost       — 标记丢失(事务内自动取消关联工单)
+  GET    /api/it/assets/:id/timeline   — 资产生命周期时间轴
+
+型号管理:
+  GET    /api/it/models                — 型号列表
+  POST   /api/it/models                — 新增型号
+  PUT    /api/it/models/:id            — 编辑型号
+
+盘点:
+  POST   /api/it/inventory/start       — 发起盘点任务
+  POST   /api/it/inventory/scan        — 记录扫描到的资产(写入盘点记录)
+  GET    /api/it/inventory/:id/discrepancies — 查看盘点差异报告
+
+工单:
+  POST   /api/tickets/apply            — 提交申领
+  POST   /api/tickets/return           — 提交归还
+  POST   /api/tickets/repair           — 提交报修(含AI分诊)
+  POST   /api/tickets/transfer         — IT发起调拨
+  POST   /api/tickets/:id/approve      — 审批通过 (deputy=true 为代审批)
+  POST   /api/tickets/:id/reject       — 驳回
+  POST   /api/tickets/:id/cancel       — 撤销
+  POST   /api/tickets/:id/assign       — IT 分配资产
+  POST   /api/tickets/:id/accept       — IT接单维修(pending_it → in_progress)
+  POST   /api/tickets/:id/confirm      — 员工确认领用/IT确认接收归还
+  POST   /api/tickets/:id/complete     — 维修完成(归还原持有人/回库存/报废)
+  GET    /api/tickets                  — 我的工单列表
+  GET    /api/tickets/:id              — 工单详情+时间轴
+  GET    /api/it/tickets               — IT 工单工作台 (所有工单)
+  GET    /api/approvals/pending        — 待我审批
+  GET    /api/approvals/history        — 我已审批
+
+AI:
+  POST   /api/ai/recommend             — 申领推荐
+  POST   /api/ai/triage                — 故障分诊
+  POST   /api/ai/chat                  — 对话助手
+
+通知:
+  GET    /api/notifications            — 通知列表
+  POST   /api/notifications/:id/read   — 标记已读
+
+看板:
+  GET    /api/dashboards/employee      — 员工工作台
+  GET    /api/dashboards/it            — IT 工作台
+  GET    /api/dashboards/exec          — 管理层大屏
+
+系统:
+  POST   /api/test/reset               — 测试重置 (开发/测试环境)
+
+用户管理:
+  GET    /api/it/users                 — 用户列表
+  POST   /api/it/users/:id/resign      — 标记离职
+  GET    /api/it/users/resigned-assets — 离职未归还清单
+
+审计:
+  GET    /api/it/audit-logs            — 审计日志 (只读)
+```
+
+### 5.2 价格与敏感字段过滤规则 (DTO/View Object)
+
+所有 API 返回的 AssetModel/AssetInstance 按角色过滤，Service 层强制应用 DTO 剥离:
+
+| 字段 | EMPLOYEE | MANAGER | IT_ADMIN | EXECUTIVE |
+|---|---|---|---|---|
+| 资产编号 / 品牌 / 型号 / 规格 | ✓ | ✓ | ✓ | ✓ |
+| 采购日期 / 保修到期日 | ✓ | ✓ | ✓ | ✓ |
+| 当前状态 | 自己持有的 | 本部门的 | ✓ | 聚合 |
+| **采购价格** | **✗** | **✗** | **✓** | **✓(汇总)** |
+| **折旧账面价值** | **✗** | **✗** | **✓** | **✓(汇总)** |
+| **供应商信息** | **✗** | **✗** | **✓** | **✗** |
+| **厂商SN** | **✗** | **✗** | **✓** | **✗** |
+| 持有人姓名 | 自己 | 本部门员工 | ✓ | ✗(仅聚合) |
+
+实现方式:
+- `role = EMPLOYEE | MANAGER` → DTO 剥离 `purchasePrice`, `supplier`, `sn`
+- `role = IT_ADMIN` → 完整返回所有字段
+- `role = EXECUTIVE` → 仅返回聚合数据(COUNT/SUM)，不返回单个资产明细；剥离 `supplier` 和 `sn`
+- AI 对话助手的查询也必须遵循此表(员工问"这台多少钱"→ AI 回复"抱歉，该信息不在你的权限范围内")
+
+---
+
+## 六、前端页面规划
+
+### 6.1 通用布局
+- 左侧导航 (按角色显示不同菜单)
+- 顶部用户信息 + 通知铃铛
+- 主内容区
+
+### 6.2 页面清单 (按角色)
+
+| 路径 | 页面 | 角色 |
+|---|---|---|
+| `/home` | 工作台首页 | 所有 |
+| `/my-assets` | 我的资产 | 员工/主管 |
+| `/apply` | 申领设备 | 员工/主管 |
+| `/tickets` | 我的工单 | 员工/主管 |
+| `/tickets/[id]` | 工单详情 | 所有 |
+| `/chat` | AI 助手 | 所有 |
+| `/notifications` | 通知中心 | 所有 |
+| `/profile` | 个人设置 | 所有 |
+| `/approvals` | 审批工作台 | 主管 |
+| `/dept-board` | 部门资产看板 | 主管 |
+| `/it/home` | IT 工作台 | IT管理员 |
+| `/it/tickets` | 工单工作台 | IT管理员 |
+| `/it/assets` | 资产管理 | IT管理员 |
+| `/it/assets/[id]` | 资产详情/时间轴 | IT管理员 |
+| `/it/models` | 型号管理 | IT管理员 |
+| `/it/inbound` | 入库操作 | IT管理员 |
+| `/it/inventory` | 盘点 | IT管理员 |
+| `/it/users` | 用户管理 | IT管理员 |
+| `/it/audit` | 审计日志 | IT管理员 |
+| `/exec/dashboard` | 管理层大屏 | 管理层 |
+| `/exec/insights` | AI 洞察(P1) | 管理层 |
+
+---
+
+## 七、AI 集成设计
+
+### 7.1 申领推荐
+```
+输入: 自然语言需求描述 + 所有活跃型号列表 (含库存数)
+输出: { recommendations: [{ modelId, score, reason }], topPick: modelId }
+Prompt: 根据用户需求匹配型号，返回结构化JSON
+```
+
+### 7.2 故障分诊
+```
+输入: 故障描述
+输出: { category, severity, needRepair, reason, selfHelp }
+约束: severity=high → needRepair=true (硬规则后处理兜底)
+```
+
+### 7.3 对话助手
+```
+输入: 对话历史 + 用户消息 + 用户上下文(持有资产/工单)
+输出: 自然语言回复 + 可选 action 建议
+
+支持意图: 查询资产、查询保修、查询工单、引导报修、引导申领、兜底
+
+二次确认机制 (关键安全机制):
+  涉及实际状态变更的操作(创建工单、提交申请等)必须经过二次确认。
+  流程:
+  1. 用户表达意图 (如"我要报修我的笔记本")
+  2. AI 返回确认提示 (含 confirmation_required: true, 如"即将为您创建报修工单，是否确认?")
+     → 此时不创建工单，系统状态不变
+  3. 用户明确回复"确认"/"是"/"好的"
+  4. AI 执行操作，返回结果
+  → 如用户回复否定或取消，则不执行
+
+  Token 安全机制 (防 CSRF/重放):
+  1. 首次请求 (意图识别):
+     用户 POST /api/ai/chat { message: "我要报修我的笔记本" }
+     → 服务端识别意图为"创建报修工单"
+     → 生成一次性确认 token (JWT, 含 { userId, action, params, exp: now+5min })
+     → 存入对话 session context
+     → 返回 { reply: "即将创建报修工单，是否确认?", action: { type: "confirm_required", token: "<one-time-jwt>", pendingAction: "create_repair", description: "创建报修工单" } }
+
+  2. 二次请求 (确认执行):
+     用户 POST /api/ai/chat { message: "确认", contextToken: "<one-time-jwt>" }
+     → 服务端验证 token 签名 + 有效期 + userId 匹配
+     → token 一次性使用后立即失效(从 session 中移除, 或 Redis/内存黑名单)
+     → 执行实际操作(创建工单等)
+     → 返回 { reply: "报修工单已创建，工单编号 TKT-XXX" }
+
+  3. 拒绝/取消:
+     用户 POST /api/ai/chat { message: "算了/不要/取消" }
+     → 服务端清除 pending token
+     → 返回 { reply: "好的，已取消" }
+
+  前端实现: 根据 action.type === "confirm_required" 展示确认对话框，确认后将 token 随下一条消息回传。
+```
+
+### 7.4 降级策略
+- API 超时(>5s)或报错 → 返回 HTTP 200 + 降级提示文案
+- 使用 `try/catch` 包裹所有 AI 调用
+- 降级不影响系统其他功能
+
+---
+
+## 八、安全与权限
+
+### 8.1 认证
+- NextAuth.js JWT session
+- 密码 bcrypt 加密存储
+- 默认账号见 Mock 数据文档
+
+### 8.2 授权 (Middleware + Service 层双重校验)
+- Middleware: 路由级角色校验 (拦截未匹配角色访问 /it/* /exec/*)
+- Service: 数据级校验 (API 返回前剥离价格字段、校验跨部门操作)
+
+#### 8.2.1 代审批机制
+- IT 管理员可代为审批处于 `pending_manager_1` 或 `pending_manager_2` 的工单
+- 代审批需在 approve API 请求中传 `deputy: true`
+- 只有 IT_ADMIN 角色可执行代审批
+- 审计日志记录 `metadata.deputy = true, deputyOperatorId = <IT管理员ID>`
+- 工单上 `deputyApproval = true`, `deputyApproverId` 记录代审批人
+
+#### 8.2.2 丢失资产自动取消关联工单
+- 调用 `POST /api/it/assets/:id/lost` 标记丢失时，在**同一事务**内:
+  1. 资产状态变更为 `lost`
+  2. 查询该资产所有活跃工单(非 completed/cancelled/rejected)
+  3. 将所有活跃工单状态变更为 `cancelled`
+  4. 记录审计日志(资产状态变更 + 工单取消)
+- 以上四步原子执行，任一步失败则全部回滚
+
+### 8.3 审计
+- `AuditLog` 表只 INSERT，不提供 UPDATE/DELETE API
+- 关键操作自动记录: 工单状态变更、资产状态变更、AI 调用
+
+---
+
+## 九、Docker 交付
+
+```dockerfile
+# Dockerfile
+FROM node:22-alpine
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+EXPOSE 3000
+
+# entrypoint: 自动执行数据库迁移+种子数据，然后启动服务
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["npm", "start"]
+```
+
+```bash
+# docker-entrypoint.sh — 启动即用，无需手动预处理
+#!/bin/sh
+set -e
+
+# 等待 PostgreSQL 就绪 (最多等60秒，每2秒检查一次)
+MAX_RETRIES=30
+echo "Waiting for PostgreSQL..."
+for i in $(seq 1 $MAX_RETRIES); do
+  if npx prisma db execute --stdin > /dev/null 2>&1 <<< "SELECT 1"; then
+    echo "PostgreSQL is ready."
+    break
+  fi
+  if [ "$i" = "$MAX_RETRIES" ]; then
+    echo "ERROR: PostgreSQL did not become ready within $((MAX_RETRIES * 2)) seconds."
+    exit 1
+  fi
+  echo "  ...waiting ($i/$MAX_RETRIES)"
+  sleep 2
+done
+
+# 数据库迁移
+echo "Running database migrations..."
+npx prisma migrate deploy
+
+# 幂等 seed (seed脚本内使用 INSERT ... ON CONFLICT DO NOTHING 确保可重复执行)
+echo "Seeding database..."
+npx prisma db seed
+
+echo "Starting application..."
+exec "$@"
+```
+
+```yaml
+# docker-compose.yml
+services:
+  app:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_URL: postgresql://user:pass@db:5432/itassets
+      AUTH_SECRET: xxx
+      AI_API_KEY: ${AI_API_KEY}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.deepseek.com/v1}
+    depends_on: [db]
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: itassets
+    volumes: [pgdata:/var/lib/postgresql/data]
+volumes:
+  pgdata:
+```
+
+---
+
+## 十、实施计划
+
+### 阶段 0: 基础设施 (Day 0, 2-3h)
+- [ ] 初始化 Prisma schema，创建所有表
+- [ ] Seed 脚本 (Mock 数据)
+- [ ] NextAuth 配置 (4 角色)
+- [ ] Docker Compose 配置
+- [ ] 测试重置接口
+
+### 阶段 1: 核心流程 (Day 0-1, 6-8h)
+- [ ] 资产 CRUD + 状态机引擎
+- [ ] 申领流程 (含审批链跳过规则)
+- [ ] 归还流程
+- [ ] 报修流程
+- [ ] 调拨流程
+- [ ] 审计日志中间件
+
+### 阶段 2: AI 集成 (Day 1, 2-3h)
+- [ ] 申领推荐 API
+- [ ] 故障分诊 API
+- [ ] 对话助手 API
+- [ ] 降级处理
+
+### 阶段 3: 前端页面 (Day 0-1, 8-10h)
+- [ ] 通用布局 + 导航
+- [ ] 员工端全部页面
+- [ ] 主管端页面
+- [ ] IT 管理员端页面
+- [ ] 管理层大屏
+
+### 阶段 4: 通知 + 收尾 (Day 1, 2-3h)
+- [ ] 通知系统
+- [ ] 价格过滤 DTO
+- [ ] 权限中间件
+- [ ] README + API 文档
+
+---
+
+## 十一、启动方式 (README 要点)
+
+```bash
+# 1. 配置环境变量
+cp .env.example .env
+# 填写 AI_API_KEY (DeepSeek 免费 API Key)
+
+# 2. 一键启动 (自动完成 migrate + seed)
+docker compose up -d
+
+# 3. 访问
+open http://localhost:3000
+```
+
+**默认账号**: `admin@company.com` / `password` (IT 管理员)
+
+---
+
+## 十二、AC 验收标准逐条对照
+
+### 🔴 红线 (一票否决)
+| 编号 | 描述 | 设计方案 | 状态 |
+|---|---|---|---|
+| RL-01 | 已报废资产不能被申领 | 状态机 lost/scrapped 为终止态，分配资产前校验 status=available | ✓ |
+| RL-02 | 越权访问他人资产被拒 | Service 层按角色+部门过滤，非本部门+非本人返回404 | ✓ |
+| RL-03 | 审计日志不可删除修改 | AuditLog 表只INSERT，API 不暴露 UPDATE/DELETE | ✓ |
+| RL-04 | 价格信息对员工保密 | §5.2 DTO 剥离规则 + AI 对话助手遵循权限表 | ✓ |
+
+### 🟦 功能主流程 (FN-01~15)
+| 编号 | 关键设计 |
+|---|---|
+| FN-01 完整申领 | apply API → 审批链(含跳过规则) → assign API → confirm API |
+| FN-02 低价跳过主管 | 审批链校验: 单价<1000 → 跳过 PENDING_MANAGER_1 |
+| FN-03 主管不能自批 | 审批校验: applicantId === approverId 且 role=MANAGER → 跳过该节点 |
+| FN-04 归还流程 | return API → IT confirm API → 资产状态 returning→available |
+| FN-05 报修硬件 | repair API(AI分诊) → accept API(IT接单) → complete API |
+| FN-06 报修软件 | AI分诊 need_repair=false → 返回自助建议，不创建工单 |
+| FN-07 维修归还 | complete API type=return_holder → repairing→in_use |
+| FN-08 维修报废 | complete API type=scrap → repairing→scrapped |
+| FN-09 调拨流程 | transfer API → 双主管审批 → assign API → transferring→in_use |
+| FN-10 扫码入库 | inbound API 创建资产(in_stock) → accept API 验收(available) |
+| FN-11 编号唯一性 | asset.id UNIQUE 约束 + inbound API 查重 |
+| FN-12 AI推荐 | §7.1 申领推荐 Design |
+| FN-13 AI对话查资产 | §7.3 对话助手意图处理 |
+| FN-14 AI二次确认 | §7.3 confirmation_required 状态机 |
+| FN-15 审批通知 | §10 通知模板 + 工单状态变更时自动触发 |
+
+### 🟨 状态机 (SM-01~08)
+| 编号 | 关键设计 |
+|---|---|
+| SM-01 非法转移拒绝 | AssetStateMachine.allowedTransitions 白名单校验 |
+| SM-02 维修中不可调拨 | transfer API 前置校验: status !== repairing |
+| SM-03 丢失不可恢复 | lost 在 allowedTransitions 中无出边 |
+| SM-04 拒收回available | cancel API 触发 assigned→available |
+| SM-05 驳回不扣库存 | reject API 不变更资产状态/库存 |
+| SM-06 不能重复归还 | return API 前置校验: 无活跃归还工单 |
+| SM-07 审批顺序 | TicketWorkflow 状态机按序校验 |
+| SM-08 已完成不可操作 | 工单 status=completed/rejected/cancelled → 拒绝所有操作 |
+
+### 🟪 权限 (PM-01~06)
+- Middleware 拦截 /it/* (仅 IT_ADMIN) 和 /exec/* (仅 EXECUTIVE)
+- Service 层审批校验: 主管仅本部门 + 非本人
+
+### 🟩 AI (AI-01~10)
+| 编号 | 关键设计 |
+|---|---|
+| AI-01~03 | 申领推荐 Prompt 工程 + 返回结构化 JSON |
+| AI-04~06 | 故障分诊 Prompt + severity=high 硬规则兜底 |
+| AI-07 | 对话助手上下文注入用户资产+保修信息 |
+| AI-08 | 必须调用外部 LLM API，附日志可验证 |
+| AI-09 | try/catch 降级返回 HTTP 200 + 兜底文案 |
+| AI-10 | 推荐/对话不能绕过业务规则(已报废/价格越权) |
+
+### 🟧 并发 (CC-01~03)
+- 分配资产使用数据库行锁或乐观锁
+- 状态变更+事件记录+工单更新在一个 Prisma 事务中
+
+### 🟫 审计 (AU-01~03)
+- 关键操作触发 AuditLog 创建
+- AI 调用记录 action="ai.recommend"/"ai.triage"/"ai.chat" + metadata 存输入输出摘要
+
+### 🟥 性能 (PF-01~02)
+- 资产列表分页查询 limit 50
+- 看板用聚合 SQL，避免 N+1

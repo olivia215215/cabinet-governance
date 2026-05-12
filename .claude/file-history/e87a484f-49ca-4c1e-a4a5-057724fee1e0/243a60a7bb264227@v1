@@ -1,0 +1,63 @@
+"use client";
+
+import React, { createContext, useContext, useState, useCallback } from "react";
+
+export type UserRole = "EMPLOYEE" | "MANAGER" | "IT_ADMIN" | "EXECUTIVE";
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatar?: string;
+  department: string;
+  departmentId: string;
+}
+
+interface AuthContextType {
+  user: User;
+  setRole: (role: UserRole) => void;
+  unreadNotifications: number;
+  setUnreadNotifications: (n: number) => void;
+}
+
+const defaultUser: User = {
+  id: "user-001",
+  name: "张明",
+  email: "zhangming@company.com",
+  role: "EMPLOYEE",
+  department: "研发部",
+  departmentId: "dept-dev",
+};
+
+const AuthContext = createContext<AuthContextType>({
+  user: defaultUser,
+  setRole: () => {},
+  unreadNotifications: 3,
+  setUnreadNotifications: () => {},
+});
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User>(defaultUser);
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
+
+  const setRole = useCallback((role: UserRole) => {
+    const names: Record<UserRole, string> = {
+      EMPLOYEE: "张明",
+      MANAGER: "李主管",
+      IT_ADMIN: "王工",
+      EXECUTIVE: "赵总",
+    };
+    setUser((prev) => ({ ...prev, role, name: names[role] }));
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, setRole, unreadNotifications, setUnreadNotifications }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}

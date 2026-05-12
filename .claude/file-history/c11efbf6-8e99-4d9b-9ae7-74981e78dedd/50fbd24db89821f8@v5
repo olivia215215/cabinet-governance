@@ -1,0 +1,35 @@
+import { NextRequest, NextResponse } from "next/server";
+import { store } from "@/lib/store";
+
+export async function GET(req: NextRequest) {
+  const date = req.nextUrl.searchParams.get("date");
+  const review = store.dailyReviews.find(
+    (r: any) => r.userId === "demo" && r.date === date
+  );
+  return NextResponse.json(review || null);
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const existing = store.dailyReviews.findIndex(
+    (r: any) => r.userId === "demo" && r.date === body.date
+  );
+
+  const review = {
+    id: crypto.randomUUID(),
+    userId: "demo",
+    ...body,
+    aiFeedback: body.aiFeedback || null,
+    aiSummary: body.aiSummary || null,
+    userSupplement: body.userSupplement || null,
+    createdAt: new Date().toISOString(),
+  };
+
+  if (existing !== -1) {
+    store.dailyReviews[existing] = { ...store.dailyReviews[existing], ...review };
+  } else {
+    store.dailyReviews.push(review);
+  }
+
+  return NextResponse.json(review);
+}

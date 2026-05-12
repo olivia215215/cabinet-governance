@@ -1,0 +1,81 @@
+# 天子日课 → iOS/Android App (Capacitor)
+
+## 方案概述
+
+用 Capacitor 将现有 Next.js 项目封装为原生移动 App。
+
+## 核心架构
+
+```
+开发模式:
+  手机 App (Capacitor WebView) → 加载 http://局域网IP:3456 → Next.js Dev Server
+
+生产模式:
+  手机 App (Capacitor WebView) → 加载内置静态文件 → API 调用 Vercel 部署的后端
+```
+
+## 具体步骤
+
+### Step 1: 安装 Capacitor 依赖
+```bash
+npm install @capacitor/core @capacitor/cli @capacitor/ios
+```
+
+### Step 2: 初始化 Capacitor
+```bash
+npx cap init "天子日课" "com.tianzi.rike"
+```
+- App ID: `com.tianzi.rike`
+- App Name: `天子日课`
+
+### Step 3: 修改前端代码 — API 基地址可配置
+
+当前所有 fetch 使用相对路径 `/api/...`。需要改为可配置的绝对 URL：
+- 创建 `lib/api.ts` — 封装 fetch，自动拼接 `API_BASE_URL`
+- 设置 `.env.local` — `NEXT_PUBLIC_API_URL=http://localhost:3456`（开发）/ Vercel URL（生产）
+- 修改所有页面和组件的 fetch 调用指向 `apiUrl`
+
+### Step 4: 更新 next.config.ts — 支持静态导出
+```ts
+const nextConfig = {
+  output: 'export',  // 生成静态文件供 Capacitor 加载
+  images: { unoptimized: true },
+};
+```
+
+### Step 5: 添加 iOS 平台
+```bash
+npx cap add ios
+```
+
+### Step 6: 构建 + 同步
+```bash
+npm run build          # Next.js 静态导出到 out/
+npx cap sync ios       # 同步到 iOS 项目
+npx cap open ios       # 在 Xcode 中打开
+```
+
+### Step 7: Xcode 中 build → 安装到 iPhone
+
+## 涉及的文件变更
+
+- `package.json` — 新增 Capacitor 依赖和 scripts
+- `next.config.ts` — 添加 `output: 'export'`
+- `lib/api.ts` — **新建**，封装带 base URL 的 fetch
+- 所有页面文件 (6个) — `fetch('/api/...')` → `apiFetch('/api/...')`
+- `.env.local` — 新增 `NEXT_PUBLIC_API_URL`
+
+## 开发工作流
+
+```bash
+# 日常开发
+npm run dev            # 启动 Next.js (端口 3456)
+npx cap sync ios       # 同步到 iOS
+npx cap open ios       # Xcode Run → 装到手机
+```
+
+## 前置要求
+
+- macOS + Xcode 已安装（陛下是 Mac，应该已有）
+- Apple ID（免费开发用，装到自己手机不需要付费开发者账号）
+- iPhone（用于真机测试）

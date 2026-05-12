@@ -1,0 +1,1023 @@
+import {
+  createSkillFromNaturalLanguage,
+  filterSkills,
+  getNextStatus,
+  scanSkill,
+  seedSkills,
+  statusOrder,
+  sources,
+  validateSkillId,
+  validatePublishReady,
+  validateImportFile
+} from "../src/skills.js";
+
+const storageKey = "br_skill_resource_library_v2";
+
+const state = {
+  page: "library",
+  primaryTab: "space",
+  resourceTab: "skill",
+  skillView: "grid",
+  keyword: "",
+  status: "全部",
+  source: "全部",
+  createMode: "",
+  editingId: "",
+  detailId: "",
+  detailTab: "overview",
+  modal: "",
+  importedFileName: "",
+  skills: loadSkills()
+};
+
+let keywordTimer = null;
+
+const resourceTabs = [
+  { id: "knowledge", label: "知识库" },
+  { id: "database", label: "数据库" },
+  { id: "plugin", label: "插件库" },
+  { id: "skill", label: "技能" }
+];
+
+const createTypes = [
+  {
+    id: "在线编写",
+    title: "在线编写",
+    subtitle: "进入编辑器编写 SKILL.md，可随时使用自然语言生成或补全内容",
+    description: "进入编辑器编写 SKILL.md，可随时用自然语言生成或补全内容。",
+    assets: ["SKILL.md", "manifest.json", "schema"]
+  },
+  {
+    id: "代码仓库拉取",
+    title: "代码仓库拉取",
+    subtitle: "从已接入代码仓库读取技能包，按 manifest.json、skill.yaml、SKILL.md 优先级识别入口",
+    description: "选择已接入的代码仓库，按 manifest.json、skill.yaml、SKILL.md 自动识别入口。",
+    assets: ["manifest.json", "skill.yaml", "SKILL.md"]
+  },
+  {
+    id: "导入技能包",
+    title: "导入技能包",
+    subtitle: "迁移已有资产",
+    description: "先唤起上传窗口读取 md、json、yaml、zip，再进入同一个技能编辑器确认和发布。",
+    assets: [".md", ".json", ".yaml", ".zip"]
+  }
+];
+
+// sources now imported from skills.js
+
+function loadSkills() {
+  const saved = localStorage.getItem(storageKey);
+  return saved ? JSON.parse(saved) : seedSkills;
+}
+
+function saveSkills() {
+  localStorage.setItem(storageKey, JSON.stringify(state.skills));
+}
+
+function render() {
+  document.querySelector("#app").innerHTML = `
+    <div class="layout">
+      ${sidebar()}
+      <main class="workspace">
+        ${pageContent()}
+      </main>
+    </div>
+    ${state.modal ? createMethodModal() : ""}
+  `;
+  bind();
+}
+
+function pageContent() {
+  if (state.page === "editor") return editorPage();
+  if (state.page === "detail") return detailPage();
+  return `${topChrome()}${resourceNavigation()}${resourceBody()}`;
+}
+
+function sidebar() {
+  return `
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">B</span>
+        <strong>百融百工</strong>
+      </div>
+      <button class="create-agent">+ 创建智能体</button>
+      <nav class="side-section"><span>广场</span><button>探索广场</button></nav>
+      <nav class="side-section"><span>应用</span><button>批量任务</button></nav>
+      <div class="space-card"><span class="space-icon">J</span><strong>jingxiu.zhao</strong><small>所有者</small></div>
+      <nav class="side-section">
+        <span>创作中心</span>
+        <button>工作台</button>
+        <button class="active">资源库</button>
+        <button>效果评测</button>
+      </nav>
+      <nav class="side-section">
+        <span>运行中心</span>
+        <button>发布管理</button>
+        <button>线上观测</button>
+        <button>自动优化</button>
+      </nav>
+      <nav class="side-section">
+        <span>管理中心</span>
+        <button>空间管理</button>
+        <button>文档中心</button>
+      </nav>
+      <div class="profile"><span class="avatar"></span><strong>jingxiu.zhao</strong></div>
+    </aside>
+  `;
+}
+
+function topChrome() {
+  return `
+    <header class="page-head">
+      <div class="title-row">
+        <h1>资源库</h1>
+        <div class="segmented" role="tablist">
+          <button class="${state.primaryTab === "space" ? "active" : ""}" data-primary="space">空间资源库</button>
+          <button class="${state.primaryTab === "public" ? "active" : ""}" data-primary="public">公开资源库</button>
+        </div>
+      </div>
+      <label class="search">
+        <span></span>
+        <input id="keyword" value="${escapeHtml(state.keyword)}" placeholder="请输入关键词搜索" />
+      </label>
+    </header>
+  `;
+}
+
+function resourceNavigation() {
+  return `
+    <div class="resource-tabs">
+      ${resourceTabs.map(tab => `
+        <button class="${state.resourceTab === tab.id ? "active" : ""}" data-resource="${tab.id}">
+          ${tab.label}${tab.id === "skill" ? "<i>NEW</i>" : ""}
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function resourceBody() {
+  if (state.resourceTab !== "skill") return placeholderResource();
+  return skillResource();
+}
+
+function placeholderResource() {
+  const copy = {
+    knowledge: ["知识库", "沉淀文档、FAQ 和业务知识，供 Agent 检索引用。"],
+    database: ["数据库", "配置结构化数据源，支持查询和分析任务。"],
+    plugin: ["插件库", "连接外部系统，执行查数、发通知、建工单等动作。"]
+  }[state.resourceTab];
+  return `
+    <section class="empty-resource">
+      <div>
+        <span class="big-icon">${copy[0].slice(0, 1)}</span>
+        <h2>${copy[0]}</h2>
+        <p>${copy[1]}</p>
+      </div>
+    </section>
+  `;
+}
+
+function skillResource() {
+  const library = state.primaryTab === "public" ? "official" : "space";
+  const skills = filterSkills(state.skills, {
+    library,
+    keyword: state.keyword,
+    status: state.status,
+    source: state.source
+  });
+  return `
+    <section class="skill-page">
+      <div class="skill-toolbar">
+        <div class="toolbar-left">
+          <div class="metric-pill"><strong>${skills.length}</strong><span>${library === "official" ? "官方技能" : "空间技能"}</span></div>
+          <select id="statusFilter">${["全部", ...statusOrder].map(item => `<option ${state.status === item ? "selected" : ""}>${item}</option>`).join("")}</select>
+          <select id="sourceFilter">${sources.map(item => `<option ${state.source === item ? "selected" : ""}>${item}</option>`).join("")}</select>
+        </div>
+        <div class="toolbar-right">
+          <button data-action="batch">批量操作</button>
+          ${library === "space" ? `<button class="primary" data-open-create-modal>+ 创建技能</button>` : ""}
+          <button class="icon-btn ${state.skillView === "list" ? "active" : ""}" data-view-mode="list" title="列表视图">≡</button>
+          <button class="icon-btn ${state.skillView === "grid" ? "active" : ""}" data-view-mode="grid" title="卡片视图">□</button>
+        </div>
+      </div>
+      ${library === "space" ? "" : officialBanner()}
+      ${skills.length ? `
+        <div class="${state.skillView === "grid" ? "skill-grid" : "skill-list"}">
+          ${skills.map(skill => state.skillView === "grid" ? skillCard(skill) : skillRow(skill)).join("")}
+        </div>
+      ` : emptySkills(library)}
+    </section>
+  `;
+}
+
+function officialBanner() {
+  return `
+    <section class="generator-strip official">
+      <div>
+        <strong>官方技能库</strong>
+        <p>官方技能可直接引用，也可以复制到空间后进入完整编辑页定制。</p>
+      </div>
+      <button data-switch-space>查看空间技能</button>
+    </section>
+  `;
+}
+
+function skillCard(skill) {
+  return `
+    <article class="skill-card">
+      <button class="card-hit" data-detail="${skill.id}" aria-label="查看 ${skill.name} 详情"></button>
+      <div class="card-head">
+        <span class="skill-icon">${skill.owner === "official" ? "官" : "S"}</span>
+        <div>
+          <h3>${skill.name}</h3>
+          <button class="copy-id" data-copy="${skill.skillId}">${skill.skillId}</button>
+        </div>
+        ${statusBadge(skill.status)}
+      </div>
+      <p class="description">${skill.description}</p>
+      <div class="tag-row">
+        <span>${skill.source}</span>
+        <span>${skill.category}</span>
+        <span>${skill.assets.length} 个资产</span>
+      </div>
+      <div class="card-meta">
+        <span>${skill.creator}</span>
+        <span>智能体：${skill.agents}</span>
+        <span>${skill.version}</span>
+      </div>
+      <div class="card-actions">${skillActions(skill)}</div>
+    </article>
+  `;
+}
+
+function skillRow(skill) {
+  return `
+    <article class="skill-row">
+      <span class="skill-icon">${skill.owner === "official" ? "官" : "S"}</span>
+      <div class="row-main">
+        <h3>${skill.name} <button class="copy-id" data-copy="${skill.skillId}">${skill.skillId}</button></h3>
+        <p>${skill.description}</p>
+      </div>
+      <div class="row-col">${skill.source}<br><small>${skill.category}</small></div>
+      <div class="row-col">${statusBadge(skill.status)}<br><small>${skill.version}</small></div>
+      <div class="row-actions">${skillActions(skill)}</div>
+    </article>
+  `;
+}
+
+function skillActions(skill) {
+  if (skill.owner === "official") {
+    return `
+      <button data-detail="${skill.id}">详情</button>
+      <button class="primary" data-copy-official="${skill.id}">复制到空间</button>
+      <button data-reference="${skill.id}">直接引用</button>
+    `;
+  }
+  const editable = `<button data-edit="${skill.id}">编辑</button>`;
+  const publish = ["草稿", "扫描失败", "已下架"].includes(skill.status) ? `<button class="primary" data-request-publish="${skill.id}">发布</button>` : "";
+  const unpublish = skill.status === "已发布" ? `<button data-unpublish="${skill.id}">下架</button>` : "";
+  return `
+    <button data-detail="${skill.id}">详情</button>
+    ${editable}
+    ${publish}
+    ${unpublish}
+    <button data-remove="${skill.id}">删除</button>
+  `;
+}
+
+function statusLabel(status) {
+  return status === "扫描中" ? "安全审核中" : status === "草稿变更" ? "草稿变更" : status;
+}
+
+function statusBadge(status) {
+  const label = statusLabel(status);
+  const tone = {
+    "草稿": "neutral",
+    "草稿变更": "warning",
+    "扫描中": "info",
+    "扫描失败": "danger",
+    "已发布": "success",
+    "已下架": "neutral"
+  }[status] || "neutral";
+  return `<span class="status ${tone}">${label}</span>`;
+}
+
+function emptySkills(library) {
+  return `
+    <section class="empty-state">
+      <span class="big-icon">S</span>
+      <h2>${library === "official" ? "暂无匹配的官方技能" : "还没有空间技能"}</h2>
+      <p>${library === "official" ? "调整搜索或筛选条件，查看平台维护的标准能力。" : "点击创建，先在弹窗选择创建方式，再进入编辑页。"}</p>
+      ${library === "space" ? `<button class="primary" data-open-create-modal>创建技能</button>` : ""}
+    </section>
+  `;
+}
+
+function createMethodModal() {
+  return `
+    <div class="modal-backdrop">
+      <section class="method-modal">
+        ${state.modal === "import" ? uploadPanel() : `
+          <header class="method-head">
+            <h2>创建技能</h2>
+            <p>创建方式只决定初始内容来源。自然语言生成属于在线编写编辑器能力，不单独作为创建方式。选择后都会进入技能编辑器，完成确认后再发布。</p>
+          </header>
+          <div class="method-list">
+            ${createTypes.map(type => `
+              <button class="method-option" data-start-create="${type.id}" aria-label="${type.title}">
+                ${methodIcon(type.id)}
+                <span class="method-copy">
+                  <strong>${type.title}</strong>
+                  <small>${createMethodSubtitle(type)}</small>
+                </span>
+                <span class="method-chevron" aria-hidden="true">›</span>
+              </button>
+            `).join("")}
+          </div>
+          <footer class="method-footer">
+            <button data-close-modal>取消</button>
+          </footer>
+        `}
+      </section>
+    </div>
+  `;
+}
+
+function createMethodSubtitle(type) {
+  const subtitles = {
+    "在线编写": "进入编辑器编写 SKILL.md，可随时用自然语言生成或补全内容。",
+    "代码仓库拉取": "从已接入代码仓库读取技能包，按 manifest.json、skill.yaml、SKILL.md 优先级识别入口。",
+    "导入技能包": "上传本地技能包，解析 Markdown、JSON、YAML、ZIP 后进入编辑器。"
+  };
+  return subtitles[type.id] || type.description;
+}
+
+function methodIcon(type) {
+  const tone = {
+    "在线编写": "primary",
+    "代码仓库拉取": "orange",
+    "导入技能包": "violet"
+  }[type] || "primary";
+  const icons = {
+    "在线编写": `<path d="M15.5 5.5 18 8l-8.8 8.8-3.7 1.1 1.1-3.7 8.9-8.7Z"></path><path d="m13.7 7.3 3 3"></path><path d="M5 6.5 3.5 5 5 3.5"></path><path d="M8 3.5 9.5 5 8 6.5"></path>`,
+    "代码仓库拉取": `<path d="m12 18 7-5-2.3-7.2-2.4 4.5H9.7L7.3 5.8 5 13l7 5Z"></path><path d="m9.7 10.3 2.3 7.2 2.3-7.2"></path>`,
+    "导入技能包": `<path d="M12 16V5"></path><path d="m8 9 4-4 4 4"></path><path d="M5 15v3h14v-3"></path>`
+  };
+  return `
+    <span class="method-icon ${tone}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${icons[type]}</svg>
+    </span>
+  `;
+}
+
+function uploadPanel() {
+  return `
+    <form class="upload-panel" id="uploadForm">
+      <header class="method-head upload-head">
+        <h2>导入技能包</h2>
+        <p>上传 Markdown、JSON、YAML 或 ZIP 技能文件包。系统读取入口文件后进入编辑器，你可以继续补全、校验和发布。</p>
+      </header>
+      <label class="upload-box">
+        <input type="file" name="skillFile" accept=".md,.json,.yaml,.yml,.zip">
+        <span>点击选择文件</span>
+        <small>${state.importedFileName || "尚未选择文件"}</small>
+      </label>
+      <div class="upload-error" id="uploadError"></div>
+      <footer class="method-footer">
+        <button type="button" data-close-modal>取消</button>
+        <button class="primary" id="importSubmitBtn">导入并编辑</button>
+      </footer>
+    </form>
+  `;
+}
+
+function editorPage() {
+  const skill = state.editingId ? state.skills.find(item => item.id === state.editingId) : draftForMode(state.createMode);
+  const mode = state.createMode || skill?.source || "在线编写";
+  return `
+    <section class="skill-editor-page">
+      <form id="editorForm" class="skill-editor-shell">
+        <header class="editor-topbar">
+          <div class="editor-title">
+            <button type="button" class="back-icon" data-back-library aria-label="返回资源库">‹</button>
+            <span class="topbar-divider"></span>
+            <strong>编辑器：${escapeHtml(skill.name || "未命名技能")}</strong>
+            ${statusBadge(skill.status || "草稿")}
+          </div>
+          <div class="editor-actions">
+            <span class="publish-note">发布后自动安全审核</span>
+            <button type="submit" data-save-draft>保存草稿</button>
+            <button type="button" class="primary" data-save-publish>发布</button>
+          </div>
+        </header>
+        <aside class="editor-meta-panel">
+          <section>
+            <h2>基础信息</h2>
+            <label>技能名称<input name="name" value="${escapeAttr(skill.name)}"></label>
+            <label>Skill ID<input name="skillId" value="${escapeAttr(skill.skillId)}" ${state.editingId ? "" : ""}><span class="skillid-error" id="skillIdError"></span></label>
+            <label>描述<textarea name="description" placeholder="请输入技能描述...">${escapeHtml(skill.description)}</textarea></label>
+          </section>
+          ${editorModePanel(mode, skill)}
+        </aside>
+        <main class="editor-workbench">
+          <nav class="file-tabs" aria-label="技能文件">
+            <button type="button" class="active">skill.md</button>
+            <button type="button">config.json</button>
+          </nav>
+          <div class="editor-split-view">
+            <section class="source-pane">
+              <textarea class="code-editor" name="content" aria-label="skill.md 内容">${escapeHtml(skill.content)}</textarea>
+            </section>
+            <aside class="render-pane">
+              <div class="rendered-skill">
+                ${renderMarkdownPreview(skill)}
+              </div>
+              <div class="bundle-files">
+                <header>
+                  <strong>Skill Bundle</strong>
+                  <span>${skill.assets.length} 个文件</span>
+                </header>
+                <div class="asset-tree editor-assets">
+                  ${skill.assets.map(asset => `<span>${asset}</span>`).join("")}
+                </div>
+              </div>
+            </aside>
+          </div>
+        </main>
+      </form>
+    </section>
+  `;
+}
+
+function editorModePanel(mode, skill) {
+  if (mode === "在线编写" || mode === "官方复制") {
+    return `
+      <section class="ai-panel">
+        <h2>自然语言生成</h2>
+        <label>业务需求<textarea name="prompt" placeholder="描述任务目标、适用场景、输入输出、约束规则">${escapeHtml(skill.description)}</textarea></label>
+        <button type="button" class="primary full" data-generate-skill>生成 / 更新 Skill 内容</button>
+      </section>
+    `;
+  }
+  if (mode === "代码仓库拉取") {
+    return `
+      <section class="ai-panel">
+        <h2>仓库来源</h2>
+        <label>GitLab 服务器<select><option>gitlab.cn.example.com</option></select></label>
+        <label>仓库<select><option>brclaw/skills/policy-qa</option><option>ops/skills/customer-care</option></select></label>
+      </section>
+      <section class="ai-panel">
+        <h2>入口识别优先级</h2>
+        <div class="priority-list">
+          <span class="priority-item"><b>P0</b> manifest.json</span>
+          <span class="priority-item"><b>P1</b> skill.yaml</span>
+          <span class="priority-item"><b>P2</b> SKILL.md</span>
+          <span class="priority-item"><b>P3</b> .skill/manifest.json</span>
+          <span class="priority-item"><b>P4</b> .skill/SKILL.md</span>
+          <span class="priority-item"><b>P5</b> README.md</span>
+        </div>
+      </section>
+    `;
+  }
+  return `
+    <section class="ai-panel">
+      <h2>导入来源</h2>
+      <label>已上传文件<input value="${escapeAttr(state.importedFileName || "customer_service_qa.zip")}" readonly></label>
+    </section>
+  `;
+}
+
+function renderMarkdownPreview(skill) {
+  const lines = String(skill.content || "").split("\n");
+  const html = lines.map(line => {
+    if (line.startsWith("# ")) return `<h1>${escapeHtml(line.slice(2))}</h1>`;
+    if (line.startsWith("## ")) return `<h2>${escapeHtml(line.slice(3))}</h2>`;
+    if (/^\d+\.\s/.test(line)) return `<p class="ordered-line">${escapeHtml(line)}</p>`;
+    if (line.startsWith("- ")) return `<p class="bullet-line">${escapeHtml(line.slice(2))}</p>`;
+    if (!line.trim()) return "";
+    return `<p>${escapeHtml(line)}</p>`;
+  }).join("");
+  return `
+    <h1>${escapeHtml(skill.name || "未命名技能")}</h1>
+    <h2>技能说明</h2>
+    <p>${escapeHtml(skill.description)}</p>
+    ${html}
+  `;
+}
+
+function draftForMode(mode) {
+  if (mode === "在线编写") return {
+    ...createSkillFromNaturalLanguage("客户投诉处理"),
+    name: "客户投诉处理 Skill",
+    skillId: "complaint_handling_skill",
+    source: "在线编写",
+    description: "根据投诉内容判断问题类型、优先级和处理流程。",
+    content: `/when_to_use
+当用户需要处理客户投诉、判断优先级或生成处理建议时使用。
+
+/input
+required:
+  - complaint: 客户投诉内容
+
+/output
+format: markdown
+
+/constraints
+- 不得承诺无法兑现的赔付或处理结果`
+  };
+  if (mode === "代码仓库拉取") return {
+    ...createSkillFromNaturalLanguage("政策问答"),
+    name: "Policy QA Skill",
+    skillId: "policy_qa_skill_draft",
+    source: "代码仓库拉取",
+    description: "从 brclaw/skills/policy-qa 仓库识别出的政策问答 Skill。",
+    assets: ["manifest.json", "SKILL.md", "references/sources.json"]
+  };
+  return {
+    ...createSkillFromNaturalLanguage("导入技能包"),
+    name: state.importedFileName ? `${state.importedFileName.replace(/\.[^.]+$/, "")} Skill` : "导入技能草稿",
+    skillId: state.importedFileName ? `${state.importedFileName.replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9_-]+/g, "_")}_skill` : "imported_skill_draft",
+    source: "导入技能包",
+    description: `从 ${state.importedFileName || "customer_service_qa.zip"} 解析出的标准技能包。`,
+    assets: ["manifest.json", "SKILL.md", "schemas/input.schema.json", "schemas/output.schema.json"]
+  };
+}
+
+function modeSpecificEditor(mode, skill) {
+  if (mode === "在线编写" || mode === "官方复制") {
+    return `
+      <section class="editor-section hero-editor">
+        <h2>AI 辅助生成</h2>
+        <label>业务需求描述<textarea name="prompt" placeholder="描述任务目标、适用场景、输入输出、约束规则">${escapeHtml(skill.description)}</textarea></label>
+        <div class="quality-check">
+          <strong>生成质量检查</strong>
+          <span>适用场景</span><span>输入要求</span><span>输出结构</span><span>约束规则</span><span>风险提示</span>
+        </div>
+        <button type="button" class="primary" data-generate-skill>生成 / 更新 Skill 内容</button>
+      </section>
+    `;
+  }
+  if (mode === "代码仓库拉取") {
+    return `
+      <section class="editor-section hero-editor">
+        <h2>代码仓库</h2>
+        <div class="two-col">
+          <label>已接入仓库<select><option>brclaw/skills/policy-qa</option><option>ops/skills/customer-care</option></select></label>
+        </div>
+        <div class="quality-check"><strong>入口识别优先级</strong><span>P0 manifest.json</span><span>P1 skill.yaml</span><span>P2 SKILL.md</span><span>P3 .skill/manifest.json</span><span>P4 .skill/SKILL.md</span><span>P5 README.md</span></div>
+      </section>
+    `;
+  }
+  if (mode === "导入技能包") {
+    return `
+      <section class="editor-section hero-editor">
+        <h2>导入解析结果</h2>
+        <label>已上传文件<input value="${escapeAttr(state.importedFileName || "customer_service_qa.zip")}"></label>
+        <div class="quality-check"><strong>已解析</strong><span>manifest.json</span><span>SKILL.md</span><span>schema</span><span>examples</span></div>
+      </section>
+    `;
+  }
+  return `
+    <section class="editor-section hero-editor">
+      <h2>在线编写模板</h2>
+      <p>从标准 Skill 模板开始维护声明块。保存草稿后可发布进入安全审核。</p>
+    </section>
+  `;
+}
+
+function detailPage() {
+  const skill = state.skills.find(item => item.id === state.detailId);
+  if (!skill) return notFoundPage();
+  const tabs = [
+    ["overview", "概览"],
+    ["content", "技能内容"],
+    ["assets", "资产包"],
+    ["scan", "安全审核"],
+    ["publish_logs", "发布记录"],
+    ["refs", "引用关系"],
+    ["logs", "调用记录"],
+    ["audit_logs", "操作日志"]
+  ];
+  return `
+    <section class="detail-page">
+      ${flowHeader("技能详情", "完整查看基础信息、资产包、安全审核、发布记录、引用关系、调用记录和操作日志。", "返回资源库")}
+      <div class="detail-hero">
+        <span class="skill-icon">${skill.owner === "official" ? "官" : "S"}</span>
+        <div>
+          <small>${skill.source} · ${skill.category}</small>
+          <h1>${skill.name}</h1>
+          <button class="copy-id" data-copy="${skill.skillId}">${skill.skillId}</button>
+          <p>${skill.description}</p>
+        </div>
+        <div class="detail-actions">
+          ${statusBadge(skill.status)}
+          ${skill.owner === "space" ? `<button data-edit="${skill.id}">编辑</button>${["草稿", "扫描失败", "已下架"].includes(skill.status) ? `<button class="primary" data-request-publish="${skill.id}">发布</button>` : ""}` : `<button class="primary" data-copy-official="${skill.id}">复制到空间</button>`}
+        </div>
+      </div>
+      <div class="detail-tabs">
+        ${tabs.map(([id, label]) => `<button class="${state.detailTab === id ? "active" : ""}" data-detail-tab="${id}">${label}</button>`).join("")}
+      </div>
+      ${detailTabContent(skill)}
+    </section>
+  `;
+}
+
+function detailTabContent(skill) {
+  if (state.detailTab === "content") {
+    return `<section class="detail-panel"><h2>结构化声明</h2><pre>${escapeHtml(skill.content)}</pre></section>`;
+  }
+  if (state.detailTab === "assets") {
+    return `<section class="detail-panel"><h2>资产包文件</h2><div class="asset-tree">${skill.assets.map(asset => `<span>${asset}</span>`).join("")}</div></section>`;
+  }
+  if (state.detailTab === "scan") {
+    const findings = skill.scan.findings;
+    return `
+      <section class="detail-panel">
+        <h2>安全审核</h2>
+        <div class="scan-progress ${skill.status === "扫描中" ? "running" : ""}">
+          <div><b>1</b><span>提交发布</span></div>
+          <div><b>2</b><span>安全审核</span></div>
+          <div><b>3</b><span>自动发布</span></div>
+        </div>
+        <div class="scan-box">
+          <strong>${skill.scan.result}</strong>
+          <span>风险等级：${skill.scan.level}</span>
+          <span>风险项：${skill.scan.issues}</span>
+          <span>${skill.scan.time}</span>
+        </div>
+        ${findings && findings.length ? findings.map(f => `
+          <div class="finding-item">
+            <div class="finding-head">
+              <span class="finding-dimension">${f.dimension || ""}</span>
+              <span class="finding-level ${f.level}">${f.level || ""}</span>
+            </div>
+            <div class="finding-detail">
+              <span><b>命中位置</b> ${f.location || "-"}</span>
+              <span><b>风险说明</b> ${f.detail || ""}</span>
+              ${f.match ? `<span><b>命中内容</b> <code>${escapeHtml(f.match)}</code></span>` : ""}
+              ${f.suggestion ? `<span><b>修复建议</b> ${f.suggestion}</span>` : ""}
+            </div>
+          </div>
+        `).join("") : ""}
+      </section>
+    `;
+  }
+  if (state.detailTab === "publish_logs") {
+    return `
+      <section class="detail-panel">
+        <h2>发布记录</h2>
+        <div class="data-table">
+          <div><b>版本</b><b>发布人</b><b>发布时间</b><b>发布说明</b><b>审核摘要</b></div>
+          <div><span>${skill.version}</span><span>${skill.creator}</span><span>${skill.updatedAt}</span><span>安全审核${skill.scan.result}</span><span>风险等级 ${skill.scan.level}</span></div>
+        </div>
+      </section>
+    `;
+  }
+  if (state.detailTab === "refs") {
+    return `<section class="detail-panel"><h2>引用关系</h2><div class="data-table"><div><b>Agent</b><b>版本</b><b>状态</b></div><div><span>客服助手</span><span>${skill.version}</span><span>已启用</span></div><div><span>运营质检 Agent</span><span>${skill.version}</span><span>已启用</span></div></div></section>`;
+  }
+  if (state.detailTab === "logs") {
+    return `<section class="detail-panel"><h2>调用记录</h2><div class="data-table"><div><b>时间</b><b>调用方式</b><b>结果</b></div><div><span>今天 14:30</span><span>自动判断</span><span>成功 1.2s</span></div><div><span>今天 13:54</span><span>/skill_id</span><span>成功 0.9s</span></div></div></section>`;
+  }
+  if (state.detailTab === "audit_logs") {
+    return `
+      <section class="detail-panel">
+        <h2>操作日志</h2>
+        <div class="data-table">
+          <div><b>时间</b><b>操作</b><b>操作人</b></div>
+          <div><span>${skill.updatedAt}</span><span>${skill.status === "草稿" ? "创建草稿" : skill.status === "扫描中" ? "提交发布" : skill.status === "已发布" ? "发布" : skill.status === "已下架" ? "下架" : "更新"}</span><span>${skill.creator}</span></div>
+        </div>
+      </section>
+    `;
+  }
+  return `
+    <section class="detail-grid-page">
+      <div class="detail-panel">
+        <h2>基础信息</h2>
+        <div class="detail-grid">
+          <span>状态</span><strong>${statusLabel(skill.status)}</strong>
+          <span>版本</span><strong>${skill.version}</strong>
+          <span>创建人</span><strong>${skill.creator}</strong>
+          <span>引用 Agent</span><strong>${skill.agents}</strong>
+          <span>更新时间</span><strong>${skill.updatedAt}</strong>
+        </div>
+      </div>
+      <div class="detail-panel">
+        <h2>发布链路</h2>
+        <div class="scan-progress ${skill.status === "扫描中" ? "running" : ""}">
+          <div><b>1</b><span>点击发布</span></div>
+          <div><b>2</b><span>安全审核</span></div>
+          <div><b>3</b><span>通过后自动发布</span></div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function flowHeader(title, subtitle, backLabel) {
+  return `
+    <header class="flow-head">
+      <button data-back-library>← ${backLabel}</button>
+      <div>
+        <h1>${title}</h1>
+        <p>${subtitle}</p>
+      </div>
+    </header>
+  `;
+}
+
+function notFoundPage() {
+  return `<section class="empty-resource"><div><h2>没有找到技能</h2><button data-back-library>返回资源库</button></div></section>`;
+}
+
+function bind() {
+  document.querySelectorAll("[data-primary]").forEach(button => button.onclick = () => {
+    state.primaryTab = button.dataset.primary;
+    state.status = "全部";
+    state.source = "全部";
+    render();
+  });
+  document.querySelectorAll("[data-resource]").forEach(button => button.onclick = () => {
+    state.resourceTab = button.dataset.resource;
+    render();
+  });
+  document.querySelector("#keyword")?.addEventListener("input", event => {
+    const value = event.target.value;
+    clearTimeout(keywordTimer);
+    keywordTimer = setTimeout(() => {
+      state.keyword = value;
+      render();
+    }, 180);
+  });
+  document.querySelector("#statusFilter")?.addEventListener("change", event => {
+    state.status = event.target.value;
+    render();
+  });
+  document.querySelector("#sourceFilter")?.addEventListener("change", event => {
+    state.source = event.target.value;
+    render();
+  });
+  document.querySelectorAll("[data-view-mode]").forEach(button => button.onclick = () => {
+    state.skillView = button.dataset.viewMode;
+    render();
+  });
+  document.querySelectorAll("[data-open-create-modal]").forEach(button => button.onclick = () => {
+    state.modal = "method";
+    render();
+  });
+  document.querySelectorAll("[data-start-create]").forEach(button => button.onclick = () => {
+    if (button.dataset.startCreate === "导入技能包") {
+      state.modal = "import";
+      render();
+      return;
+    }
+    state.createMode = button.dataset.startCreate;
+    state.editingId = "";
+    state.modal = "";
+    state.page = "editor";
+    render();
+  });
+  document.querySelectorAll("[data-close-modal]").forEach(button => button.onclick = () => {
+    state.modal = "";
+    render();
+  });
+  document.querySelector("[name='skillFile']")?.addEventListener("change", event => {
+    const file = event.target.files?.[0];
+    state.importedFileName = file?.name || "";
+    const errEl = document.querySelector("#uploadError");
+    if (file && !validateImportFile(file.name, file.size).valid) {
+      errEl.textContent = validateImportFile(file.name, file.size).error;
+      state.importedFileName = "";
+    } else if (errEl) {
+      errEl.textContent = "";
+    }
+    render();
+  });
+  document.querySelector("#uploadForm")?.addEventListener("submit", event => {
+    event.preventDefault();
+    const fileInput = document.querySelector("[name='skillFile']");
+    const file = fileInput?.files?.[0];
+    if (file) {
+      const check = validateImportFile(file.name, file.size);
+      if (!check.valid) {
+        document.querySelector("#uploadError").textContent = check.error;
+        return;
+      }
+    }
+    state.importedFileName = state.importedFileName || "customer_service_qa.zip";
+    state.createMode = "导入技能包";
+    state.editingId = "";
+    state.modal = "";
+    state.page = "editor";
+    toast("技能包已读取，请在编辑页确认解析结果");
+    render();
+  });
+  document.querySelectorAll("[data-back-library]").forEach(button => button.onclick = () => {
+    state.page = "library";
+    state.detailId = "";
+    state.editingId = "";
+    render();
+  });
+  document.querySelectorAll("[data-detail]").forEach(button => button.onclick = () => {
+    state.detailId = button.dataset.detail;
+    state.detailTab = "overview";
+    state.page = "detail";
+    render();
+  });
+  document.querySelectorAll("[data-detail-tab]").forEach(button => button.onclick = () => {
+    state.detailTab = button.dataset.detailTab;
+    render();
+  });
+  document.querySelectorAll("[data-edit]").forEach(button => button.onclick = () => {
+    const skill = state.skills.find(item => item.id === button.dataset.edit);
+    if (!skill) return;
+    state.editingId = skill.id;
+    state.createMode = skill.source;
+    state.page = "editor";
+    render();
+  });
+  document.querySelector("[name='skillId']")?.addEventListener("input", event => {
+    const errorEl = document.querySelector("#skillIdError");
+    const existingIds = state.skills.filter(s => s.id !== state.editingId).map(s => s.skillId);
+    const result = validateSkillId(event.target.value, existingIds);
+    if (!result.valid && event.target.value.length > 0) {
+      errorEl.textContent = result.error;
+      event.target.setCustomValidity(result.error);
+    } else {
+      errorEl.textContent = "";
+      event.target.setCustomValidity("");
+    }
+  });
+  document.querySelector("#editorForm")?.addEventListener("submit", event => {
+    event.preventDefault();
+    saveEditor(false);
+  });
+  document.querySelector("[data-save-publish]")?.addEventListener("click", () => {
+    const id = saveEditor(true);
+    requestPublish(id);
+  });
+  document.querySelector("[data-generate-skill]")?.addEventListener("click", () => {
+    const prompt = document.querySelector("[name='prompt']")?.value || "";
+    const generated = createSkillFromNaturalLanguage(prompt);
+    document.querySelector("[name='name']").value = generated.name;
+    document.querySelector("[name='skillId']").value = generated.skillId;
+    document.querySelector("[name='description']").value = generated.description;
+    document.querySelector("[name='content']").value = generated.content;
+    toast("已根据自然语言生成 Skill 内容");
+  });
+  document.querySelectorAll("[data-copy]").forEach(button => button.onclick = () => copyId(button.dataset.copy));
+  document.querySelectorAll("[data-request-publish]").forEach(button => button.onclick = () => requestPublish(button.dataset.requestPublish));
+  document.querySelectorAll("[data-unpublish]").forEach(button => button.onclick = () => updateStatus(button.dataset.unpublish, "unpublish", "技能已下架"));
+  document.querySelectorAll("[data-remove]").forEach(button => button.onclick = () => removeSkill(button.dataset.remove));
+  document.querySelectorAll("[data-copy-official]").forEach(button => button.onclick = () => copyOfficial(button.dataset.copyOfficial));
+  document.querySelectorAll("[data-reference]").forEach(button => button.onclick = () => toast("已引用官方技能，可在 Agent 资源配置中使用"));
+  document.querySelector("[data-switch-space]")?.addEventListener("click", () => {
+    state.primaryTab = "space";
+    render();
+  });
+  document.querySelector("[data-action='batch']")?.addEventListener("click", () => toast("可批量发布、下架或删除筛选结果"));
+}
+
+function saveEditor(silent = false) {
+  const form = Object.fromEntries(new FormData(document.querySelector("#editorForm")));
+  let skill = state.editingId ? state.skills.find(item => item.id === state.editingId) : null;
+  if (!skill) {
+    skill = draftForMode(state.createMode);
+    skill.id = `sk-${Date.now()}`;
+    state.skills = [skill, ...state.skills];
+    state.editingId = skill.id;
+  }
+  skill.name = form.name;
+  skill.skillId = form.skillId;
+  skill.description = form.description;
+  skill.content = form.content;
+  skill.source = state.createMode || skill.source;
+  if (skill.status === "已发布") {
+    skill.status = "草稿变更";
+  }
+  skill.updatedAt = "刚刚";
+  saveSkills();
+  if (!silent) toast("草稿已保存");
+  return skill.id;
+}
+
+function requestPublish(id) {
+  const skill = state.skills.find(item => item.id === id);
+  if (!skill) return;
+  const publishCheck = validatePublishReady(skill);
+  if (!publishCheck.ready) {
+    toast(`发布前需补齐声明块：${publishCheck.missing.join("、")}`);
+    return;
+  }
+  skill.status = getNextStatus(skill.status, "request_publish");
+  skill.scan = { level: "-", issues: 0, result: "审核中", time: "刚刚" };
+  skill.updatedAt = "刚刚";
+  saveSkills();
+  state.page = "detail";
+  state.detailId = id;
+  state.detailTab = "scan";
+  toast("已提交发布，正在进行安全审核");
+  render();
+  setTimeout(() => {
+    const result = scanSkill(skill);
+    skill.status = result.summary.passed ? getNextStatus("扫描中", "scan_pass") : getNextStatus("扫描中", "scan_fail");
+    skill.scan = result.scan;
+    skill.version = skill.status === "已发布" ? nextVersion(skill.version) : skill.version;
+    skill.updatedAt = "刚刚";
+    saveSkills();
+    toast(result.summary.passed ? "安全审核通过，技能已自动发布" : "安全审核未通过，请修复后再发布");
+    render();
+  }, 900);
+}
+
+function nextVersion(version) {
+  const match = String(version || "v0.0.0").match(/^v(\d+)\.(\d+)\.(\d+)$/);
+  if (!match) return "v1.0.0";
+  return `v${match[1]}.${match[2]}.${Number(match[3]) + 1}`;
+}
+
+function updateStatus(id, action, message) {
+  const skill = state.skills.find(item => item.id === id);
+  if (!skill) return;
+  skill.status = getNextStatus(skill.status, action);
+  skill.updatedAt = "刚刚";
+  saveSkills();
+  toast(message);
+  render();
+}
+
+function removeSkill(id) {
+  const skill = state.skills.find(item => item.id === id);
+  if (!skill) return;
+  if (skill.status === "扫描中") {
+    toast("安全审核中不可删除，请等待审核完成");
+    return;
+  }
+  if (skill.status === "已发布") {
+    toast("已发布的技能不可直接删除，请先下架");
+    return;
+  }
+  if (skill.status === "已下架" && skill.agents > 0) {
+    toast("已有智能体引用此技能，请先解除引用后再删除");
+    return;
+  }
+  state.skills = state.skills.filter(item => item.id !== id);
+  state.page = "library";
+  state.detailId = "";
+  saveSkills();
+  toast("技能已删除");
+  render();
+}
+
+function copyOfficial(id) {
+  const original = state.skills.find(item => item.id === id);
+  if (!original) return;
+  const copy = {
+    ...original,
+    id: `sk-${Date.now()}`,
+    owner: "space",
+    source: "官方复制",
+    status: "草稿",
+    skillId: `${original.skillId}_copy`,
+    name: `${original.name} 副本`,
+    agents: 0,
+    creator: "jingxiu.zhao",
+    updatedAt: "刚刚"
+  };
+  state.skills = [copy, ...state.skills];
+  state.primaryTab = "space";
+  state.page = "editor";
+  state.editingId = copy.id;
+  state.createMode = copy.source;
+  saveSkills();
+  toast("已复制到空间，请在编辑页确认后发布");
+  render();
+}
+
+async function copyId(text) {
+  await navigator.clipboard?.writeText(text);
+  toast(`已复制 ${text}`);
+}
+
+function toast(text) {
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2400);
+}
+
+function escapeHtml(text) {
+  return String(text || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function escapeAttr(text) {
+  return escapeHtml(text).replaceAll("'", "&#39;");
+}
+
+render();

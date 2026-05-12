@@ -1,0 +1,3 @@
+- [派大臣干活的铁律](feedback_delegate-to-ministers.md) — 首辅不亲自动手，连 ls/cat 也派主簿
+- [Skill + Agent 双系统](feedback_use-skills.md) — 派大臣时动态判断是否挂 Skill
+- [项目目录防污染](feedback_prevent-project-pollution.md) — 新文件及时 commit，多项目严禁混目录

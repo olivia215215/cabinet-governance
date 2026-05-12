@@ -1,0 +1,42 @@
+#!/bin/sh
+# docker-entrypoint.sh — AI IT 资产与设备流转管理系统
+# 启动即用，无需手动预处理
+# 规范来源: tech-spec-it-asset-mgmt.md §9
+set -e
+
+# ============================================================
+# 1. 等待 PostgreSQL 就绪 (最多等60秒，每2秒检查一次)
+# ============================================================
+MAX_RETRIES=30
+echo "=== docker-entrypoint: Waiting for PostgreSQL ==="
+for i in $(seq 1 $MAX_RETRIES); do
+  if npx prisma db execute --stdin > /dev/null 2>&1 <<< "SELECT 1"; then
+    echo "=== PostgreSQL is ready. ==="
+    break
+  fi
+  if [ "$i" = "$MAX_RETRIES" ]; then
+    echo "ERROR: PostgreSQL did not become ready within $((MAX_RETRIES * 2)) seconds."
+    exit 1
+  fi
+  echo "  ...waiting ($i/$MAX_RETRIES)"
+  sleep 2
+done
+
+# ============================================================
+# 2. 数据库迁移
+# ============================================================
+echo "=== Running database migrations... ==="
+npx prisma migrate deploy
+
+# ============================================================
+# 3. 幂等 seed (seed脚本内使用 INSERT ... ON CONFLICT DO NOTHING
+#    确保可重复执行)
+# ============================================================
+echo "=== Seeding database... ==="
+npx prisma db seed
+
+# ============================================================
+# 4. 启动应用
+# ============================================================
+echo "=== Starting application... ==="
+exec "$@"

@@ -1,0 +1,46 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long",
+  });
+}
+
+export function getToday(): string {
+  return new Date().toISOString().split("T")[0];
+}
+
+export function getStreak(dates: string[]): number {
+  const sorted = [...dates].sort().reverse();
+  let streak = 0;
+  const today = new Date(getToday());
+  for (let i = 0; i < sorted.length; i++) {
+    const expected = new Date(today);
+    expected.setDate(expected.getDate() - i);
+    if (sorted[i] === expected.toISOString().split("T")[0]) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+export const PRESET_DOMAINS = [
+  { name: "健身", icon: "💪", color: "#ef4444" },
+  { name: "读书", icon: "📚", color: "#3b82f6" },
+  { name: "变美", icon: "✨", color: "#ec4899" },
+  { name: "工作", icon: "💼", color: "#f59e0b" },
+  { name: "学习", icon: "🧠", color: "#8b5cf6" },
+  { name: "商业思维", icon: "🏛️", color: "#10b981" },
+  { name: "视野", icon: "🌍", color: "#06b6d4" },
+  { name: "生活习惯", icon: "🏠", color: "#78716c" },
+];

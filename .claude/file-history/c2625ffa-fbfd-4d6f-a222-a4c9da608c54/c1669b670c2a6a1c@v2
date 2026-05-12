@@ -1,0 +1,146 @@
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log("Seeding database...");
+
+  const passwordHash = await bcrypt.hash("password", 10);
+
+  // ============================================================
+  // Departments (managerId set after users are created to avoid FK violations)
+  // ============================================================
+  console.log("  Creating departments...");
+  await prisma.department.createMany({
+    data: [
+      { id: "dept-01", name: "研发部" },
+      { id: "dept-02", name: "产品部" },
+      { id: "dept-03", name: "运营部" },
+    ],
+    skipDuplicates: true,
+  });
+
+  // ============================================================
+  // Users
+  // ============================================================
+  console.log("  Creating users...");
+  await prisma.user.createMany({
+    data: [
+      { id: "user-emp1", email: "employee1@company.com", passwordHash, name: "员工甲", role: "EMPLOYEE", deptId: "dept-01", status: "ACTIVE" },
+      { id: "user-emp2", email: "employee2@company.com", passwordHash, name: "员工乙", role: "EMPLOYEE", deptId: "dept-02", status: "ACTIVE" },
+      { id: "user-mgr1", email: "manager1@company.com", passwordHash, name: "主管甲", role: "MANAGER", deptId: "dept-01", status: "ACTIVE" },
+      { id: "user-mgr2", email: "manager2@company.com", passwordHash, name: "主管乙", role: "MANAGER", deptId: "dept-02", status: "ACTIVE" },
+      { id: "user-admin", email: "admin@company.com", passwordHash, name: "管理员", role: "IT_ADMIN", deptId: "dept-02", status: "ACTIVE" },
+      { id: "user-exec", email: "exec@company.com", passwordHash, name: "高管", role: "EXECUTIVE", deptId: "dept-03", status: "ACTIVE" },
+    ],
+    skipDuplicates: true,
+  });
+
+  // Update departments with managers after users exist
+  await prisma.department.update({ where: { id: "dept-01" }, data: { managerId: "user-mgr1" } });
+  await prisma.department.update({ where: { id: "dept-02" }, data: { managerId: "user-mgr2" } });
+
+  // ============================================================
+  // Asset Models
+  // ============================================================
+  console.log("  Creating asset models...");
+  await prisma.assetModel.createMany({
+    data: [
+      {
+        id: "MODEL-L01",
+        category: "LAPTOP",
+        brandName: "Apple",
+        modelName: "MacBook Pro M3 14寸",
+        specs: { cpu: "Apple M3", ram: "16GB", storage: "512GB SSD", screen: "14寸 Liquid Retina XDR" },
+        purchasePrice: 16000,
+        supplier: "Apple中国",
+        warrantyMonths: 12,
+        status: "ACTIVE",
+      },
+      {
+        id: "MODEL-M01",
+        category: "MONITOR",
+        brandName: "Dell",
+        modelName: "Dell U2722D 27寸 4K",
+        specs: { size: "27寸", resolution: "3840x2160", ports: "HDMI+DP+USB-C", panel: "IPS" },
+        purchasePrice: 3200,
+        supplier: "Dell官方",
+        warrantyMonths: 36,
+        status: "ACTIVE",
+      },
+      {
+        id: "MODEL-P01",
+        category: "KEYBOARD",
+        brandName: "罗技",
+        modelName: "MX Keys S无线",
+        specs: { connection: "蓝牙/无线", color: "石墨黑", wireless: true, layout: "全尺寸" },
+        purchasePrice: 699,
+        supplier: "罗技授权经销商",
+        warrantyMonths: 24,
+        status: "ACTIVE",
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  // ============================================================
+  // Asset Instances
+  // ============================================================
+  console.log("  Creating asset instances...");
+  const purchaseDate = new Date("2026-01-15");
+
+  await prisma.assetInstance.createMany({
+    data: [
+      { id: "AST-101", sn: "SN-AST-101", modelId: "MODEL-L01", status: "IN_STOCK",  purchaseDate, warrantyExpiry: new Date("2027-01-15") },
+      { id: "AST-102", sn: "SN-AST-102", modelId: "MODEL-L01", status: "AVAILABLE", purchaseDate, warrantyExpiry: new Date("2027-01-15") },
+      { id: "AST-103", sn: "SN-AST-103", modelId: "MODEL-M01", status: "ASSIGNED",  holderId: "user-emp1", purchaseDate, warrantyExpiry: new Date("2029-01-15") },
+      { id: "AST-104", sn: "SN-AST-104", modelId: "MODEL-L01", status: "IN_USE",    holderId: "user-emp2", purchaseDate, warrantyExpiry: new Date("2027-01-15") },
+      { id: "AST-105", sn: "SN-AST-105", modelId: "MODEL-L01", status: "RETURNING", holderId: "user-emp1", purchaseDate, warrantyExpiry: new Date("2027-01-15") },
+      { id: "AST-106", sn: "SN-AST-106", modelId: "MODEL-M01", status: "REPAIRING", holderId: "user-emp2", purchaseDate, warrantyExpiry: new Date("2029-01-15") },
+      { id: "AST-107", sn: "SN-AST-107", modelId: "MODEL-L01", status: "TRANSFERRING", holderId: "user-mgr1", purchaseDate, warrantyExpiry: new Date("2027-01-15") },
+      { id: "AST-108", sn: "SN-AST-108", modelId: "MODEL-M01", status: "SCRAPPED",  purchaseDate, warrantyExpiry: new Date("2029-01-15") },
+      { id: "AST-109", sn: "SN-AST-109", modelId: "MODEL-P01", status: "LOST",      purchaseDate, warrantyExpiry: new Date("2028-01-15") },
+      { id: "AST-110", sn: "SN-AST-110", modelId: "MODEL-P01", status: "AVAILABLE", purchaseDate, warrantyExpiry: new Date("2028-01-15") },
+    ],
+    skipDuplicates: true,
+  });
+
+  // ============================================================
+  // Tickets
+  // ============================================================
+  console.log("  Creating tickets...");
+  await prisma.ticket.createMany({
+    data: [
+      { id: "TKT-A01", type: "APPLY", status: "PENDING_MANAGER_1", applicantId: "user-emp1", targetModelId: "MODEL-L01", reason: "新入职需要开发用笔记本" },
+      { id: "TKT-A02", type: "APPLY", status: "PENDING_IT", applicantId: "user-emp2", targetModelId: "MODEL-M01", reason: "需要外接显示器" },
+      { id: "TKT-R01", type: "REPAIR", status: "PENDING_IT", applicantId: "user-emp2", targetAssetId: "AST-106", reason: "屏幕闪烁" },
+      { id: "TKT-T01", type: "TRANSFER", status: "PENDING_MANAGER_1", applicantId: "user-admin", targetAssetId: "AST-107", fromHolderId: "user-mgr1", toHolderId: "user-emp2", targetDeptId: "dept-02", reason: "调拨至产品部" },
+    ],
+    skipDuplicates: true,
+  });
+
+  // ============================================================
+  // Notifications
+  // ============================================================
+  console.log("  Creating notifications...");
+  await prisma.notification.createMany({
+    data: [
+      { id: "MSG-001", userId: "user-emp1", type: "APPROVAL_RESULT",  title: "申领已通过", body: "您的申领工单已通过审批，请前往 IT 前台领取设备", relatedTicketId: "TKT-A02" },
+      { id: "MSG-002", userId: "user-mgr1", type: "APPROVAL_REQUEST", title: "待审批",         body: "员工甲提交了笔记本电脑申领，请及时审批", relatedTicketId: "TKT-A01" },
+      { id: "MSG-003", userId: "user-emp2", type: "WARRANTY_EXPIRY",  title: "保修即将到期", body: "您持有的 MacBook Pro M3 保修期即将到期", relatedAssetId: "AST-104" },
+    ],
+    skipDuplicates: true,
+  });
+
+  console.log("Seed completed successfully.");
+}
+
+main()
+  .catch((e) => {
+    console.error("Seed failed:", e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

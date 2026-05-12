@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  profile     UserProfile?
+  habits      Habit[]
+  habitLogs   HabitLog[]
+  dailyReviews DailyReview[]
+  personalization PersonalizationInput[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id          String @id @default(uuid())
+  userId      String @unique @map("user_id")
+  goals       Json   @default("[]")
+  preferences Json   @default("{}")
+  wakeTime    String? @map("wake_time")
+  sleepTime   String? @map("sleep_time")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Domain {
+  id        String  @id @default(uuid())
+  name      String
+  icon      String
+  color     String
+  sortOrder Int     @default(0) @map("sort_order")
+  isPreset  Boolean @default(true) @map("is_preset")
+
+  habits Habit[]
+
+  @@map("domains")
+}
+
+model Habit {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  domainId     String   @map("domain_id")
+  title        String
+  description  String?
+  frequency    String   @default("daily")
+  targetValue  Int      @default(1) @map("target_value")
+  unit         String   @default("次")
+  reminderTime String?  @map("reminder_time")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  domain Domain     @relation(fields: [domainId], references: [id])
+  logs   HabitLog[]
+
+  @@map("habits")
+}
+
+model HabitLog {
+  id        String   @id @default(uuid())
+  habitId   String   @map("habit_id")
+  userId    String   @map("user_id")
+  date      DateTime @default(now()) @db.Date
+  value     Int      @default(1)
+  completed Boolean  @default(false)
+  note      String?
+  mood      Int?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([habitId, date])
+  @@map("habit_logs")
+}
+
+model DailyReview {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  date         DateTime @default(now()) @db.Date
+  score        Int
+  summary      String?
+  highlight    String?
+  lowlight     String?
+  tomorrowGoal String?  @map("tomorrow_goal")
+  aiFeedback   String?  @map("ai_feedback")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("daily_reviews")
+}
+
+model PersonalizationInput {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  category  String
+  content   String
+  priority  Int      @default(0)
+  status    String   @default("active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("personalization_inputs")
+}

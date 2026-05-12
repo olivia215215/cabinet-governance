@@ -1,0 +1,79 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard,
+  ListChecks,
+  BarChart3,
+  PenLine,
+  User,
+  Lightbulb,
+} from "lucide-react";
+
+const navItems = [
+  { href: "/", label: "今日", icon: LayoutDashboard },
+  { href: "/habits", label: "习惯", icon: ListChecks },
+  { href: "/stats", label: "统计", icon: BarChart3 },
+  { href: "/review", label: "复盘", icon: PenLine },
+  { href: "/insights", label: "洞察", icon: Lightbulb },
+  { href: "/profile", label: "我的", icon: User },
+];
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex flex-col w-64 border-r bg-card p-6 gap-2">
+        <div className="mb-8">
+          <h1 className="text-xl font-bold tracking-tight">天子日课</h1>
+          <p className="text-sm text-muted-foreground mt-1">日日精进，终成大器</p>
+        </div>
+        <nav className="flex flex-col gap-1">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                pathname === item.href
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 pb-20 md:pb-6 px-4 md:px-8 py-6 overflow-auto">
+        {children}
+      </main>
+
+      {/* Mobile Bottom Tab Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-card border-t flex justify-around py-2 safe-bottom z-50">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+              pathname === item.href
+                ? "text-primary"
+                : "text-muted-foreground"
+            )}
+          >
+            <item.icon className="w-5 h-5" />
+            {item.label}
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}

@@ -1,0 +1,144 @@
+# 天子日课 — 每日自我提升 App 架构方案
+
+## 定位
+
+一款全栈 Web App（PWA），覆盖健身、读书、变美、工作、学习、商业思维、视野、生活习惯等维度。先做 Web 版（响应式，手机浏览器即可用），后续可演进为 React Native 移动端。
+
+---
+
+## 技术栈
+
+| 层 | 技术 | 理由 |
+|---|------|------|
+| 前端框架 | Next.js 14 (App Router) | SSR + 静态生成，SEO友好，PWA支持 |
+| UI | Tailwind CSS + shadcn/ui | 美观、组件丰富、响应式 |
+| 图表 | Recharts | 趋势图、雷达图、热力图 |
+| 后端 | Next.js API Routes | 同仓开发，无需额外服务器 |
+| 数据库 | Supabase (PostgreSQL) | 免费额度、实时订阅、内置Auth |
+| ORM | Prisma | 类型安全、迁移管理 |
+| LLM | Claude API | 个性化推荐、日报总结、习惯分析 |
+| 提醒 | Web Push + Cron | 浏览器推送 + 定时任务 |
+| 部署 | Vercel | 一键部署、免费额度 |
+
+---
+
+## 数据模型
+
+```
+User
+  id, email, name, avatar, created_at
+  
+UserProfile
+  userId, goals (JSON), preferences (JSON), wake_time, sleep_time
+  
+Domain (系统预置 + 用户自定义)
+  id, name, icon, color, sort_order
+  预置: 健身, 读书, 变美, 工作, 学习, 商业思维, 视野, 生活习惯
+
+Habit (每个领域下的习惯)
+  id, userId, domainId, title, description, frequency (每日/每周/自定义), 
+  target_value, unit, reminder_time, is_active, created_at
+
+HabitLog (打卡记录)
+  id, habitId, userId, date, value, completed, note, mood, created_at
+
+DailyReview (每日复盘)
+  id, userId, date, score (1-5), summary, highlight, lowlight, 
+  tomorrow_goal, ai_feedback, created_at
+
+PersonalizationInput (个性化需求)
+  id, userId, category, content, priority, status, created_at
+```
+
+---
+
+## 页面路由
+
+| 路由 | 页面 | 功能 |
+|------|------|------|
+| `/` | 今日仪表盘 | 日期、天气、今日待办习惯清单、完成进度环、快捷打卡 |
+| `/habits` | 习惯管理 | 按领域分组展示、增删改习惯、拖拽排序 |
+| `/stats` | 数据统计 | 周/月趋势图、完成率、连续天数、领域雷达图 |
+| `/review` | 每日复盘 | 今日打分、亮点/不足、明日目标、AI智能总结 |
+| `/profile` | 个人设置 | 目标设定、偏好输入、作息时间、LLM个性化prompt |
+| `/insights` | AI洞察 | LLM生成的周报分析、习惯建议、个性化推荐 |
+
+---
+
+## LLM 接入点
+
+1. **每日清晨推荐** — 根据昨日完成情况 + 个人目标，推荐今日3个重点
+2. **每周洞察报告** — 分析一周数据，指出趋势、薄弱环节、改进建议
+3. **个性化习惯生成** — 用户描述目标，AI拆解为可执行的习惯计划
+4. **复盘辅助** — 根据今日打卡数据，帮用户写复盘总结
+5. **激励/调整** — 连续懈怠时调整策略，连续达标时提高挑战
+
+---
+
+## MVP 开发阶段
+
+### Sprint 1: 骨架（预计2-3天）
+- Next.js 项目初始化 + Tailwind + shadcn/ui
+- Supabase 项目创建 + Prisma schema + 迁移
+- 基础布局（侧边栏/底部Tab导航）
+- 用户认证（Supabase Auth）
+
+### Sprint 2: 核心循环（预计2-3天）
+- 今日仪表盘页面（习惯清单 + 打卡交互）
+- 习惯管理 CRUD
+- 打卡记录存储与读取
+
+### Sprint 3: 数据可视化（预计1-2天）
+- 统计页面 + Recharts 图表
+- 连续打卡天数计算
+- 领域完成率展示
+
+### Sprint 4: AI 赋能（预计1-2天）
+- Claude API 集成
+- 每日推荐 + 复盘辅助
+- 个性化习惯生成
+
+### Sprint 5: 体验打磨（预计1-2天）
+- PWA 配置（离线可用、添加到主屏幕）
+- Web Push 提醒
+- 响应式优化
+- 动画过渡
+
+---
+
+## 项目目录结构
+
+```
+tianzi-rike/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx          # 根布局
+│   ├── page.tsx            # 今日仪表盘
+│   ├── habits/page.tsx     # 习惯管理
+│   ├── stats/page.tsx      # 数据统计
+│   ├── review/page.tsx     # 每日复盘
+│   ├── profile/page.tsx    # 个人设置
+│   ├── insights/page.tsx   # AI洞察
+│   ├── api/                # API Routes
+│   │   ├── habits/
+│   │   ├── logs/
+│   │   ├── review/
+│   │   ├── insights/
+│   │   └── auth/
+│   └── globals.css
+├── components/
+│   ├── ui/                 # shadcn/ui 组件
+│   ├── dashboard/          # 仪表盘组件
+│   ├── habits/             # 习惯相关组件
+│   ├── stats/              # 图表组件
+│   └── layout/             # 导航、布局组件
+├── lib/
+│   ├── supabase.ts         # Supabase 客户端
+│   ├── prisma.ts           # Prisma 客户端
+│   ├── claude.ts           # Claude API 封装
+│   └── utils.ts
+├── prisma/
+│   └── schema.prisma
+├── public/                 # 静态资源 + PWA manifest
+├── tailwind.config.ts
+└── package.json
+```

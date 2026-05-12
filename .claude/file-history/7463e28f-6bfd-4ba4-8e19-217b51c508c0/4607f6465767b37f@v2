@@ -1,0 +1,40 @@
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import AppLayout from "@/components/layout/app-layout";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "天子日课 — 每日自我提升",
+  description: "健身、读书、变美、工作、学习，日日精进",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "天子日课",
+    statusBarStyle: "default",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="zh-CN"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full bg-background text-foreground">
+        <AppLayout>{children}</AppLayout>
+      </body>
+    </html>
+  );
+}

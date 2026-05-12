@@ -1,0 +1,19 @@
+import Taro from "@tarojs/taro";
+
+const API_BASE = "https://unstirred-clang-peddling.ngrok-free.dev";
+
+export async function apiFetch(path: string, options?: RequestInit) {
+  const url = `${API_BASE}${path}`;
+  const res = await Taro.request({
+    url,
+    method: (options?.method as any) || "GET",
+    data: options?.body ? JSON.parse(options.body as string) : undefined,
+    header: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "1",
+    },
+    timeout: 15000,
+  });
+  if (res.statusCode >= 400) throw new Error(`API error: ${res.statusCode}`);
+  return res.data;
+}

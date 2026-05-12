@@ -1,0 +1,21 @@
+import type { CapacitorConfig } from "@capacitor/cli";
+
+const isDev = process.env.NODE_ENV !== "production";
+
+const config: CapacitorConfig = {
+  appId: "com.tianzi.rike",
+  appName: "天子日课",
+  webDir: ".next",
+  server: isDev
+    ? {
+        // Development: load from Next.js dev server (hot reload)
+        // For real device, replace localhost with your Mac's LAN IP
+        url: "http://172.16.184.119:3456",
+        cleartext: true,
+      }
+    : undefined,
+  // Production: remove server.url and deploy Next.js to Vercel.
+  // The Capacitor app will load the bundled webDir instead.
+};
+
+export default config;

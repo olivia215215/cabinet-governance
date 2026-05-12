@@ -1,0 +1,17 @@
+import { NextRequest, NextResponse } from "next/server";
+import { store } from "@/lib/store";
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const input = {
+    id: crypto.randomUUID(),
+    userId: "demo",
+    category: body.category,
+    content: body.content,
+    priority: 0,
+    status: "active",
+    createdAt: new Date().toISOString(),
+  };
+  store.personalInputs.push(input);
+  return NextResponse.json(input);
+}

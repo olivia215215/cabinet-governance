@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 install *)",
+      "Bash(python -m markitdown /Users/admin/AS_Platform_Roadmap.pptx)",
+      "Bash(python3)",
+      "Bash(npx skills *)"
+    ]
+  }
+}

@@ -1,0 +1,164 @@
+// In-memory store — swap for Supabase/Prisma when database is ready
+// Data persists to a global object during dev server lifetime
+// In production, replace with actual database calls
+
+export interface Goal {
+  id: string;
+  userId: string;
+  title: string;
+  description: string | null;
+  startValue: number;
+  targetValue: number;
+  currentValue: number;
+  unit: string;
+  deadline: string | null;
+  linkedHabitIds: string[];
+  isArchived: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GoalLog {
+  id: string;
+  goalId: string;
+  userId: string;
+  previousValue: number;
+  newValue: number;
+  delta: number;
+  note: string | null;
+  createdAt: string;
+}
+
+const globalStore = globalThis as unknown as {
+  habits: any[];
+  habitLogs: any[];
+  dailyReviews: any[];
+  profiles: Map<string, any>;
+  personalInputs: any[];
+  goals: any[];
+  goalLogs: any[];
+};
+
+if (!globalStore.habits) globalStore.habits = [];
+if (!globalStore.habitLogs) globalStore.habitLogs = [];
+if (!globalStore.dailyReviews) globalStore.dailyReviews = [];
+if (!globalStore.profiles) globalStore.profiles = new Map();
+if (!globalStore.personalInputs) globalStore.personalInputs = [];
+if (!globalStore.goals) globalStore.goals = [];
+if (!globalStore.goalLogs) globalStore.goalLogs = [];
+
+// Seed preset domains as habits for demo purposes
+if (globalStore.habits.length === 0) {
+  const seedHabits = [
+    { domainId: "健身", title: "晨跑 30 分钟", description: "公园慢跑，心率保持在130-150", unit: "分钟", targetValue: 30, frequency: "daily" },
+    { domainId: "健身", title: "睡前拉伸", description: "全身拉伸10分钟，改善柔韧性", unit: "分钟", targetValue: 10, frequency: "daily" },
+    { domainId: "读书", title: "阅读 30 分钟", description: "纸质书优先，做简短笔记", unit: "分钟", targetValue: 30, frequency: "daily" },
+    { domainId: "变美", title: "护肤流程", description: "洁面-精华-面霜-防晒（白天）", unit: "次", targetValue: 1, frequency: "daily" },
+    { domainId: "工作", title: "深度工作 2 小时", description: "手机勿扰模式，专注核心任务", unit: "小时", targetValue: 2, frequency: "weekday" },
+    { domainId: "学习", title: "学习新技能 45 分钟", description: "在线课程或实践项目", unit: "分钟", targetValue: 45, frequency: "daily" },
+    { domainId: "商业思维", title: "商业案例分析", description: "每天分析一个商业案例或新闻", unit: "个", targetValue: 1, frequency: "daily" },
+    { domainId: "视野", title: "阅读行业报告", description: "浏览科技/商业前沿动态", unit: "篇", targetValue: 1, frequency: "daily" },
+    { domainId: "生活习惯", title: "早睡早起", description: "23:00前躺下，不碰手机", unit: "次", targetValue: 1, frequency: "daily" },
+  ];
+  seedHabits.forEach((h) => {
+    globalStore.habits.push({ id: crypto.randomUUID(), userId: "demo", ...h, isActive: true, reminderTime: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+  });
+}
+
+export const store = {
+  habits: globalStore.habits,
+  habitLogs: globalStore.habitLogs,
+  dailyReviews: globalStore.dailyReviews,
+  profiles: globalStore.profiles,
+  personalInputs: globalStore.personalInputs,
+  goals: globalStore.goals,
+  goalLogs: globalStore.goalLogs,
+};
+
+// ── Goal helpers ──
+
+export function createGoal(data: {
+  title: string;
+  description?: string;
+  startValue: number;
+  targetValue: number;
+  currentValue?: number;
+  unit: string;
+  deadline?: string;
+  linkedHabitIds?: string[];
+}): Goal {
+  const goal: Goal = {
+    id: crypto.randomUUID(),
+    userId: "demo",
+    title: data.title,
+    description: data.description || null,
+    startValue: data.startValue,
+    targetValue: data.targetValue,
+    currentValue: data.currentValue ?? data.startValue,
+    unit: data.unit,
+    deadline: data.deadline || null,
+    linkedHabitIds: data.linkedHabitIds || [],
+    isArchived: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  store.goals.push(goal);
+  return goal;
+}
+
+export function getGoalById(id: string): Goal | undefined {
+  return store.goals.find((g: Goal) => g.id === id);
+}
+
+export function deleteGoal(id: string): void {
+  store.goals = store.goals.filter((g: Goal) => g.id !== id);
+  store.goalLogs = store.goalLogs.filter((l: GoalLog) => l.goalId !== id);
+}
+
+// ── GoalLog helpers ──
+
+export function createGoalLog(data: {
+  goalId: string;
+  previousValue: number;
+  newValue: number;
+  delta: number;
+  note?: string | null;
+}): GoalLog {
+  const log: GoalLog = {
+    id: crypto.randomUUID(),
+    goalId: data.goalId,
+    userId: "demo",
+    previousValue: data.previousValue,
+    newValue: data.newValue,
+    delta: data.delta,
+    note: data.note ?? null,
+    createdAt: new Date().toISOString(),
+  };
+  store.goalLogs.push(log);
+  return log;
+}
+
+export function getGoalLogsByGoalId(goalId: string): GoalLog[] {
+  return store.goalLogs.filter((l: GoalLog) => l.goalId === goalId);
+}
+
+// ── Computation helpers ──
+
+export function calculateProgress(goal: Goal): number {
+  const { startValue, targetValue, currentValue } = goal;
+  if (targetValue === startValue) return 0;
+  if (targetValue > startValue) {
+    // Positive direction: e.g. increase running distance
+    return Math.min(Math.max((currentValue - startValue) / (targetValue - startValue), 0), 1);
+  }
+  // Negative direction: e.g. lose weight
+  return Math.min(Math.max((startValue - currentValue) / (startValue - targetValue), 0), 1);
+}
+
+export function calculateDaysRemaining(deadline: string | null): number | null {
+  if (!deadline) return null;
+  const now = new Date();
+  const deadlineDate = new Date(deadline);
+  const diff = deadlineDate.getTime() - now.getTime();
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
