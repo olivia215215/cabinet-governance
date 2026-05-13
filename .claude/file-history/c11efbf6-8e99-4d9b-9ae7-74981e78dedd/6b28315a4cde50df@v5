@@ -1,0 +1,58 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET() {
+  const user = await prisma.user.findUnique({
+    where: { id: "demo" },
+    include: { profile: true, personalization: { orderBy: { createdAt: "desc" } } },
+  });
+
+  if (!user) {
+    return NextResponse.json({ profile: null, inputs: [] });
+  }
+
+  const profile = user.profile
+    ? { ...user.profile, name: user.name }
+    : null;
+
+  return NextResponse.json({ profile, inputs: user.personalization });
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+
+  await prisma.userProfile.upsert({
+    where: { userId: "demo" },
+    create: {
+      userId: "demo",
+      goals: body.goals || [],
+      preferences: { customPrompt: body.customPrompt || "" },
+      wakeTime: body.wakeTime || null,
+      sleepTime: body.sleepTime || null,
+    },
+    update: {
+      goals: body.goals || [],
+      preferences: { customPrompt: body.customPrompt || "" },
+      wakeTime: body.wakeTime || null,
+      sleepTime: body.sleepTime || null,
+    },
+  });
+
+  if (body.name) {
+    await prisma.user.update({
+      where: { id: "demo" },
+      data: { name: body.name },
+    });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: "demo" },
+    include: { profile: true },
+  });
+
+  const profile = user?.profile
+    ? { ...user.profile, name: user.name }
+    : null;
+
+  return NextResponse.json(profile);
+}

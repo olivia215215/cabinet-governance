@@ -1,0 +1,10 @@
+# API Base URL
+NEXT_PUBLIC_API_URL=http://localhost:3456
+
+# Database (Supabase)
+DATABASE_URL="postgresql://admin@localhost:5432/tianzi_rike"
+NEXT_PUBLIC_SUPABASE_URL="https://unpbbukybhcsmcwahhwt.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_HJ4zGQFfPrEJHUQZlr37Jg_xDJn24Pv"
+
+# Claude API (DeepSeek)
+CLAUDE_API_KEY="sk-6a23f15727ae4059b1c425ec0707e4ff"

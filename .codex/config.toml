@@ -1,0 +1,54 @@
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-05-12T14:18:08Z"
+source_type = "local"
+source = "/Users/admin/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-05-12T15:43:18Z"
+source_type = "local"
+source = "/Users/admin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."linear@openai-curated"]
+enabled = true
+
+[plugins."notion@openai-curated"]
+enabled = true
+
+[plugins."figma@openai-curated"]
+enabled = true
+
+[plugins."latex-tectonic@openai-bundled"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."browser-use@openai-bundled"]
+enabled = true
+
+[projects."/Users/admin/Documents/New project"]
+trust_level = "trusted"
+
+[projects."/Users/admin"]
+trust_level = "trusted"
+
+[projects."/Users/admin/Documents/Codex/2026-05-12/new-chat"]
+trust_level = "trusted"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
+
+[features]
+memories = true

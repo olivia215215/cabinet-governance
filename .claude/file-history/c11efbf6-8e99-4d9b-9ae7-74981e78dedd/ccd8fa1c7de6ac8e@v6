@@ -1,0 +1,49 @@
+// In-memory store removed. Data now lives in PostgreSQL via Prisma.
+// This file only contains type definitions and pure computation helpers.
+
+export interface Goal {
+  id: string;
+  userId: string;
+  title: string;
+  description: string | null;
+  startValue: number;
+  targetValue: number;
+  currentValue: number;
+  unit: string;
+  deadline: string | null;
+  linkedHabitIds: string[];
+  isArchived: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GoalLog {
+  id: string;
+  goalId: string;
+  userId: string;
+  previousValue: number;
+  newValue: number;
+  delta: number;
+  note: string | null;
+  createdAt: string;
+}
+
+// ── Computation helpers ──
+
+export function calculateProgress(startValue: number, targetValue: number, currentValue: number): number {
+  if (targetValue === startValue) return 0;
+  if (targetValue > startValue) {
+    // Positive direction: e.g. increase running distance
+    return Math.min(Math.max((currentValue - startValue) / (targetValue - startValue), 0), 1);
+  }
+  // Negative direction: e.g. lose weight
+  return Math.min(Math.max((startValue - currentValue) / (startValue - targetValue), 0), 1);
+}
+
+export function calculateDaysRemaining(deadline: string | null): number | null {
+  if (!deadline) return null;
+  const now = new Date();
+  const deadlineDate = new Date(deadline);
+  const diff = deadlineDate.getTime() - now.getTime();
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}

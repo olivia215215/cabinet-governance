@@ -1,0 +1,109 @@
+import { PrismaClient } from "../generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
+
+const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] || "" });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
+async function main() {
+  // ── User ──
+  const user = await prisma.user.upsert({
+    where: { id: "demo" },
+    update: {},
+    create: {
+      id: "demo",
+      email: "demo@tianzi.com",
+      name: "Demo User",
+    },
+  });
+
+  // ── Domains ──
+  const domainData = [
+    { name: "健身", icon: "dumbbell", color: "#ef4444", sortOrder: 1 },
+    { name: "读书", icon: "book-open", color: "#3b82f6", sortOrder: 2 },
+    { name: "变美", icon: "sparkles", color: "#ec4899", sortOrder: 3 },
+    { name: "工作", icon: "briefcase", color: "#f59e0b", sortOrder: 4 },
+    { name: "学习", icon: "graduation-cap", color: "#10b981", sortOrder: 5 },
+    { name: "商业思维", icon: "lightbulb", color: "#8b5cf6", sortOrder: 6 },
+    { name: "视野", icon: "globe", color: "#06b6d4", sortOrder: 7 },
+    { name: "生活习惯", icon: "calendar-check", color: "#f97316", sortOrder: 8 },
+    { name: "未分类", icon: "folder", color: "#6b7280", sortOrder: 99, isPreset: false },
+  ];
+
+  for (const d of domainData) {
+    await prisma.domain.upsert({
+      where: { id: d.name },
+      update: {},
+      create: {
+        id: d.name,
+        name: d.name,
+        icon: d.icon,
+        color: d.color,
+        sortOrder: d.sortOrder,
+        isPreset: d.isPreset ?? true,
+      },
+    });
+  }
+
+  // ── Example Habits ──
+  const exampleHabits = [
+    {
+      id: "habit-morning-run",
+      userId: user.id,
+      domainId: "健身",
+      title: "晨跑 30 分钟",
+      description: "公园慢跑，心率保持在130-150",
+      frequency: "daily",
+      targetValue: 30,
+      unit: "分钟",
+    },
+    {
+      id: "habit-reading",
+      userId: user.id,
+      domainId: "读书",
+      title: "阅读 30 分钟",
+      description: "纸质书优先，做简短笔记",
+      frequency: "daily",
+      targetValue: 30,
+      unit: "分钟",
+    },
+  ];
+
+  for (const h of exampleHabits) {
+    await prisma.habit.upsert({
+      where: { id: h.id },
+      update: {},
+      create: h,
+    });
+  }
+
+  // ── Example Goal ──
+  await prisma.goal.upsert({
+    where: { id: "goal-running" },
+    update: {},
+    create: {
+      id: "goal-running",
+      userId: user.id,
+      title: "3 个月跑完第一个 10 公里",
+      description: "从每天 2 公里起步，逐步增加到 10 公里",
+      startValue: 2,
+      targetValue: 10,
+      currentValue: 2,
+      unit: "公里",
+      linkedHabitIds: ["habit-morning-run"],
+      deadline: new Date("2026-08-12"),
+    },
+  });
+
+  console.log("Seed completed successfully");
+}
+
+main()
+  .catch((e) => {
+    console.error("Seed failed:", e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

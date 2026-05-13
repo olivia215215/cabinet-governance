@@ -1,0 +1,323 @@
+{
+  "projectRoot": "/Users/admin/Documents/New project",
+  "generatedAtMs": 1778591589154,
+  "currentSuggestionIds": [
+    "b1a19219-d4d8-40d8-adae-bb1483ff7346",
+    "8baaf6aa-b49d-4954-b767-eea8162385b9",
+    "786f5082-1050-4da1-b52f-7597290fc929"
+  ],
+  "suggestions": [
+    {
+      "id": "f44f1b29-7655-4855-9c4e-ba7e3c1a819a",
+      "title": "Replace browser dialogs in core workflows",
+      "description": "This Apr 29 scaffold still uses `prompt()` and `confirm()` for申领、归还、报修、审批和完结, which is the main thing making the platform feel unfinished. A focused UI pass here would upgrade the highest-traffic flows without changing the overall architecture.",
+      "prompt": "把这个平台里所有核心流程的 `prompt()` / `confirm()` 交互改成正式的页面内表单或弹窗，至少覆盖申领、归还、报修、审批驳回和 IT 完结，并顺手补上必要的前端状态提示。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1777531275571,
+      "updatedAtMs": 1777531275571
+    },
+    {
+      "id": "0aeff788-e8be-464f-b6fb-bfbc91467905",
+      "title": "Finish the offboarding asset recovery flow",
+      "description": "`POST /api/users/:id/offboard` 现在只把用户设为离职并返回未归还资产列表，没有生成追缴动作、通知或后续工单。对“资产流转管理系统”来说，这是一个直接的业务闭环缺口，而且代码范围很集中。",
+      "prompt": "把离职处理流程补完整：标记离职时自动生成未归还资产的追缴/归还处理记录，补通知和审计信息，并把前端用户管理页改成能清楚看到未归还资产和处理状态。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1777531275571,
+      "updatedAtMs": 1777531275571
+    },
+    {
+      "id": "764306ab-93a5-470d-a81a-32b33e2a6075",
+      "title": "Expose real AI output in the product",
+      "description": "后端已经返回 `aiAvailable` 和 `aiText`，但前端大多还是只展示规则兜底结果，`AI 洞察` 里的“了解详情”按钮也没有落地交互。既然项目主打 AI 资产管理，这一块现在最像半成品。",
+      "prompt": "把 AI 能力在前端真正做出来：申领推荐、报修分诊、AI 助手和管理层洞察都要清楚展示真实模型输出、兜底状态和关键依据，并补上 `AI 洞察` 页面可展开的详情交互。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1777531275571,
+      "updatedAtMs": 1777531275571
+    },
+    {
+      "id": "7f950da1-9906-40de-9a80-3ec42112bb58",
+      "title": "补上资产调拨闭环",
+      "description": "这个仓库已经把 `transfer` 写进了工单类型和 API 文档，但前后端都还没有真正的调拨创建、审批、执行和时间轴。对一个主打“资产流转管理”的平台，这是现在最明显的业务断层，而且代码范围很集中。",
+      "prompt": "把资产调拨流程真正做出来：支持员工/主管发起调拨申请、必要的审批与 IT 执行、资产所属部门和持有人更新、通知与审计记录，以及前端可操作的调拨入口和工单详情时间轴。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778035874947,
+      "updatedAtMs": 1778035874947
+    },
+    {
+      "id": "53dac74f-9a1c-43b7-9429-b753e6a25eb9",
+      "title": "修正 AI 可用状态判断",
+      "description": "README 明确说未配置或失败时不能把兜底文案冒充真实 AI，但现在 `/api/exec/insights` 只要有 `AI_API_KEY` 就会返回 `aiAvailable: true`，和推荐/分诊接口的判断口径也不一致。这会直接把“AI 已接入”这件事显示错。",
+      "prompt": "把整个平台的 AI 可用状态和降级逻辑收紧统一：推荐、报修分诊、AI 助手和 AI 洞察都要基于真实调用结果返回一致的 `aiAvailable`/失败原因，前端要清楚区分真实模型输出、规则兜底和调用失败。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778035874947,
+      "updatedAtMs": 1778035874947
+    },
+    {
+      "id": "678a119a-35d0-40f1-8a73-8b254d62c06e",
+      "title": "把盘点结果变成可处理异常",
+      "description": "当前盘点页只是把 `unknown` 和 `missing` 文本列出来，后端也只记了扫描数量，没有差异处置动作、状态变更或后续工单。这个闭环对 IT 资产平台很关键，而且现有盘点接口已经够接近可扩展。",
+      "prompt": "把盘点流程补成真正可处理的异常闭环：对未盘到、未知编号、疑似丢失等结果提供可执行处理动作，补审计和资产事件记录，并把前端盘点结果页改成能逐项处理而不只是显示文本。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778035874947,
+      "updatedAtMs": 1778035874947
+    },
+    {
+      "id": "d6624c5d-a08b-49f1-8280-90e29da000b7",
+      "title": "补上离职归还闭环",
+      "description": "README 把“用户离职未归还”列成核心能力，但现在 `/api/users/:id/offboard` 只是把用户设为离职并返回资产编号，资产仍挂在离职员工名下，也不会生成追回任务、通知或时间轴。这是当前代码里最明显还没闭环的人事场景。",
+      "prompt": "把员工离职场景补成真正的资产追回闭环：标记离职时冻结该员工自助入口、自动生成待处理的归还/追回工单、通知 IT 和主管、把相关资产标成待回收并写入资产/工单时间轴，前端用户管理页也要能直接看到未归还资产和处理进度。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778135042626,
+      "updatedAtMs": 1778135042626
+    },
+    {
+      "id": "dcd8c7a1-c8cf-4d81-9d0c-245b9acbde2a",
+      "title": "让 AI 洞察能落到执行清单",
+      "description": "API 文档写的是“采购和调拨建议”，但现在 `/api/exec/insights` 只返回一段文本，前端“了解详情”按钮也没有任何动作。对这个“完整平台”线程来说，这块已经有入口，却还没有真正可执行的管理动作。",
+      "prompt": "把 AI 洞察从一段文案做成可执行的管理清单：后端返回结构化的采购/调拨建议项、数量、依据和风险，前端 AI 洞察页支持展开详情、按建议跳转到相关资产/型号/工单视图，并清楚区分 AI 生成与规则兜底。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778135042626,
+      "updatedAtMs": 1778135042626
+    },
+    {
+      "id": "6f8b9788-9d30-4dab-9399-1e852f2ffc60",
+      "title": "补出保修到期预警队列",
+      "description": "当前代码里只有聊天问答和一条种子通知涉及保修，但资产列表已经展示保修日期，演示数据里也有多台已过保设备。这个平台已经有通知、看板和工单基础，保修续保/替换却还没形成任何日常处理入口。",
+      "prompt": "把保修到期管理补出来：自动识别即将过保和已过保资产，给员工、IT 和管理层生成对应预警，在 IT 工作台/资产看板里提供筛选和统计，并支持基于过保风险直接发起维修、替换或采购跟进。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778135042626,
+      "updatedAtMs": 1778135042626
+    },
+    {
+      "id": "d1f09682-883b-42ed-ba9f-1a4eee82d312",
+      "title": "补齐资产调拨闭环",
+      "description": "README 和 API 文档都把 `transfer` 当成正式工单类型，数据库枚举和工单列表标签也预留了，但现在没有调拨发起接口、审批流或交接时间轴。对这个“完整平台”项目，这是一条已经写进系统词汇却还没真正落地的核心流程。",
+      "prompt": "把资产调拨流程补完整：支持员工/主管/IT 发起部门内或跨部门调拨，后端新增调拨工单创建、审批、接收和完结接口，更新资产所属部门/持有人/位置并写入资产与工单时间轴，前端提供调拨入口、待处理队列和调拨详情页。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778227896760,
+      "updatedAtMs": 1778227896760
+    },
+    {
+      "id": "9a27b350-95ee-4395-86f7-a196f5ffdf65",
+      "title": "让 AI 助手生成预填工单",
+      "description": "当前 `/api/chat` 只返回文本并提醒用户自己去表单确认，前端聊天页也没有把申领、报修、归还意图带进现有流程。仓库里已经有推荐、分诊和工单接口，补一层确认后生成预填草稿会让 AI 助手第一次真正减少操作步骤。",
+      "prompt": "把 AI 助手改成可落地的工单入口：识别聊天里的申领/归还/报修意图，返回结构化确认卡片，用户确认后直接跳到已预填的表单或创建草稿工单，并清楚区分 AI 建议、规则兜底和最终人工确认。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778227896760,
+      "updatedAtMs": 1778227896760
+    },
+    {
+      "id": "fc51e2bd-ae4b-414c-b5f7-c630ec7d5bd5",
+      "title": "把盘点差异变成处理队列",
+      "description": "现在盘点页只展示匹配、未知编号和未盘到资产三组文本，后端也只记了一条 audit，差异不会变成后续任务。项目里已经有工单、通知、时间轴和资产管理基础，把盘点结果沉淀成待处理队列会直接补上日常运维闭环。",
+      "prompt": "把盘点差异做成可处理队列：盘点时对未知编号、未盘到资产和状态异常生成待处理项，支持 IT 在页面里逐条认领、备注、忽略或转成丢失/维修/追查工单，同时给相关资产写时间轴并在通知和看板里展示未闭环的盘点问题。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778227896760,
+      "updatedAtMs": 1778227896760
+    },
+    {
+      "id": "ebc15faf-7f1a-4640-b929-158a22e880b6",
+      "title": "加上 AI 连通性诊断面板",
+      "description": "你今天连续在排查首 token 卡住和 Chrome 断网，这个项目又强依赖外部 OpenAI-compatible 接口；但现在 `/api/ai/recommend`、`/api/ai/triage`、`/api/chat` 只是在失败后静默降级，前后端都看不到超时、DNS、认证或模型不可达到底卡在哪一步。",
+      "prompt": "给这个资产平台补一套 AI 连通性诊断：后端新增健康检查与受控超时，分别暴露 API base、模型名、鉴权是否配置、DNS/HTTP 连通性、首字节耗时和错误分类；前端在 AI 推荐、报修分诊、AI 助手和管理层洞察页显示当前状态、最近一次失败原因与降级说明，并提供一键自检入口，方便排查首 token 卡住和网络异常。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778314829701,
+      "updatedAtMs": 1778314829701
+    },
+    {
+      "id": "815c068b-24c9-4470-a090-cce641629e3e",
+      "title": "补齐离职归还闭环",
+      "description": "README 把“用户离职未归还”写成 IT 管理员核心能力，但当前 `/api/users/:id/offboard` 只是把用户设为离职并返回未归还列表，没有冻结账号、生成催还动作或把未归还资产转成后续处理。",
+      "prompt": "把离职未归还流程补完整：IT 标记离职时冻结账号登录、汇总该员工在用资产，自动生成待处理的归还/追缴任务与通知，给资产和工单写时间轴，并在用户管理和 IT 工作台里展示离职未闭环列表、责任人和处理状态。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778314829701,
+      "updatedAtMs": 1778314829701
+    },
+    {
+      "id": "ea4b08c4-46cb-4b94-93d2-62151716174c",
+      "title": "把低库存洞察落成采购草案",
+      "description": "这个项目已经有低库存告警和 `/api/exec/insights` 的采购建议，但现在只是返回一段文本，前端“了解详情”按钮也没有后续动作，管理层看到建议后还无法直接推进到可执行单据。",
+      "prompt": "把低库存告警和 AI 洞察做成可执行采购草案：管理层或 IT 在看板里能展开每个缺口型号的建议数量、理由和紧急度，一键生成待确认采购草稿或入库计划，保留人工确认，再把审批结果、计划入库数量和后续入库记录串到时间轴和审计里。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778314829701,
+      "updatedAtMs": 1778314829701
+    },
+    {
+      "id": "5d6e09b4-7c6c-4c1d-868c-4160967f28ac",
+      "title": "别再让 AI 请求一直卡住",
+      "description": "你昨天刚排查过首 token 卡住和 Chrome 断网，这个项目里 `callLLM()` 还是裸 `fetch`，`/api/ai/recommend`、`/api/ai/triage`、`/api/chat` 一旦外部模型半连通就会一直等。补超时、中止、重试和明确降级，比单纯报错更像你现在会立刻用上的止血项。",
+      "prompt": "给这个资产平台把 AI 请求的卡死问题彻底收口：后端所有 LLM 调用加受控超时、Abort、错误分类和 fallback，前端在 AI 推荐、报修分诊、AI 助手里加加载态、取消、超时提示和重试入口，确保外部模型半连通或首 token 卡住时页面不会一直转圈。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778409879672,
+      "updatedAtMs": 1778409879672
+    },
+    {
+      "id": "a74f7ee8-3b34-461a-b293-8d7eb1a864a8",
+      "title": "让 AI 助手能直接交接到工单",
+      "description": "README 和 API 都说 AI 助手遇到申领/报修这类动作时要“引导确认”，但现在 `public/app.js` 里的聊天页只是纯文本往返，不能把对话结果落成可执行草稿。这是“完整平台”里一个很明显的断点，而且正好能复用现有工单接口。",
+      "prompt": "把 AI 助手从纯聊天补成可交接工作流：当用户在聊天里表达申领、归还、报修、查保修等意图时，后端返回结构化建议，前端把它展示成可确认的操作卡片，支持一键带着预填信息跳到申领/归还/报修流程或直接生成待确认工单草稿，但仍保留人工确认。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778409879672,
+      "updatedAtMs": 1778409879672
+    },
+    {
+      "id": "846f8fe0-8398-40db-9ad7-36174f24d0b7",
+      "title": "把报修改成先受理再占用资产",
+      "description": "当前 `/api/tickets/repair` 在员工提交瞬间就把工单设成 `it_processing`，同时把资产状态改成 `repairing`，IT 还没接单就已经占用了资产生命周期。这个流程和“工单进度、IT 工作台、追溯”不一致，属于很具体的业务闭环缺口。",
+      "prompt": "重做报修流转状态机：员工提交报修后先进入待 IT 受理，资产先保持原状态或进入待检；IT 在工作台明确受理后再切到维修中，并补齐受理、维修、无法修复报废、修复归还等节点的通知、时间轴和审计，避免现在一提交就直接进入维修中的问题。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778409879672,
+      "updatedAtMs": 1778409879672
+    },
+    {
+      "id": "f2dcf8aa-5b0c-4361-9ded-52982211209b",
+      "title": "把 AI 降级原因直接做成状态面板",
+      "description": "你今天刚排查过首 token 卡住，前几天又查过 Chrome 断网；这个项目里 `/api/chat`、`/api/ai/recommend`、`/api/ai/triage` 失败时都会静默回退，前端也没明确告诉用户现在是真 AI、规则兜底，还是外部模型连不上。把连通性、自检结果和最近一次失败原因直接露出来，会比继续盲查网络问题更省事。",
+      "prompt": "给这个资产平台补一套 AI 服务状态与降级诊断：后端新增 AI 健康检查/最近失败原因接口，区分未配置、连通失败、超时、返回异常；前端在 AI 推荐、报修分诊、AI 助手里显示当前是实时模型还是规则兜底，并给出可操作的重试或排查提示，避免用户只看到结果却不知道为什么。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778504828474,
+      "updatedAtMs": 1778504828474
+    },
+    {
+      "id": "86632e6f-70f3-40d1-b756-a8061bb51955",
+      "title": "离职时自动生成资产回收流程",
+      "description": "你在做“完整平台”，但现在 `/api/users/:id/offboard` 只是把用户设为离职并返回未归还资产列表，没有冻结资产、没有生成回收工单，也没有通知或审计到后续处理人。这是已经做到一半但还没闭环的真实缺口。",
+      "prompt": "把离职流程补成真正可执行的资产回收闭环：IT 标记员工离职时，系统自动汇总未归还资产、生成待处理回收任务或工单、通知相关人员，并在用户侧禁止继续发起新申领；同时把资产状态、时间轴和审计记录补齐，别再只返回一串未归还列表。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778504828474,
+      "updatedAtMs": 1778504828474
+    },
+    {
+      "id": "dbf28c85-1c1d-40cb-99af-133f1fc7806e",
+      "title": "申领阶段先锁库存再走审批",
+      "description": "当前 `POST /api/tickets/apply` 只在提交时看一次可用库存，但资产要到 IT 最终审批时才真正分配，期间一直还是 `available`。这会让多人并发申领同一型号时先都走完审批，最后才在 IT 端发现没货，属于平台流程里的硬伤。",
+      "prompt": "重做申领库存占用逻辑：员工提交申领后就先做可追踪的预留，或至少在审批链里引入明确的锁库存/释放库存状态，避免同一台库存被多个工单同时消费；同时补齐驳回、超时、取消时的释放规则，以及前端和工单时间轴里的库存占用提示。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778504828474,
+      "updatedAtMs": 1778504828474
+    },
+    {
+      "id": "b1a19219-d4d8-40d8-adae-bb1483ff7346",
+      "title": "把已发布技能改成版本化草稿",
+      "description": "你今天刚把技能创建文档升级到“不可直接覆盖线上版本”，但 `skill-resource-library/public/app.js` 现在编辑已发布技能时只会原地改同一条记录并改成“草稿变更”，详情页里的发布记录也还是占位数据。把发布版和草稿版拆开，才能让这个原型真正对齐你刚定下的产品口径。",
+      "prompt": "把 `skill-resource-library` 的已发布技能编辑流改成真正的版本化草稿：编辑已发布技能时保留线上已发布版本不变，新增一个关联的草稿修订；详情页补发布记录、当前生效版本、待发布草稿差异和重新发布后的版本递增逻辑，别再用现在这种直接改同一条数据再改状态的假流程。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778591589154,
+      "updatedAtMs": 1778591589154
+    },
+    {
+      "id": "8baaf6aa-b49d-4954-b767-eea8162385b9",
+      "title": "补真实的技能包解析入口",
+      "description": "你今天那条文档线程已经把“Skill 不只是一个 md，而是 bundle”说得很明确，但 `skill-resource-library` 现在导入和代码仓库拉取基本还是静态演示：导入只记文件名，仓库拉取也只是固定下拉。下一步最值钱的是把 `manifest.json`/`skill.yaml`/`SKILL.md` 的识别、解析结果和失败原因真的做出来。",
+      "prompt": "把 `skill-resource-library` 的“代码仓库拉取”和“导入技能包”从静态原型补成真实解析流：新增本地 mock skill bundle 样例，按 `manifest.json`、`skill.yaml`、`SKILL.md` 优先级识别入口；把解析出的资产树、声明块、schema 和错误原因真实展示到编辑器与详情页里；导入失败时停留在上传/识别步骤并给出修复建议。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778591589154,
+      "updatedAtMs": 1778591589154
+    },
+    {
+      "id": "786f5082-1050-4da1-b52f-7597290fc929",
+      "title": "给比赛版补员工拒收领用",
+      "description": "今天的比赛系统里，`it-asset-codex/server.js` 和 `docs/API.md` 已经支持 `confirm-receipt` 的 accept/reject，但前端 `public/app.js` 只有“确认领用”，没有“拒收”入口。设备分配错了时流程会直接卡在 `assigned`，这是完整平台里很真实的缺口。",
+      "prompt": "给 `it-asset-codex` 补完整的领用确认闭环：员工在待领用工单里除了“确认领用”之外，还能“拒收并填写原因”；拒收后资产退回可用池、工单和时间轴记录拒收原因、IT 收到通知重新分配；同时把前端按钮、详情页文案和 smoke test 一起补齐。",
+      "threadAction": {
+        "type": "new-thread"
+      },
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1778591589154,
+      "updatedAtMs": 1778591589154
+    }
+  ]
+}

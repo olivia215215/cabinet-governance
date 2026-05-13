@@ -1,0 +1,64 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const date = searchParams.get("date");
+
+  const habits = await prisma.habit.findMany({
+    where: { userId: "demo" },
+  });
+
+  const enriched = await Promise.all(
+    habits.map(async (h) => {
+      if (!date) return { ...h, logs: [] };
+      const log = await prisma.habitLog.findUnique({
+        where: { habitId_date: { habitId: h.id, date: new Date(date + "T00:00:00Z") } },
+      });
+      return { ...h, logs: log ? [log] : [] };
+    })
+  );
+
+  return NextResponse.json(enriched);
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const habit = await prisma.habit.create({
+    data: {
+      userId: "demo",
+      domainId: body.domainId,
+      title: body.title,
+      description: body.description || null,
+      frequency: body.frequency || "daily",
+      targetValue: body.targetValue || 1,
+      unit: body.unit || "次",
+      reminderTime: body.reminderTime || null,
+      isActive: true,
+    },
+  });
+  return NextResponse.json(habit);
+}
+
+export async function PUT(req: NextRequest) {
+  const { id, ...updates } = await req.json();
+  try {
+    const habit = await prisma.habit.update({
+      where: { id },
+      data: updates,
+    });
+    return NextResponse.json(habit);
+  } catch {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const { id } = await req.json();
+  try {
+    await prisma.habit.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+}

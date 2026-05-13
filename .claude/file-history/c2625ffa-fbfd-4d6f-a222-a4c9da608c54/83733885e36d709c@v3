@@ -1,0 +1,4 @@
+DATABASE_URL="postgresql://admin@localhost:5432/tianzi_rike"
+AUTH_SECRET="tianzi-rike-dev-secret-2026"
+AI_API_KEY=""
+AI_BASE_URL="https://api.deepseek.com/v1"

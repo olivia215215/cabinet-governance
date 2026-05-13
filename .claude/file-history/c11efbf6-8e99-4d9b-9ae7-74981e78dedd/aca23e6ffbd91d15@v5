@@ -1,0 +1,32 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function POST(req: NextRequest) {
+  const { habitId, date, value, note, mood } = await req.json();
+  const dateObj = new Date(date + "T00:00:00Z");
+
+  const existing = await prisma.habitLog.findUnique({
+    where: { habitId_date: { habitId, date: dateObj } },
+  });
+
+  if (existing) {
+    const updated = await prisma.habitLog.update({
+      where: { id: existing.id },
+      data: { completed: !existing.completed },
+    });
+    return NextResponse.json(updated);
+  }
+
+  const log = await prisma.habitLog.create({
+    data: {
+      habitId,
+      userId: "demo",
+      date: dateObj,
+      value: value || 1,
+      completed: true,
+      note: note || null,
+      mood: mood || null,
+    },
+  });
+  return NextResponse.json(log);
+}

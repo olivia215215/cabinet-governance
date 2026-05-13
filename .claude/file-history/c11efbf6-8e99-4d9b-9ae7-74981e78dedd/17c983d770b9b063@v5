@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(req: NextRequest) {
+  const range = req.nextUrl.searchParams.get("range") || "week";
+  const days = range === "month" ? 30 : 7;
+
+  const habits = await prisma.habit.findMany({
+    where: { userId: "demo", isActive: true },
+  });
+
+  const habitLogs = await prisma.habitLog.findMany({
+    where: { userId: "demo" },
+  });
+
+  const result = habits.map((h) => ({
+    ...h,
+    logs: habitLogs
+      .filter((l) => l.habitId === h.id)
+      .map((l) => ({ date: l.date.toISOString().split("T")[0], completed: l.completed })),
+  }));
+
+  return NextResponse.json({ habits: result, days });
+}

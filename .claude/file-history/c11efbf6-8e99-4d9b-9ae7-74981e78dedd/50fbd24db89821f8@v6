@@ -1,0 +1,41 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(req: NextRequest) {
+  const date = req.nextUrl.searchParams.get("date");
+  if (!date) return NextResponse.json(null);
+
+  const review = await prisma.dailyReview.findUnique({
+    where: { userId_date: { userId: "demo", date: new Date(date + "T00:00:00Z") } },
+  });
+  return NextResponse.json(review || null);
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const dateObj = new Date(body.date + "T00:00:00Z");
+
+  const review = await prisma.dailyReview.upsert({
+    where: { userId_date: { userId: "demo", date: dateObj } },
+    create: {
+      userId: "demo",
+      date: dateObj,
+      score: body.score,
+      summary: body.summary || null,
+      highlight: body.highlight || null,
+      lowlight: body.lowlight || null,
+      tomorrowGoal: body.tomorrowGoal || null,
+      aiFeedback: body.aiFeedback || null,
+    },
+    update: {
+      score: body.score,
+      summary: body.summary || null,
+      highlight: body.highlight || null,
+      lowlight: body.lowlight || null,
+      tomorrowGoal: body.tomorrowGoal || null,
+      aiFeedback: body.aiFeedback || null,
+    },
+  });
+
+  return NextResponse.json(review);
+}

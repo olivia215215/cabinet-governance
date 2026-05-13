@@ -1,0 +1,155 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { getAIRecommendation } from "@/lib/claude";
+
+export async function POST(req: NextRequest) {
+  const { type, data, prompt } = await req.json();
+
+  try {
+    if (type === "weekly") {
+      const habits = await prisma.habit.findMany({
+        where: { userId: "demo", isActive: true },
+      });
+      const allLogs = await prisma.habitLog.findMany({
+        where: { userId: "demo" },
+      });
+
+      const today = new Date();
+      const logs: any[] = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split("T")[0];
+        const dayLogs = allLogs.filter(
+          (l) => l.date.toISOString().split("T")[0] === dateStr
+        );
+        logs.push({ date: dateStr, completed: dayLogs.filter((l) => l.completed).length, total: dayLogs.length });
+      }
+
+      const message = `作为个人成长教练，根据以下本周数据给一段简短的洞察（200字以内）：
+完成情况: ${logs.map((l) => `${l.date}: ${l.completed}/${l.total}`).join(", ")}
+活跃习惯: ${habits.map((h) => h.title).join("、")}
+指出1-2个趋势，给出1条具体改进建议。语气像帝王侍读。`;
+
+      const text = await getAIRecommendation(message);
+      return NextResponse.json({ text });
+    }
+
+    if (type === "review") {
+      const message = `用户刚做了今日复盘：评分${data.score}/5，总结："${data.summary}"，亮点："${data.highlight}"，不足："${data.lowlight}"。请用帝王侍读的语气给一段鼓励+建议（100字以内）。`;
+      const text = await getAIRecommendation(message);
+      return NextResponse.json({ text });
+    }
+
+    if (type === "generate-habits") {
+      const message = `用户描述了以下目标："${prompt}"。请帮用户拆解成3-5个具体的每日习惯，每个习惯格式为：- [领域] 习惯名称：具体描述（目标值+单位）。直接给列表，不要多余的话。`;
+      const text = await getAIRecommendation(message);
+      return NextResponse.json({ text });
+    }
+
+    if (type === "daily-summary") {
+      const habits = await prisma.habit.findMany({
+        where: { userId: "demo", isActive: true },
+      });
+      const allLogs = await prisma.habitLog.findMany({
+        where: { userId: "demo" },
+      });
+
+      const todayStr = new Date().toISOString().split("T")[0];
+      const todayLogs = allLogs.filter((l) => l.date.toISOString().split("T")[0] === todayStr);
+      const completedCount = todayLogs.filter((l) => l.completed).length;
+      const totalCount = habits.length;
+      const completionRate = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+      // 连续天数
+      let streak = 0;
+      const now = new Date();
+      for (let i = 0; i < 365; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        const ds = d.toISOString().split("T")[0];
+        const dayCompleted = allLogs.filter((l) => l.date.toISOString().split("T")[0] === ds && l.completed).length;
+        if (dayCompleted > 0) streak++;
+        else break;
+      }
+
+      // 昨日复盘
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
+      const yesterdayReview = await prisma.dailyReview.findUnique({
+        where: { userId_date: { userId: "demo", date: new Date(yesterdayStr + "T00:00:00Z") } },
+      });
+
+      const message = `用户今日打卡情况：完成 ${completedCount}/${totalCount} 项习惯，完成率 ${completionRate}%，连续 ${streak} 天。${yesterdayReview ? `昨日复盘："${yesterdayReview.summary}"` : ""}请用帝王侍读的口吻，给一段温暖、简洁的今日小结（80-120字），既肯定成就又温和提醒不足。`;
+
+      const text = await getAIRecommendation(message);
+      return NextResponse.json({ text });
+    }
+
+    if (type === "daily-goals") {
+      const habits = await prisma.habit.findMany({
+        where: { userId: "demo", isActive: true },
+      });
+      const allLogs = await prisma.habitLog.findMany({
+        where: { userId: "demo" },
+      });
+
+      const now = new Date();
+
+      // 近14天各习惯完成率
+      const habitStats = habits.map((h) => {
+        let completed = 0;
+        let total = 0;
+        for (let i = 1; i <= 14; i++) {
+          const d = new Date(now);
+          d.setDate(d.getDate() - i);
+          const ds = d.toISOString().split("T")[0];
+          const log = allLogs.find((l) => l.habitId === h.id && l.date.toISOString().split("T")[0] === ds);
+          total++;
+          if (log?.completed) completed++;
+        }
+        return { title: h.title, completionRate: Math.round((completed / total) * 100), streak: 0 };
+      });
+
+      // 查断档
+      habitStats.forEach((hs: any) => {
+        let s = 0;
+        for (let i = 1; i <= 14; i++) {
+          const d = new Date(now);
+          d.setDate(d.getDate() - i);
+          const ds = d.toISOString().split("T")[0];
+          const log = allLogs.find(
+            (l) =>
+              l.habitId === habits.find((h) => h.title === hs.title)?.id &&
+              l.date.toISOString().split("T")[0] === ds
+          );
+          if (!log?.completed) break;
+          s++;
+        }
+        hs.streak = s;
+      });
+
+      const message = `用户近14天各习惯完成率：${habitStats.map((hs: any) => `${hs.title}(${hs.completionRate}%)`).join("，")}。连续未做的习惯：${habitStats.filter((hs: any) => hs.streak === 0).map((hs: any) => hs.title).join("、") || "无"}。请基于以上数据，推荐2-3条明日具体可执行的行动建议。返回 JSON 数组格式：[{"title":"...","detail":"...","reason":"..."}]，不要 markdown 包裹，只返回纯 JSON。`;
+
+      const text = await getAIRecommendation(message);
+      try {
+        const goals = JSON.parse(text);
+        return NextResponse.json({ goals: Array.isArray(goals) ? goals : [] });
+      } catch {
+        return NextResponse.json({ goals: [] });
+      }
+    }
+
+    return NextResponse.json({ error: "Unknown type" }, { status: 400 });
+  } catch (err) {
+    // If API is not configured, return a fallback message
+    return NextResponse.json({
+      text: type === "weekly"
+        ? "本周数据已汇总。完成率最高的领域是健身上午时段，建议将重要习惯安排在精力充沛的早晨。连续3天以上达标的习惯会形成惯性，再坚持一下。"
+        : type === "review"
+        ? "每日三省，便是精进。今日无论得失，皆是明日之基石。坚持复盘，自见成效。"
+        : "根据你的目标，建议从每天25分钟的微习惯开始，不求多但求持续。三周后自然成习惯。",
+    });
+  }
+}
