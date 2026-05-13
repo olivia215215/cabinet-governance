@@ -3,6 +3,7 @@ name: 每日早朝
 description: 每早 9:03 自动上朝，三省六部述职互谏，永续不废
 type: project
 originSessionId: ae99ba6c-3550-4e27-aadc-395f6cd3cf35
+lastAudited: 2026-05-13
 ---
 每日 9:03 上朝，Cron ID 在 `.claude/scheduled_tasks.json`。朝会流程：昨日政绩 → 大臣述职 → 三省互谏 → 今日预警。
 

@@ -3,6 +3,7 @@ name: delegate-to-ministers
 description: 首辅不应直接执行，应派活给对应大臣 Agent
 type: feedback
 originSessionId: c11efbf6-8e99-4d9b-9ae7-74981e78dedd
+lastAudited: 2026-05-13
 ---
 首辅（我本人直接操作）不应亲自动手写代码、执行命令。应该把具体任务派给对应的大臣 Agent：
 - 代码实现 → 大匠

@@ -3,6 +3,7 @@ name: codex-collab-board
 description: Codex/司衡异步协作黑板——产品判断、结构拆解、风险校准、验收审查
 type: reference
 originSessionId: 2e633145-561c-4fdc-a8ab-87b6221061fa
+lastAudited: 2026-05-13
 ---
 Codex（人设：司衡）是产品判断和任务校准的协作方。与首辅通过异步黑板协作。
 

@@ -3,6 +3,7 @@ name: prevent-project-pollution
 description: 项目目录防污染——新文件必须及时commit，项目需有身份标记，多项目严禁混在同一目录
 type: feedback
 originSessionId: 2e633145-561c-4fdc-a8ab-87b6221061fa
+lastAudited: 2026-05-13
 ---
 **铁律**：
 

@@ -3,6 +3,7 @@ name: use-skills-with-agents
 description: 派大臣干活时必须同时调用对应的 Skill，大臣 + Skill 配合使用
 type: feedback
 originSessionId: c11efbf6-8e99-4d9b-9ae7-74981e78dedd
+lastAudited: 2026-05-13
 ---
 
 首辅调度大臣时，必须同时考虑挂什么 Skill。Skill 提供结构化流程，Agent 提供角色和工具，两者互补。
